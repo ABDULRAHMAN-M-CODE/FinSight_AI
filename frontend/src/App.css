@@ -68,7 +68,8 @@
 }
 
 #Continue:hover {
-  transform: translateY(-3px);
+  transform: translateY(-3px);  /*button moves up*/
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
   background: linear-gradient(90deg, #1b7f73, #299d91);
+  
 }
