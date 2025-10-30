@@ -1,42 +1,74 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Frame 133539 */
+#Frame_133539 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 50px; /* slightly smaller gap for balance */
+  position: absolute;
+  width: 900px;
+  max-width: 90%; /* responsive */
+  height: auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); /* cleaner centering */
+  padding: 40px;
+  background: linear-gradient(135deg, #e0f7f6, #c1f0ed); /* soft gradient */
+  border-radius: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); /* subtle depth */
+}
+
+/* Text Container */
+#Text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Welcoming Text */
+#Welcoming {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 42px;
+  line-height: 1.4;
   text-align: center;
+  color: #004d40; /* darker teal for elegance */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* subtle shadow */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Description */
+#describe_services {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.6;
+  text-align: center;
+  color: #333;
+  max-width: 700px; /* easier to read */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Button */
+#Continue {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 70px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  background: linear-gradient(90deg, #299d91, #1b7f73); /* gradient button */
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+#Continue:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(90deg, #1b7f73, #299d91);
 }
