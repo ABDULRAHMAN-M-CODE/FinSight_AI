@@ -1,11 +1,15 @@
 
 
 
-
-
+import { useDispatch, useSelector, type UseSelector } from 'react-redux';
+import { setPage } from './mainSlice';
 import './App.css'
+import { Routes,Route,BrowserRouter,useNavigate } from 'react-router-dom';
+
 function WelcomePage(){
-      return(
+  const dispatch=useDispatch();    
+  const navigate=useNavigate();
+  return(
       <div id="WelcomePage">
         <div id="Frame_133539">
             <div id="Text">
@@ -13,26 +17,35 @@ function WelcomePage(){
               <p id="describe_services">Unlock personalized financial insights, track your goals, and get smart, AI-powered recommendations tailored just for you—all in one easy-to-use app</p>
             </div>
             <div id="Split_Line"></div>
-            <button id='Continue' onClick={()=>}>Start Your Journey</button>
+            <button id='Continue' onClick={()=>{
+              dispatch(setPage("continue...."))
+              navigate("/Login")
+            }}>Start Your Journey</button>
         </div>
       </div>
     );
-}
-function App() {
-  
-  
-    if (=="Welcome_Page"){
-        return(
-        <WelcomePage   />
-        );
-      }
-  else{
+
+  }
+  function Login(){
     return(
       <div>
-        <p>Continue......</p>
+        <p>login</p>
       </div>
     );
   }
+function App() {
+  
+    
+    
+        return(
+          <Routes>
+            <Route path="/" element={<WelcomePage />}/>
+            <Route path='/Login' element={<Login />} />
+          </Routes>
+        
+        );
+      
+
   
 }
 
