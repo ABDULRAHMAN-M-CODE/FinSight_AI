@@ -73,3 +73,818 @@
   background: linear-gradient(90deg, #1b7f73, #299d91);
   
 }
+#Login_Frame{
+
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 64px;
+
+width: 400px;
+height: 532px;
+
+
+
+
+}
+#Frame_40590{
+/* Frame 40589 */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 40px;
+
+width: 276px;
+height: 32px;
+
+
+}
+
+#Text1{
+width: 276px;
+height: 32px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 800;
+font-size: 40px;
+line-height: 32px;
+/* identical to box height, or 80% */
+text-align: center;
+letter-spacing: 0.08em;
+
+/* Primary color */
+color: #299D91;
+}
+#Input_Section{
+/* Input section */
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+gap: 24px;
+width: 400px;
+height: 436px;
+}
+#Login{
+/* Login */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 32px;
+
+width: 400px;
+height: 304px;
+}
+#Inputs{
+/* Input */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 24px;
+
+width: 400px;
+height: 184px;
+}
+#Email_Div{
+/* Email */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 8px;
+
+width: 400px;
+height: 80px;
+
+
+}
+#Email_Label{
+/* Label */
+
+width: 342px;
+height: 24px;
+
+/* Medium 16-24 */
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 24px;
+/* identical to box height, or 150% */
+
+/* Black */
+color: #191D23;
+
+
+
+}
+#Email_Input{
+/* Input */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 12px 16px;
+gap: 24px;
+
+width: 400px;
+height: 48px;
+
+/* Gray/02 */
+border: 1px solid #4B5768;
+border-radius: 8px;
+
+
+}
+#Email_Input::placeholder{
+
+
+/* text */
+
+width: 314px;
+height: 24px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 22px;
+/* or 138% */
+
+/* Gray/02 */
+color: #4B5768;
+
+
+/* Inside auto layout */
+
+}
+
+#Password_Div{
+/* Password */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 8px;
+
+width: 400px;
+height: 80px;
+}
+#Password_Header{
+/* Header */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center; /* comment : effect is column wise*/
+padding: 0px;
+gap: 20px;
+
+width: 400px;
+height: 24px;
+}
+#Password_Label{
+/* Label */
+
+margin: 0 auto;
+width: 160px;
+height: 24px;
+
+/* Medium 16-24 */
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 24px;
+/* identical to box height, or 150% */
+
+/* Black */
+color: #191D23;
+
+
+}
+
+/* Right text */
+
+margin: 0 auto;
+width: 162px;
+height: 16px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 500;
+font-size: 12px;
+line-height: 16px;
+/* identical to box height, or 133% */
+text-align: right;
+
+/* Primary color */
+color: #299D91;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Input */
+
+box-sizing: border-box;
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: flex-start;
+padding: 12px 16px;
+gap: 24px;
+
+width: 400px;
+height: 48px;
+
+/* Gray/03 */
+border: 1px solid #D0D5DD;
+border-radius: 8px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* text */
+
+margin: 0 auto;
+width: 262px;
+height: 24px;
+
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 4px;
+line-height: 24px;
+/* identical to box height, or 600% */
+letter-spacing: 1em;
+
+/* Gray/01 */
+color: #999DA3;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Icon/eye */
+
+margin: 0 auto;
+width: 24px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Vector */
+
+position: absolute;
+left: 8.33%;
+right: 8.33%;
+top: 20.83%;
+bottom: 20.83%;
+
+/* Gray/01 */
+border: 2px solid #999DA3;
+
+
+/* Vector */
+
+position: absolute;
+left: 37.5%;
+right: 37.5%;
+top: 37.5%;
+bottom: 37.5%;
+
+/* Gray/01 */
+border: 2px solid #999DA3;
+
+
+/* Button */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+padding: 0px;
+gap: 16px;
+
+width: 400px;
+height: 88px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Remind me */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 0px;
+gap: 16px;
+
+width: 264px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Tick */
+
+width: 20px;
+height: 20px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* fill */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+/* Primary color */
+background: #299D91;
+border-radius: 2px;
+
+
+/* Icons/Outline/Checkmark */
+
+position: absolute;
+left: 0%;
+right: 0%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Shape */
+
+position: absolute;
+left: 12.5%;
+right: 12.5%;
+top: 25%;
+bottom: 20.83%;
+
+/* White */
+background: #FFFFFF;
+
+
+/* Keep me signed in */
+
+width: 228px;
+height: 24px;
+
+/* Light 16-24 */
+font-family: 'Inter';
+font-style: normal;
+font-weight: 300;
+font-size: 16px;
+line-height: 24px;
+/* identical to box height, or 150% */
+
+/* Black */
+color: #191D23;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Button/primary */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 16px 12px;
+
+width: 400px;
+height: 48px;
+
+/* Primary color */
+background: #299D91;
+border-radius: 4px;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Label */
+
+width: 160px;
+height: 24px;
+
+/* Semibold 16-24 */
+font-family: 'Inter';
+font-style: normal;
+font-weight: 600;
+font-size: 16px;
+line-height: 24px;
+/* identical to box height, or 150% */
+text-align: center;
+
+/* White */
+color: #FFFFFF;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Devider */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+isolation: isolate;
+
+width: 128px;
+height: 36px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+
+
+/* Line 10 */
+
+position: absolute;
+width: 342px;
+height: 0px;
+left: calc(50% - 342px/2);
+top: 18px;
+
+opacity: 0.25;
+/* Gray/02 */
+border: 0.5px solid #4B5768;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+z-index: 0;
+
+
+/* Sign in with */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 8px;
+gap: 8px;
+
+width: 128px;
+height: 36px;
+
+/* Special/Main BG */
+background: #F4F5F7;
+
+/* Inside auto layout */
+flex: none;
+order: 1;
+flex-grow: 0;
+z-index: 1;
+
+
+/* or sign in with */
+
+width: 112px;
+height: 20px;
+
+/* Regular 14-20 */
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 20px;
+/* identical to box height, or 143% */
+text-align: center;
+
+/* Gray/01 */
+color: #999DA3;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Button/secondary */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 12px 69px;
+gap: 16px;
+
+width: 400px;
+height: 48px;
+
+/* Gray/04 */
+background: #E4E7EB;
+border-radius: 4px;
+
+/* Inside auto layout */
+flex: none;
+order: 2;
+flex-grow: 0;
+
+
+/* Google */
+
+width: 24px;
+height: 24px;
+
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+
+
+/* Group */
+
+position: absolute;
+left: 1.56%;
+right: 0.71%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Clip path group */
+
+position: absolute;
+left: 1.56%;
+right: 0.71%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* B */
+
+position: absolute;
+left: 1.56%;
+right: 0.71%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 1.56%;
+right: 0.71%;
+top: 0%;
+bottom: 0%;
+
+background: #000000;
+
+
+/* Vector */
+
+position: absolute;
+left: -2.98%;
+right: 64.35%;
+top: 20.45%;
+bottom: 20.45%;
+
+background: #FBBC05;
+
+
+/* Clip path group */
+
+position: absolute;
+left: 1.56%;
+right: 0.71%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* B */
+
+position: absolute;
+left: 1.56%;
+right: 0.71%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 1.56%;
+right: 0.71%;
+top: 0%;
+bottom: 0%;
+
+background: #000000;
+
+
+/* Vector */
+
+position: absolute;
+left: -2.98%;
+right: -6.11%;
+top: -4.55%;
+bottom: 50%;
+
+/* Special/Red */
+background: #E73D1C;
+
+
+/* Clip path group */
+
+position: absolute;
+left: 1.56%;
+right: 0.71%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* B */
+
+position: absolute;
+left: 1.56%;
+right: 0.71%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 1.56%;
+right: 0.71%;
+top: 0%;
+bottom: 0%;
+
+background: #000000;
+
+
+/* Vector */
+
+position: absolute;
+left: -2.98%;
+right: -6.11%;
+top: -4.55%;
+bottom: -4.55%;
+
+background: #34A853;
+
+
+/* Clip path group */
+
+position: absolute;
+left: 1.56%;
+right: 0.71%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* B */
+
+position: absolute;
+left: 1.56%;
+right: 0.71%;
+top: 0%;
+bottom: 0%;
+
+
+
+/* Vector */
+
+position: absolute;
+left: 1.56%;
+right: 0.71%;
+top: 0%;
+bottom: 0%;
+
+background: #000000;
+
+
+/* Vector */
+
+position: absolute;
+left: 26.56%;
+right: -6.11%;
+top: 20.45%;
+bottom: -4.55%;
+
+background: #4285F4;
+
+
+/* Continue with Google */
+
+width: 164px;
+height: 24px;
+
+/* Regular 16-24 */
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 24px;
+/* identical to box height, or 150% */
+text-align: center;
+
+/* Gray/02 */
+color: #4B5768;
+
+
+#Create_Account_Button{
+  
+  
+  /* Create an account */
+
+width: 400px;
+height: 24px;
+
+/* Semibold 16-24 */
+font-family: 'Inter';
+font-style: normal;
+font-weight: 600;
+font-size: 16px;
+line-height: 24px;
+/* identical to box height, or 150% */
+text-align: center;
+
+/* Primary color */
+color: #299D91;
+
+
+
+}
+
