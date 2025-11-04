@@ -1,1 +1,1 @@
-I changed the Repository name to be 'FinSight_AI'
+I changed the Repository name to be 'FinSight_AI', now I'm using Github mobile 
