@@ -41,34 +41,34 @@ function WelcomePage(){
                 <div id='Password_Div'>
                   <div id='Password_Header'>
                     <p id='Password_Label'></p>
-                    <Link to="/Forgot_Password">Forgot Password?</Link>;                    
+                    <Link to="/Forgot_Password" id="Right_text">Forgot Password?</Link>;                    
                   </div>
                   <div  id='Password_Input'>
-                    <input />
-                    <button>
-                      <i className='fa fa-eye'></i>
+                    <input  id="text"/>
+                    <button id="Icon_eye_button">
+                      <i className='fa fa-eye' id ='Icon_eye'></i>
                     </button>
                   </div>
                 </div>
               </div>
-              <div id='Buttons'>
+              <div id='Button'>
                 <div id='Remind_ME'>
-                  <input  type='checkbox'/>
-                  <p>Keep me signed in</p>
+                  <input  type='checkbox' id="Tick"/>
+                  <p id="Keep_me_signed_in">Keep me signed in</p>
                 </div>
                 <button id='Login_Button'>Login</button>
               </div>
             </div>
             <div id='Divider_2'>
-              <hr />
-              <div>
-                <p>or sign in with</p>
+              <div  id="Line_10"></div>
+              <div id="Sign_in_with">
+                <p id="or_sign_in_with">or sign in with</p>
               </div>
             </div>
-            <div id="Continue_With_Google">
+            <button id="Button_Secondry">
               <img />
-              <p></p>
-            </div>
+              <p id="Continue_With_Google">Continue_With_Google</p>
+            </button>
           </div>
         </div>
         <button id="Create_Account_Button">Create an account</button>

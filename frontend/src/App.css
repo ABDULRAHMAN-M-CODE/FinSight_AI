@@ -1,4 +1,8 @@
 /* Frame 133539 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+body{
+background-color: #F4F5F7;
+}
 #Frame_133539 {
   display: flex;
   flex-direction: column;
@@ -283,7 +287,7 @@ color: #191D23;
 
 
 }
-
+#Right_text{
 /* Right text */
 
 margin: 0 auto;
@@ -302,12 +306,10 @@ text-align: right;
 color: #299D91;
 
 
-/* Inside auto layout */
-flex: none;
-order: 1;
-flex-grow: 0;
 
 
+}
+#Password_Input{
 /* Input */
 
 box-sizing: border-box;
@@ -327,12 +329,10 @@ height: 48px;
 border: 1px solid #D0D5DD;
 border-radius: 8px;
 
-/* Inside auto layout */
-flex: none;
-order: 1;
-flex-grow: 0;
 
 
+}
+#text{
 /* text */
 
 margin: 0 auto;
@@ -346,55 +346,25 @@ font-size: 4px;
 line-height: 24px;
 /* identical to box height, or 600% */
 letter-spacing: 1em;
-
+border:0;
 /* Gray/01 */
 color: #999DA3;
 
 
-/* Inside auto layout */
-flex: none;
-order: 0;
-flex-grow: 0;
+}
 
-
-/* Icon/eye */
-
+#Icon_eye_button{
 margin: 0 auto;
 width: 24px;
 height: 24px;
-
-
-/* Inside auto layout */
-flex: none;
-order: 1;
-flex-grow: 0;
-
-
-/* Vector */
-
-position: absolute;
-left: 8.33%;
-right: 8.33%;
-top: 20.83%;
-bottom: 20.83%;
-
-/* Gray/01 */
-border: 2px solid #999DA3;
-
-
-/* Vector */
-
-position: absolute;
-left: 37.5%;
-right: 37.5%;
-top: 37.5%;
-bottom: 37.5%;
-
-/* Gray/01 */
-border: 2px solid #999DA3;
-
-
-/* Button */
+display: flex;
+align-items: center;
+justify-content: center;
+background: none;
+border: none;
+}
+#Button{
+  /* Button */
 
 /* Auto layout */
 display: flex;
@@ -407,13 +377,11 @@ width: 400px;
 height: 88px;
 
 
-/* Inside auto layout */
-flex: none;
-order: 1;
-flex-grow: 0;
 
 
-/* Remind me */
+}
+#Remind_ME{
+  /* Remind me */
 
 /* Auto layout */
 display: flex;
@@ -425,83 +393,8 @@ gap: 16px;
 width: 264px;
 height: 24px;
 
-
-/* Inside auto layout */
-flex: none;
-order: 0;
-flex-grow: 0;
-
-
-/* Tick */
-
-width: 20px;
-height: 20px;
-
-
-/* Inside auto layout */
-flex: none;
-order: 0;
-flex-grow: 0;
-
-
-/* fill */
-
-position: absolute;
-left: 0%;
-right: 0%;
-top: 0%;
-bottom: 0%;
-
-/* Primary color */
-background: #299D91;
-border-radius: 2px;
-
-
-/* Icons/Outline/Checkmark */
-
-position: absolute;
-left: 0%;
-right: 0%;
-top: 0%;
-bottom: 0%;
-
-
-
-/* Shape */
-
-position: absolute;
-left: 12.5%;
-right: 12.5%;
-top: 25%;
-bottom: 20.83%;
-
-/* White */
-background: #FFFFFF;
-
-
-/* Keep me signed in */
-
-width: 228px;
-height: 24px;
-
-/* Light 16-24 */
-font-family: 'Inter';
-font-style: normal;
-font-weight: 300;
-font-size: 16px;
-line-height: 24px;
-/* identical to box height, or 150% */
-
-/* Black */
-color: #191D23;
-
-
-/* Inside auto layout */
-flex: none;
-order: 1;
-flex-grow: 0;
-
-
+}
+#Login_Button{
 /* Button/primary */
 
 /* Auto layout */
@@ -518,350 +411,37 @@ height: 48px;
 background: #299D91;
 border-radius: 4px;
 
-/* Inside auto layout */
-flex: none;
-order: 1;
-flex-grow: 0;
+}
+#Tick{
+ /* Tick */
 
-
-/* Label */
-
-width: 160px;
-height: 24px;
-
-/* Semibold 16-24 */
-font-family: 'Inter';
-font-style: normal;
-font-weight: 600;
-font-size: 16px;
-line-height: 24px;
-/* identical to box height, or 150% */
-text-align: center;
-
-/* White */
-color: #FFFFFF;
-
-
-/* Inside auto layout */
-flex: none;
-order: 0;
-flex-grow: 0;
-
-
-/* Devider */
-
-/* Auto layout */
-display: flex;
-flex-direction: column;
-align-items: center;
-padding: 0px;
-isolation: isolate;
-
-width: 128px;
-height: 36px;
-
-
-/* Inside auto layout */
-flex: none;
-order: 1;
-flex-grow: 0;
-
-
-/* Line 10 */
-
-position: absolute;
-width: 342px;
-height: 0px;
-left: calc(50% - 342px/2);
-top: 18px;
-
-opacity: 0.25;
-/* Gray/02 */
-border: 0.5px solid #4B5768;
-
-/* Inside auto layout */
-flex: none;
-order: 0;
-flex-grow: 0;
-z-index: 0;
-
-
-/* Sign in with */
-
-/* Auto layout */
-display: flex;
-flex-direction: row;
-align-items: flex-start;
-padding: 8px;
-gap: 8px;
-
-width: 128px;
-height: 36px;
-
-/* Special/Main BG */
-background: #F4F5F7;
-
-/* Inside auto layout */
-flex: none;
-order: 1;
-flex-grow: 0;
-z-index: 1;
-
-
-/* or sign in with */
-
-width: 112px;
+width: 20px;
 height: 20px;
 
-/* Regular 14-20 */
-font-family: 'Inter';
-font-style: normal;
-font-weight: 400;
-font-size: 14px;
-line-height: 20px;
-/* identical to box height, or 143% */
-text-align: center;
 
-/* Gray/01 */
-color: #999DA3;
+ 
+}
+#Keep_me_signed_in {
+  /* Keep me signed in */
 
-
-/* Inside auto layout */
-flex: none;
-order: 0;
-flex-grow: 0;
-
-
-/* Button/secondary */
-
-/* Auto layout */
-display: flex;
-flex-direction: row;
-justify-content: center;
-align-items: center;
-padding: 12px 69px;
-gap: 16px;
-
-width: 400px;
-height: 48px;
-
-/* Gray/04 */
-background: #E4E7EB;
-border-radius: 4px;
-
-/* Inside auto layout */
-flex: none;
-order: 2;
-flex-grow: 0;
-
-
-/* Google */
-
-width: 24px;
+width: 228px;
 height: 24px;
 
-
-/* Inside auto layout */
-flex: none;
-order: 0;
-flex-grow: 0;
-
-
-/* Group */
-
-position: absolute;
-left: 1.56%;
-right: 0.71%;
-top: 0%;
-bottom: 0%;
-
-
-
-/* Clip path group */
-
-position: absolute;
-left: 1.56%;
-right: 0.71%;
-top: 0%;
-bottom: 0%;
-
-
-
-/* B */
-
-position: absolute;
-left: 1.56%;
-right: 0.71%;
-top: 0%;
-bottom: 0%;
-
-
-
-/* Vector */
-
-position: absolute;
-left: 1.56%;
-right: 0.71%;
-top: 0%;
-bottom: 0%;
-
-background: #000000;
-
-
-/* Vector */
-
-position: absolute;
-left: -2.98%;
-right: 64.35%;
-top: 20.45%;
-bottom: 20.45%;
-
-background: #FBBC05;
-
-
-/* Clip path group */
-
-position: absolute;
-left: 1.56%;
-right: 0.71%;
-top: 0%;
-bottom: 0%;
-
-
-
-/* B */
-
-position: absolute;
-left: 1.56%;
-right: 0.71%;
-top: 0%;
-bottom: 0%;
-
-
-
-/* Vector */
-
-position: absolute;
-left: 1.56%;
-right: 0.71%;
-top: 0%;
-bottom: 0%;
-
-background: #000000;
-
-
-/* Vector */
-
-position: absolute;
-left: -2.98%;
-right: -6.11%;
-top: -4.55%;
-bottom: 50%;
-
-/* Special/Red */
-background: #E73D1C;
-
-
-/* Clip path group */
-
-position: absolute;
-left: 1.56%;
-right: 0.71%;
-top: 0%;
-bottom: 0%;
-
-
-
-/* B */
-
-position: absolute;
-left: 1.56%;
-right: 0.71%;
-top: 0%;
-bottom: 0%;
-
-
-
-/* Vector */
-
-position: absolute;
-left: 1.56%;
-right: 0.71%;
-top: 0%;
-bottom: 0%;
-
-background: #000000;
-
-
-/* Vector */
-
-position: absolute;
-left: -2.98%;
-right: -6.11%;
-top: -4.55%;
-bottom: -4.55%;
-
-background: #34A853;
-
-
-/* Clip path group */
-
-position: absolute;
-left: 1.56%;
-right: 0.71%;
-top: 0%;
-bottom: 0%;
-
-
-
-/* B */
-
-position: absolute;
-left: 1.56%;
-right: 0.71%;
-top: 0%;
-bottom: 0%;
-
-
-
-/* Vector */
-
-position: absolute;
-left: 1.56%;
-right: 0.71%;
-top: 0%;
-bottom: 0%;
-
-background: #000000;
-
-
-/* Vector */
-
-position: absolute;
-left: 26.56%;
-right: -6.11%;
-top: 20.45%;
-bottom: -4.55%;
-
-background: #4285F4;
-
-
-/* Continue with Google */
-
-width: 164px;
-height: 24px;
-
-/* Regular 16-24 */
+/* Light 16-24 */
 font-family: 'Inter';
 font-style: normal;
-font-weight: 400;
+font-weight: 300;
 font-size: 16px;
 line-height: 24px;
 /* identical to box height, or 150% */
-text-align: center;
 
-/* Gray/02 */
-color: #4B5768;
+/* Black */
+color: #191D23;
+
+
+
+}
+
 
 
 #Create_Account_Button{
@@ -883,6 +463,116 @@ text-align: center;
 
 /* Primary color */
 color: #299D91;
+
+
+
+}
+#Divider_2{
+  /* Devider */
+
+/* Auto layout */
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 0px;
+isolation: isolate;
+
+width: 128px;
+height: 36px;
+
+}
+#Line_10{
+/* Line 10 */
+
+position: absolute;
+width: 342px;
+height: 0px;
+left: calc(50% - 342px/2);
+top: 18px;
+
+opacity: 0.25;
+/* Gray/02 */
+border: 0.5px solid #4B5768;
+border:red;
+
+}
+#Sign_in_with {
+  /* Sign in with */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 8px;
+gap: 8px;
+
+width: 128px;
+height: 36px;
+
+/* Special/Main BG */
+background: #F4F5F7;
+
+/* Inside auto layout */
+
+z-index: 1;
+
+}
+#or_sign_in_with{
+  /* or sign in with */
+
+width: 112px;
+height: 20px;
+
+/* Regular 14-20 */
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 20px;
+/* identical to box height, or 143% */
+text-align: center;
+
+/* Gray/01 */
+color: #999DA3;
+}
+#Button_Secondry{
+  /* Button/secondary */
+
+/* Auto layout */
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+padding: 12px 69px;
+gap: 16px;
+
+width: 400px;
+height: 48px;
+
+/* Gray/04 */
+background: #E4E7EB;
+border-radius: 4px;
+
+
+}
+#Continue_With_Google{
+  /* Continue with Google */
+
+width: 164px;
+height: 24px;
+
+/* Regular 16-24 */
+font-family: 'Inter';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 24px;
+/* identical to box height, or 150% */
+text-align: center;
+
+/* Gray/02 */
+color: #4B5768;
+
 
 
 
