@@ -1,7 +1,30 @@
 /* Frame 133539 */
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 body{
-background-color: #F4F5F7;
+  background-color: #F4F5F7;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+}
+#app_name{
+  color:#299D91;
+  /* FINEbank.IO */
+
+width: 276px;
+height: 32px;
+
+font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 40px;
+line-height: 32px;
+/* identical to box height, or 80% */
+text-align: center;
+letter-spacing: 0.08em;
 }
 #Frame_133539 {
   display: flex;
@@ -134,6 +157,8 @@ padding: 0px;
 gap: 24px;
 width: 400px;
 height: 436px;
+
+margin-top:-5rem;
 }
 #Login{
 /* Login */
@@ -192,8 +217,8 @@ line-height: 24px;
 
 /* Black */
 color: #191D23;
-
-
+width:auto;
+margin-bottom: -5px;
 
 }
 #Email_Input{
@@ -215,6 +240,7 @@ height: 48px;
 border: 1px solid #4B5768;
 border-radius: 8px;
 
+background-color: #F4F5F7;
 
 }
 #Email_Input::placeholder{
@@ -284,7 +310,9 @@ line-height: 24px;
 
 /* Black */
 color: #191D23;
-
+width: auto;
+position:relative;
+left: -31px;
 
 }
 #Right_text{
@@ -301,11 +329,10 @@ font-size: 12px;
 line-height: 16px;
 /* identical to box height, or 133% */
 text-align: right;
-
 /* Primary color */
 color: #299D91;
-
-
+position:relative;
+right: -40px;
 
 
 }
@@ -342,14 +369,15 @@ height: 24px;
 font-family: 'Inter';
 font-style: normal;
 font-weight: 400;
-font-size: 4px;
+
 line-height: 24px;
 /* identical to box height, or 600% */
-letter-spacing: 1em;
-border:0;
-/* Gray/01 */
-color: #999DA3;
+letter-spacing: 1em; /*spacing between alphabets */
 
+/* Gray/01 */
+color: black;
+border: none;
+background-color: #F4F5F7;
 
 }
 
@@ -362,6 +390,10 @@ align-items: center;
 justify-content: center;
 background: none;
 border: none;
+color: #999DA3;
+}
+#Icon_eye_button:hover{
+  color:#007BFF;
 }
 #Button{
   /* Button */
@@ -418,8 +450,9 @@ border-radius: 4px;
 width: 20px;
 height: 20px;
 
-
- 
+}
+#Tick:checked{
+  accent-color: #299D91;
 }
 #Keep_me_signed_in {
   /* Keep me signed in */
@@ -488,12 +521,12 @@ position: absolute;
 width: 342px;
 height: 0px;
 left: calc(50% - 342px/2);
-top: 18px;
+top: 30.5rem;
 
 opacity: 0.25;
 /* Gray/02 */
 border: 0.5px solid #4B5768;
-border:red;
+
 
 }
 #Sign_in_with {
@@ -516,6 +549,15 @@ background: #F4F5F7;
 
 z-index: 1;
 
+}
+#Creat_account{
+  position:relative;
+  left: 8rem;
+  top: 1rem;
+}
+#gogle_icon{
+  border-radius: 50%;
+  border: transparent;
 }
 #or_sign_in_with{
   /* or sign in with */
@@ -569,12 +611,15 @@ font-size: 16px;
 line-height: 24px;
 /* identical to box height, or 150% */
 text-align: center;
-
+width: auto;
 /* Gray/02 */
 color: #4B5768;
 
 
 
 
+}
+#Create_Account_Button{
+  
 }
 
