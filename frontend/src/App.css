@@ -239,9 +239,9 @@ height: 48px;
 /* Gray/02 */
 border: 1px solid #4B5768;
 border-radius: 8px;
-
+color: black;
 background-color: #F4F5F7;
-
+font-size: 1.1rem;
 }
 #Email_Input::placeholder{
 
