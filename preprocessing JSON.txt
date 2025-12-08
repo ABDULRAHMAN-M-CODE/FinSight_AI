@@ -1,0 +1,73 @@
+Input : JSON frontend
+Output : Processed JSON
+
+
+
+
+***Preprocessing Rules (field by field ) **
+
+
+
+A. household_income
+Requires preprocessing? YES
+
+Why?
+Incoming values are strings, inconsistent formats, missing fields possible.
+
+Preprocessing you must do:
+- Convert annual_income → number
+- Sum total household income
+- Normalize income_source to lowercase
+- Remove empty members
+
+Example:
+Input: "annual_income": "45000"
+Output: 45000.0
+
+
+B. monthly_budget
+Requires preprocessing? YES
+
+Preprocessing:
+- Convert to float
+- Detect impossible values (negative, unrealistic > $1M)
+
+
+C. investment_accounts
+Requires preprocessing? YES
+
+You do:
+- Convert current_balance → float
+- Drop accounts with 0 or negative balances
+- Normalize type names (“401k”, “IRA”, “Bank Savings”)
+- Do NOT calculate returns (LLM will do it)
+
+
+D. outstanding_debts
+Requires preprocessing? YES
+
+You do:
+- Convert balance, monthly_payment, interest_rate → floats
+- Detect inconsistent inputs (e.g., payment > balance)
+- Add computed field “annual_interest_cost”
+
+Formula:
+annual_interest_cost = balance * (interest_rate / 100)
+
+
+E. life_insurance
+Requires preprocessing? YES
+
+You do:
+- Convert death_benefit, cash_value, monthly_premium → floats
+- Normalize insurance_type strings
+- Add boolean: has_cash_value = cash_value > 0
+  (CFP rules treat Term vs Whole Life differently)
+
+
+F. financial_goals
+Requires preprocessing? NO
+
+Text fields → pass directly.
+Only check:
+- If empty → replace with "none"
