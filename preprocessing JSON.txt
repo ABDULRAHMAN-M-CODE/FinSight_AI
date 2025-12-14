@@ -1,5 +1,5 @@
-Input : JSON frontend
-Output : Processed JSON
+Input : JSON1 from  frontend
+Output : Processed JSON2
 
 
 
@@ -16,7 +16,7 @@ Incoming values are strings, inconsistent formats, missing fields possible.
 
 Preprocessing you must do:
 - Convert annual_income → number
-- Sum total household income
+- Sum total household income → only sum is shown in JSON2 , not individuals income 
 - Normalize income_source to lowercase
 - Remove empty members
 
@@ -38,9 +38,9 @@ Requires preprocessing? YES
 
 You do:
 - Convert current_balance → float
-- Drop accounts with 0 or negative balances
+- Drop accounts with 0 or negative balances → so they are not shown in JSON2
 - Normalize type names (“401k”, “IRA”, “Bank Savings”)
-- Do NOT calculate returns (LLM will do it)
+- Do NOT calculate returns 
 
 
 D. outstanding_debts
@@ -49,7 +49,7 @@ Requires preprocessing? YES
 You do:
 - Convert balance, monthly_payment, interest_rate → floats
 - Detect inconsistent inputs (e.g., payment > balance)
-- Add computed field “annual_interest_cost”
+- Add computed field “annual_interest_cost” 
 
 Formula:
 annual_interest_cost = balance * (interest_rate / 100)
