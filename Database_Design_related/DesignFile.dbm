@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+ Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="1.2.2" use-changelog="false" max-obj-count="4"
+	 gen-disabled-objs-code="false" show-sys-schemas-rects="true"
+	 last-position="137,81" last-zoom="1"
+	 default-schema="public" default-owner="postgres"
+	 layers="Default layer"
+	 active-layers="0"
+	 layer-name-colors="#000000"
+	 layer-rect-colors="#b4b4b4"
+	 show-layer-names="false" show-layer-rects="false">
+<database name="new_database" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layers="0" fill-color="#e1e1e1" name-color="#000000" sql-disabled="true">
+</schema>
+
+<table name="FINANCIAL_PROFILE_JSON2" layers="0" alias="Table1" collapse-mode="1" max-obj-count="12" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="380" y="400"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+		<comment> <![CDATA[identification number of user]]> </comment>
+	</column>
+	<column name="Name" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="email" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="total_household_income" not-null="true">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="monthly_budget" not-null="true">
+		<type name="numeric" length="0"/>
+	</column>
+	<column name="income_sources">
+		<type name="jsonb" length="0"/>
+	</column>
+	<column name="investments_accounts">
+		<type name="jsonb" length="0"/>
+	</column>
+	<column name="outstanding_depts">
+		<type name="jsonb" length="0"/>
+	</column>
+	<column name="life_insurence">
+		<type name="jsonb" length="0"/>
+	</column>
+	<column name="financial_goals">
+		<type name="jsonb" length="0"/>
+	</column>
+	<constraint name="my_table_pk" type="pk-constr" table="public.&quot;FINANCIAL_PROFILE_JSON2&quot;">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="email_constraint" type="uq-constr" table="public.&quot;FINANCIAL_PROFILE_JSON2&quot;">
+		<columns names="email" ref-type="src-columns"/>
+		<comment> <![CDATA[This email should not be duplicated]]> </comment>
+	</constraint>
+	<constraint name="name_constraints" type="uq-constr" table="public.&quot;FINANCIAL_PROFILE_JSON2&quot;">
+		<columns names="Name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="AI_response_JSON3" layers="0" collapse-mode="2" max-obj-count="0" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="920" y="460"/>
+</table>
+
+</dbmodel>

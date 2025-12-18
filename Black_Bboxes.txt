@@ -1,39 +1,51 @@
 
 
 
-Entire System blocks (ممكن يزيدو) :
+**********Entire system***************
 
 
 
-1-Questionnaire Input UI
+Questionnaire Input UI  			(finished design only , not implementation)
 
-2-Limited Personalized Advice (anonymous mode)
 
-3-Signup Module
 
-4-Login Module
+Signup Module 			       		(finished design only , not implementation)
 
-5-User Session / Auth State Module // optional 
+Login Module 					(finished design only , not implementation)
 
-6-Preprocessing Module
+ 
 
-7-Full LangChain Pipeline Module
+-Preprocessing Module				(finished design only , not implementation)
 
-8-Retrieval / Vector DB Module (optional but included)
 
-9-User Data Storage Module (DB models + CRUD)
 
-10-Dashboard 1 — Main Overview Dashboard
 
-11-Dashboard 2 — Goals & Planning Dashboard
 
-12-Dashboard 3 — Alerts & Trends Dashboard
 
-13-Update Inputs / Run New Analysis Module
 
-14-what if Simulation Module 
 
-and  maybe more ........
+Limited Personalized Advice (anonymous mode) (Done , its for unknown user that did not sign up yet , or if he is logged out)
+
+------------------------------------------------------------------------------------------------
+The following services are shown if and only if the user is singed up 
+
+-Dashboard 1 — Main Overview Dashboard		(finished design only , not implementation)
+
+-Dashboard 2 — Goals & Planning Dashboard	(finished design only , not implementation)
+
+-what if Simulation Module 		        (finished design only , not implementation)
+
+-Update Inputs / Run New Analysis Module      (nothing is done)
+
+----------------------------------------------------------------------------------------------------
+
+-Full LangChain Pipeline Module		(not Done )
+
+- subset of LangChain modules 		(not done)
+
+- Database design 			(not done)
+
+-Retrieval / Vector DB Module 		 (not Done)
 
 
 
