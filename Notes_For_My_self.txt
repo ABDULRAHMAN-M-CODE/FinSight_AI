@@ -1,3 +1,23 @@
-I should modify the following prompt to consider What is exactly the user info JSON's content  and what is Exactly JSON3 contents (JSON Returned By the LLM)
+Ahmad Don't Read this File.
 
-here is the prompt "I uploaded a screenshot of the pgModeler 1.2.2 interface. I have zero experience in database design and no experience making ERD diagrams. I need to design a database for my project. So far, I know I need to store: AI recommendations (content from JSON files) User information (content from JSON files) Based on the project description I previously uploaded in the .docx file, are there any other data elements I should store? Please guide me step by step like a professional database designer, including: Which tables to create Their fields and types Relationships between tables Any best practices I should follow Make the guidance practical and beginner-friendly, so I can implement it in pgModeler efficiently."
+This File is for ME only .
+
+/////////////////////////////////////////////////////////////////////////////////
+
+
+*********next thing to work on ********
+
+1-Design the prompts that will be Sent to the LLM , You should design the prompt to let ChatGPT give us all the Data We Need for Each UI 
+2-Should I make a single Big Prompt or multiple Prompts ? 
+3- After I know what the AI will Return , how to Design DB ? Do I need to store every thing returned by LLM or just store some specific things ? 
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+****Some info Keep info  in Mind ****
+langGraph  workflow To build context-aware alerts behavior is :
+- Node 1: Retrieve DB history
+- Node 2: Call LLM → “Analyze this data for risky financial patterns”
+- Node 3: LLM output → Decide if alert is needed
+- Node 4: Call LLM again → “Generate advice email text”
+- Node 5: Send email

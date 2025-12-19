@@ -2,20 +2,20 @@
 
 
 **********Entire system***************
+This File Describes the components of my System , alongside with info to say if it's planning is finished or not .
+
+
+Questionnaire Input UI  			(finished design only , not implementation)(Flowchart explains it)
 
 
 
-Questionnaire Input UI  			(finished design only , not implementation)
+Signup Module 			       		(finished design only , not implementation)(Flowchart explains it)
 
-
-
-Signup Module 			       		(finished design only , not implementation)
-
-Login Module 					(finished design only , not implementation)
+Login Module 					(finished design only , not implementation)(Flowchart explains it)
 
  
 
--Preprocessing Module				(finished design only , not implementation)
+-Preprocessing Module				(finished design only , not implementation) (Flowchart explains it)
 
 
 
@@ -35,18 +35,31 @@ The following services are shown if and only if the user is singed up
 
 -what if Simulation Module 		        (finished design only , not implementation)
 
--Update Inputs / Run New Analysis Module      (nothing is done)
+-Update Inputs / Run New Analysis Module      (finished design only , not implementation)
 
 ----------------------------------------------------------------------------------------------------
 
--Full LangChain Pipeline Module		(not Done )
-
-- subset of LangChain modules 		(not done)
-
 - Database design 			(not done)
 
--Retrieval / Vector DB Module 		 (not Done)
+-Full LangChain Pipeline Module		(not Done ).
 
+- subset of LangChain modules 		(not done)(Flowchart explains it, but it's not designed it ).
+
+-Retrieval / Vector DB Module : context awareness (not Done) → I think I will use LangGraph , not LangChain .
+ -Agentic behavior 			(not done)
+
+Agentic behavior description : the only Agentic behavior currently in our system is   continuously monitoring the Db to discover  patterns of Financial behaviors and send emails based on that 
+
+
+
+
+
+
+
+the following is also (not done ).
+
+- CI/CD & testing: Unit/integration/e2e tests, pipelines, staging environment.
+- Deployment & infra: Containerization, orchestration (Docker/K8s), CDN, load balancer.
 
 
 
