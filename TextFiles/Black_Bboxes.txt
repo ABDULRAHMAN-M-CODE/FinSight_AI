@@ -39,13 +39,13 @@ The following services are shown if and only if the user is singed up
 
 ----------------------------------------------------------------------------------------------------
 
-- Database design 			(not done)
+1- Database design 			(not done)
 
--Full LangChain Pipeline Module		(not Done ).
+2-Full LangChain Pipeline Module		(not Done ).
 
-- subset of LangChain modules 		(not done)(Flowchart explains it, but it's not designed it ).
+3- subset of LangChain modules 		(not done)(Flowchart explains it, but it's not designed it ).
 
--Retrieval / Vector DB Module : context awareness (not Done) → I think I will use LangGraph , not LangChain .
+4-Retrieval / Vector DB Module : context awareness (not Done) → I think I will use LangGraph , not LangChain .
  -Agentic behavior 			(not done)
 
 Agentic behavior description : the only Agentic behavior currently in our system is   continuously monitoring the Db to discover  patterns of Financial behaviors and send emails based on that 
