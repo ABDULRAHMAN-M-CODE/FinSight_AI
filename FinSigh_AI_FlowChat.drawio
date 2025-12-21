@@ -537,6 +537,11 @@
         <mxCell id="bphaHdjWv-R5DhJj-cas-39" value="&lt;font color=&quot;#ff3333&quot;&gt;the file is inside the project folder&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="330" y="750" width="210" height="40" as="geometry" />
         </mxCell>
+        <mxCell id="6f5GTl90_5h3AefDp_H0-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="bphaHdjWv-R5DhJj-cas-41">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="519.2222222222222" y="1140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="bphaHdjWv-R5DhJj-cas-41" value="we got&amp;nbsp;Finalize JSON2" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="460" y="1060" width="120" height="30" as="geometry" />
         </mxCell>
