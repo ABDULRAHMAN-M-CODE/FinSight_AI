@@ -1,0 +1,76 @@
+┌────────────────────┐
+│     CRON JOBS      │ 1. Hourly Trigger
+│ "0 * * * *"        │──────────────┐
+└─────────┬──────────┘               │
+         │                           │
+         ▼                           │
+┌────────────────────┐               │
+│    STATEGRAPH      │◄── Orchestrates workflow
+│ (Workflow Engine)  │               │
+│ per-user thread    │               │
+└─────────┬──────────┘               │
+         │                           │
+         ▼ 2. Invoke Node            │
+┌────────────────────┐               │
+│ @TOOL w/ TOOLRUNTIME│◄── SQL Queries
+│ get_transactions() │               │
+│ Input: user_id,    │──────────────┘
+│ since=state.last_run│
+└─────────┬──────────┘
+          │ 3. Raw Txns
+          ▼
+┌────────────────────┐
+│   BASESTORE.SEARCH │◄── Semantic Patterns
+│ ("unusual dining") │
+│ Input: query, ns=  │
+│ ("user_123", "txns")│
+└─────────┬──────────┘
+          │ 4. Historical Patterns
+          ▼
+┌────────────────────┐
+│   STATEGRAPH       │◄── LLM Analysis
+│ (Decision Node)    │
+│ "Pattern Match?"   │
+└─────────┬──────────┘
+          │
+     ┌────▼────┐
+     │  NO     │───► END
+     └────┬────┘
+          │ YES
+          ▼ 5. Alert Generated
+┌────────────────────┐
+│ @TOOL w/ TOOLRUNTIME│◄── Store Alert
+│ store_alert()      │
+└─────────┬──────────┘
+          │ 6. Alert Persisted
+          ▼
+┌────────────────────┐
+│   POSTGRESAVER     │◄── State Update
+│ state.last_run     │
+│ state.last_alert_id│
+└────────────────────┘ 7. State Saved
+
+
+
+
+
+
+END_TO END DATA FLOW 
+
+Raw PG Data ──@tool──► Structured Txns ──BaseStore──► Semantic Patterns
+     ↓                                           ↓
+StateGraph ───────────────────────────────────────► LLM Context
+     ↓                                           ↓
+PostgresSaver ──Persisted State ─────────────────► Next Iteration Context
+
+
+
+
+
+Precision Notes:
+
+Thread isolation: thread_id="user_{id}_monitor" → user-specific state
+Deduplication: state.last_alert_id + BaseStore.search(since=last_run)
+Context awareness: Combines user_profile + historical_patterns + recent_txns
+Non-blocking: Cron → Queue → StateGraph → Async tool calls
+Implementation Ready. Deploy via langgraph.json with these exact components.
