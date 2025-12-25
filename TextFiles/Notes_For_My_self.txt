@@ -7,15 +7,18 @@ This File is for ME only .
 
 *********next thing to work on ********
 
+
+Some model providers offer built-in tools that can be enabled via model or invocation parameters (e.g. ChatOpenAI, ChatAnthropic). Check the respective provider reference for details.
+////////////////////////////////
 1-Design the prompts that will be Sent to the LLM , You should design the prompt to let ChatGPT give us all the Data We Need for Each UI 
-2-Should I make a single Big Prompt or multiple Prompts ? 
-3- After I know what the AI will Return , how to Design DB ? Do I need to store every thing returned by LLM or just store some specific things ? 
+ make multiple invokations 
+3- After I know what the AI will Return , how to Design DB ? Do I need to store every thing returned by LLM or just store some specific things ? How Many Tables the Db should contain ? 
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
 ****Some info Keep info  in Mind ****
-langGraph  workflow To build context-aware alerts behavior is :
+langGraph  workflow To build context-aware alerts behavior is something like  :
 - Node 1: Retrieve DB history
 - Node 2: Call LLM → “Analyze this data for risky financial patterns”
 - Node 3: LLM output → Decide if alert is needed
