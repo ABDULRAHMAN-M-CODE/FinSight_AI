@@ -1,0 +1,88 @@
+
+
+ Project Proposal
+
+
+
+
+
+
+
+
+Project’s title	AI-Powered Personalized Financial Advisor
+Project Summary	
+ Managing personal finances is a major challenge for many individuals, as financial goals, spending habits, and unexpected expenses often lead to overspending and ineffective saving strategies. Existing financial apps provide static budgets or generic advice, but they do not offer adaptive recommendations based on individual user behavior or goals.
+
+
+This project aims to develop a web-based application that leverages AI to deliver personalized financial recommendations, adaptive alerts, progress tracking dashboards, and financial simulations. By analyzing user inputs, spending patterns, and historical data, the system provides actionable insights and guidance to help users achieve savings and investment goals.
+
+Methodology
+•	Conduct a literature review on AI-based financial advisors, personal finance management apps, and alerting systems.
+•	Enhance skills in AI reasoning, LangChain programming, and data integration with databases.
+•	Implement AI reasoning using ChatGPT API + LangChain for personalized recommendations and alerts.
+•	Design and develop a web application for interactive dashboards and user interfaces 
+•	Integrate frontend with backend and AI logic to display dashboards, alerts, and simulations.
+•	Test, debug, and iterate on AI reasoning, alerting accuracy, and dashboard visualization
+•	Final Documentation and Reporting
+
+Objectives
+•	Provide personalized financial advice based on user goals and historical behavior.
+•	Generate adaptive alerts for budget monitoring and goal achievement.
+•	Enable users to run what-if financial simulations for informed decision-making.
+•	Maintain a history of user inputs and AI recommendations to continuously improve personalization.
+•	There is another Optional Idea, to integrate bank account of the user , so that to somehow make a fake account with fake money, and then the Platform should detect patterns in changing of the Account information and potentially sending alerts or emails to the user .
+
+Execution Workflow and Algorithm   
+     Initially, there is two states or cases, first case, let’s call it “Limited Service”, when the user is unknown and considered logged out or he did not even do a signup yet, second case which called “Full service” is when the user is known.
+
+The Limited service is explained as follows: 
+
+1-	Questionnaire UI is shown to the User, after user fill answers, JSON will be produced, let’s call it JSON1, which is client-side validated JSON by React frontend, but it’s not Server-side validated yet, i.e., it’s not preprocessed yet.
+2-	JSON1 is forwarded to the backend, which is considered FastAPI, then the FastAPI will preprocess JSON1 to produce a processed JSON called JSON2, this JSON2 is server-side validated, the JSON2 content’s is considered the validated-user info, and it will be stored somehow in the database only and only if the user completed the signup process successfully.
+3-	JSON2 will be passed as Input to the LangChain or LangGraph Modules  , the output  should be JSON that is returned by the LLM, this JSON is called JSON3, JSON3’s content will be considered the AI advice that follows CFP board standards ethics , this Advice  will be a stored in the database only and only if the user completed the signup process  and will be used to feed the various UI’s and interfaces  and dashboards that are previously designed and implemented .
+4-	The Limited Advice UI consists of just one interface, that interface will provide limited services, with some option offering signup feature to the user via button that is called ‘Save and Continue’, then the user will be guided or routed to the signup page, if he manages to sign up successfully, the JSON2’s and JSON3’s contents should be stored in the DB  , also after successful sign up, the user will be automatically logged in so there is no need to show the log in page,  if the ‘Save and Continue’ button is pressed and the user already has account but it happened that he is logged out , the Login Page should be shown , in either successful Signup or Successful Login , some interface must be shown , let’s call it ‘DashBoard1’, if ‘DashBoard1’ is  managed to be shown, then that means the System reached the “Full service” case or mode.
+5-	For the “Full service” mode or case, it will be planned for later, planning did not finish yet for this mode.
+ 
+  Project’s Services
+   
+•	Provide financial recommendations 
+•	Monitor goal progress and detect unusual trends
+•	Send smart, context -aware alerts to users
+•	Store user data and historical records
+•	Ethical compliance
+
+     
+     
+     
+
+
+ Important References
+•	Morgan Stanly Questions 
+•	CFP Board standards documentation
+•	React documentation 
+•	Fast API documentation
+•	LangChain documentation
+•	OpenAI  documentation
+
+Engineering Standards to be used :LangChain, LangGraph, FastAPI, PostgreSQL, React.
+	 
+
+
+
+•	Software Tools or IDEs
+•	Software or Hardware Programming Languages
+•	Databases will 
+•	Data Sets	
+IDEs and tools: Visual Studio Code, pgModeler, etc.
+      Programming Languages: TypeScript, TSX, CSS, Python, SQL, etc.
+
+
+
+Database: PostgreSQL.
+
+Data: AI advice will be based on history of user info and all past AI recommendations.  
+Final Deliverables	A full-scale, production-ready system engineered for real deployment and real users. This project is explicitly designed to deliver direct industry value, not to function as a basic academic submission. It must operate at a professional standard: complete architecture, robust infrastructure, financial-grade accuracy, high reliability, and seamless user experience.
+Its purpose is to give its creator true industry-level expertise and measurable return: a product that attracts real users, generates real revenue, and serves as a portfolio centerpiece strong enough on its own to secure employment. This is a commercially viable, end-to-end financial technology platform built to succeed in the market.
+
+
+     

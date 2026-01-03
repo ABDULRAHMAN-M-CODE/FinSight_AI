@@ -6,11 +6,21 @@ This File is for ME only .
 
 
 
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+## THING TO WORK ON.
+
+
+
 /////////////////////////////////////////////////////////////////////////////////
 
-## FIRST THING TO WORK ON.
+## Continuous Monitoring for DB +Alerts (is it Fully Agentic , compound Ai , or programmatic ? )
 
-Continuous DB monitoring  for generating alerts via email, need 5 components  : 
+Continuous DB monitoring  for generating alerts via email, need 5 components  :
 
 
 
@@ -18,7 +28,9 @@ Continuous DB monitoring  for generating alerts via email, need 5 components  :
 
 
 
-1-automated workflow (Engine)							→ StateGraph orchestration 
+1-automated workflow (Engine)							→ StateGraph orchestration
+
+
 
 5-Memory									→ PostgresSaver checkpointer
 
@@ -36,29 +48,17 @@ Continuous DB monitoring  for generating alerts via email, need 5 components  :
 
 
 
-
-
-
-
 5- means : It means that even if a pattern was unusual in the past, once the system has processed it, it won’t treat the same instance as new or alert-worthy again.
 
 //////////////////////////////////////////////////////////////////////
 
+### THING TO WORK ON.
 
+1-Design the prompts that will be Sent to the LLM , You should design the prompt to let ChatGPT give us all the Data We Need for Each UI
 
-### SECOND THING TO WORK ON.
+ make multiple invocations
 
-
-
-1-Design the prompts that will be Sent to the LLM , You should design the prompt to let ChatGPT give us all the Data We Need for Each UI 
-
-&nbsp;make multiple invocations 
-
-3- After I know what the AI will Return , how to Design DB ? Do I need to store every thing returned by LLM or just store some specific things ? How Many Tables the Db should contain ? 
-
-
-
-
+3- After I know what the AI will Return , how to Design DB ? Do I need to store every thing returned by LLM or just store some specific things ? How Many Tables the Db should contain ?
 
 
 
