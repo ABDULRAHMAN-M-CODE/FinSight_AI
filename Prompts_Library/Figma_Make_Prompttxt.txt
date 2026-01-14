@@ -1,4 +1,4 @@
-Given that The UI that you designed for me consists of the following  , nothing else "A clean header with the FinanceHub branding and navigation
+Given that The UI that is uploaded to you   consists of the following  , "A clean header with the FinanceHub branding and navigation
 Three key stat cards showing Investment Value ($244,400), Total Returns (+$48,200), and Portfolio Risk Level
 The full Investment Performance component with interactive bar charts, toggleable time periods ( yearly only), and detailed account breakdowns
 Color-coded risk levels, animated tooltips, and smooth micro-interactions throughout" ,you Must not assume that the UI include any thing else.

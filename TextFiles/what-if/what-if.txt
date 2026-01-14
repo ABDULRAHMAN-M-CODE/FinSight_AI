@@ -1,0 +1,40 @@
+**The what-if simulation does not modify your core financial tables, but it adds to the system's persistence and memory layers to enable semantic search and auditability.**
+
+To maintain the constraint of "no real-world actions," the service treats your core tables (`investment_accounts`, `user_financial_data`) as read-only. However, it writes to three specific areas to support its agentic behavior:
+
+### 1. LangGraph Checkpoints (Persistence)
+When using `PostgresSaver`, LangGraph automatically creates and manages its own internal tables (typically `checkpoints`, `checkpoint_blobs`, and `checkpoint_writes`). 
+
+These tables store the `SimulationState` at every step. This is critical for:
+- **Fault Tolerance**: Resuming a 12-iteration simulation if the server restarts.
+- **Auditability**: Keeping a permanent record of exactly which assumptions the AI tested.
+
+### 2. Semantic Memory (`BaseStore`)
+To fulfill the requirement of "searching historical simulations to avoid duplicates," the final result of a simulation is saved to a store. While this can be a separate vector database, LangGraph's `BaseStore` allows you to save these outcomes in Postgres.
+
+```python
+# Saving the final result to the Store for future semantic lookups
+store.put(
+    ("user_123", "simulations"), 
+    simulation_hash, 
+    {"input": scenario_text, "output": sim_summary}
+)
+```
+
+### 3. Application Tables (Advice Record)
+To ensure the simulation results are available for the user to view later in the UI, the service should write the final "interpreted results" to the existing `limited_advice` table:
+
+- **`limited_advice`**: New rows are added here with the `recommendations` and `projections` JSONB fields populated by the simulation output. This treats a "What-If" as a specific type of advice the user requested.
+
+### Tables Not Modified
+To ensure safety and accuracy, the following tables are **never** updated by the simulation:
+- `investment_accounts`: Simulation values are purely hypothetical.
+- `user_financial_data`: The user's actual budget remains unchanged.
+- `health_score_snapshots`: Historical health is not impacted by "what-if" scenarios.
+
+The simulation essentially "shadows" your database—reading the real data to build a baseline, but writing its "imaginary" results only to advice and persistence tables.
+
+**Relevant docs:**
+- [Persistence in LangGraph](https://docs.langchain.com/oss/python/langgraph/persistence)
+- [BaseStore for Semantic Memory](https://docs.langchain.com/oss/python/langgraph/persistence#memory-store)
+- [How to add persistence to your agent](https://docs.langchain.com/oss/python/langgraph/how-tos/persistence)
