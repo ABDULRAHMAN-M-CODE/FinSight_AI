@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finadvisor-beat
+  namespace: finadvisor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finadvisor-beat
+  template:
+    metadata:
+      labels:
+        app: finadvisor-beat
+    spec:
+      containers:
+        - name: beat
+          image: your-registry/your-image@sha256:REPLACE_DIGEST
+          command: ["celery", "-A", "app.celery_app.celery_app", "beat", "--loglevel=info"]
+          envFrom:
+            - secretRef:
+                name: finadvisor-secrets

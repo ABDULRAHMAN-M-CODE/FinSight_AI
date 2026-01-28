@@ -1,0 +1,90 @@
+name: CI / CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          pytest -q
+
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        if: secrets.DOCKERHUB_USERNAME != ''
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build image
+        run: |
+          docker build -t ${GITHUB_REPOSITORY##*/}:latest .
+
+      - name: Push image to Docker Hub
+        if: secrets.DOCKERHUB_USERNAME != ''
+        run: |
+          docker tag ${GITHUB_REPOSITORY##*/}:latest ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.repository }}:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.repository }}:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+    # INPUT: kubeconfig (provided by DevOps)
+    # OUTPUT: ~/.kube/config for kubectl
+      - name: Configure Kubernetes access
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG_BASE64 }}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+
+
+    # INPUT: deployment + HPA manifests
+    # OUTPUT: desired workload state stored in cluster
+      - name: Apply application manifests
+        run: |
+          kubectl apply -f k8s/
+
+    # OUTPUT: verified zero-downtime rollout
+    #This step waits for all Kubernetes Deployments to finish updating successfully and fails the CI pipeline if any rollout does not complete within 180 seconds.
+      - name: Verify rollouts
+        run: |
+          kubectl rollout status deployment/finadvisor-web -n finadvisor --timeout=180s
+          kubectl rollout status deployment/finadvisor-worker -n finadvisor --timeout=180s
+          kubectl rollout status deployment/finadvisor-beat -n finadvisor --timeout=180s
+          

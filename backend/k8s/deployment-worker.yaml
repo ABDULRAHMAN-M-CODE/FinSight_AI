@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finadvisor-worker
+  namespace: finadvisor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finadvisor-worker
+  template:
+    metadata:
+      labels:
+        app: finadvisor-worker
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: worker
+          image: your-registry/your-image@sha256:REPLACE_DIGEST
+          command: ["celery", "-A", "app.celery_app.celery_app", "worker", "--loglevel=info"]
+          envFrom:
+            - secretRef:
+                name: finadvisor-secrets
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
