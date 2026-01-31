@@ -1,22 +1,25 @@
+--File 2--
+-- THERE IS NO AI USED AT ALL IN THE CREATION OF THIS FILE --
 -- ** Database generated with pgModeler (PostgreSQL Database Modeler).
 -- ** pgModeler version: 1.2.2
 -- ** PostgreSQL version: 18.0
 -- ** Project Site: pgmodeler.io
--- ** Model Author: ---
+-- ** Model Author:  عبدالرحمن اشرف  ---
 
--- ** Database creation must be performed outside a multi lined SQL file. 
--- ** These commands were put in this file only as a convenience.
+-- ** COMMENT 1 : Database creation must be performed outside a multi lined SQL file. 
+-- **  COMMENT 2 : These commands were put in this file only as a convenience.
 
 -- object: new_database | type: DATABASE --
 -- DROP DATABASE IF EXISTS new_database;
-CREATE DATABASE new_database;
+ 
+CREATE DATABASE new_database; -- Question A to chatGPT: after I execute this , will next SQL commands be executed in the new_database or other database  ?  --
 -- ddl-end --
 
 
-SET check_function_bodies = false;
+SET check_function_bodies = false;-- what is this ?  --
 -- ddl-end --
 
-SET search_path TO pg_catalog,public;
+SET search_path TO pg_catalog,public;-- what is this ? --
 -- ddl-end --
 
 -- object: public.users | type: TABLE --
@@ -35,6 +38,7 @@ CREATE TABLE public.users (
 	CONSTRAINT id PRIMARY KEY (id),
 	CONSTRAINT disallow_repeated_emails UNIQUE (email)
 );
+-- THE FOLLOWINGS ARE CONSIDERED AS COMMENTS AND DO NOT AFFECT THE DATABASE STRUCTURE--
 -- ddl-end --
 COMMENT ON COLUMN public.users.password_hash IS E'computed by backend';
 -- ddl-end --
@@ -46,7 +50,7 @@ COMMENT ON COLUMN public.users.email_verified IS E'Related to Signup';
 -- ddl-end --
 COMMENT ON COLUMN public.users.email_verified_at IS E'BACKEND COMPUTED (on verification)';
 -- ddl-end --
-COMMENT ON COLUMN public.users.last_login_at IS E'🖥️ BACKEND COMPUTED (on login)';
+COMMENT ON COLUMN public.users.last_login_at IS E'BACKEND COMPUTED (on login)';
 -- ddl-end --
 ALTER TABLE public.users OWNER TO postgres;
 -- ddl-end --
@@ -67,6 +71,7 @@ BEGIN
   NEW.updated_at = CURRENT_TIMESTAMP;
   RETURN NEW;
 END;
+
 $function$;
 -- ddl-end --
 ALTER FUNCTION public."updated_at_Function"() OWNER TO postgres;
@@ -113,6 +118,7 @@ CREATE TABLE public.password_reset_tokens (
 	id_users bigint NOT NULL,
 	CONSTRAINT password_reset_tokens_pk PRIMARY KEY (id)
 );
+--THE FOLLOWING ARE CONSIDERED AS COMMENTS AND DO NOT AFFECT THE DATABASE STRUCTURE--
 -- ddl-end --
 COMMENT ON COLUMN public.password_reset_tokens.id IS E'identification colmun , it''s sequential , like the following :\ntoken 1 → id 1\ntoken 2 → id 2\ntoken 3 → id 3\netc......';
 -- ddl-end --
@@ -129,7 +135,8 @@ ALTER TABLE public.password_reset_tokens OWNER TO postgres;
 -- ALTER TABLE public.password_reset_tokens DROP CONSTRAINT IF EXISTS users_fk CASCADE;
 ALTER TABLE public.password_reset_tokens ADD CONSTRAINT users_fk FOREIGN KEY (id_users)
 REFERENCES public.users (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+-- COMMENT : UPDATE CASCADE EXAMPLE :  If you change a user's id from 1 to 99, the user_id in the token table automatically changes to 99 to keep the link alive.-
+ON DELETE CASCADE ON UPDATE CASCADE; -- when a user is deleted, all their password reset tokens are also deleted (CASCADE) --
 -- ddl-end --
 
 -- object: public.email_verification_tokens | type: TABLE --
@@ -143,6 +150,7 @@ CREATE TABLE public.email_verification_tokens (
 	id_users bigint NOT NULL,
 	CONSTRAINT email_verification_tokens_pk PRIMARY KEY (id)
 );
+-- THE FOLLOWINGS ARE CONSIDERED AS COMMENTS AND DO NOT AFFECT THE DATABASE STRUCTURE--
 -- ddl-end --
 COMMENT ON TABLE public.email_verification_tokens IS E'This Table Related to the Signup process';
 -- ddl-end --
@@ -163,7 +171,8 @@ ALTER TABLE public.email_verification_tokens OWNER TO postgres;
 -- ALTER TABLE public.email_verification_tokens DROP CONSTRAINT IF EXISTS users_fk CASCADE;
 ALTER TABLE public.email_verification_tokens ADD CONSTRAINT users_fk FOREIGN KEY (id_users)
 REFERENCES public.users (id) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
+ON DELETE CASCADE ON UPDATE CASCADE; -- when a user is deleted, all their email verification tokens are also deleted (CASCADE) --
+
 -- ddl-end --
 
 
