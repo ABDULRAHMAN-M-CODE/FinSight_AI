@@ -1,68 +1,350 @@
-import { Link, useNavigate } from "react-router";
-import { useDispatch } from 'react-redux';
+//import { Link, useNavigate } from "react-router";
+
   
-import { setPage } from "../mainSlice"; // is this line mandatory for this code and why ? answer is : yes , because we are using setPage action from mainSlice to update the current page in the redux store. 
+// is this line mandatory for this code and why ? answer is : yes , because we are using setPage action from mainSlice to update the current page in the redux store. 
 
-export default function Login(){
-   const dispatch=useDispatch();    
-  const navigate=useNavigate();
-    return(
-      <>
-        <div id='Login_Frame'>
-          <p id="app_name">FinSight AI</p>
-          <div id="Input_Section">
-            <div id='Login'>
-              <div id='Inputs'>
-                <div id="Email_Div">
-                  <p id='Email_Label'>Email Address</p>
-                  <input id='Email_Input'  placeholder='Chris@gmail.com'/>
-                </div>
-                <div id='Password_Div'>
-                  <div id='Password_Header'>
-                    <p id='Password_Label'>Password</p>
-                    <Link to="/Forgot_Password" id="Right_text" onClick={()=>
-                      dispatch(setPage("Forgot_Password"))
-                      
-                    }>Forgot Password?</Link>                    
-                  </div>
-                  <div  id='Password_Input'>
-                    <input  id="text" />
-                    <button id="Icon_eye_button">
-                      <i className='fa fa-eye' id ='Icon_eye'></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div id='Button'>
-                <div id='Remind_ME'>
-                  <input  type='checkbox' id="Tick"/>
-                  <p id="Keep_me_signed_in">Keep me signed in</p>
-                </div>
-                <button id='Login_Button' onClick={()=>
-                  
-                  navigate("/IntroStepper")
-                }>Login</button>
-              </div>
+import { useState } from "react";
+import svgPaths from "./imports/svg-i38a9njwbx";
+import { Loader2 } from "lucide-react";
+
+type ViewMode = "login" | "resetPassword";
+type LoginState = "default" | "filled" | "loading" | "error";
+type ResetState = "default" | "loading" | "success" | "error";
+
+export  default function LoginPage() {
+  const [viewMode, setViewMode] = useState<ViewMode>("login");
+  const [loginState, setLoginState] = useState<LoginState>("default");
+  const [resetState, setResetState] = useState<ResetState>("default");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [resetEmail, setResetEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // Simulate login
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginState("loading");
+    
+    // Simulate API call
+    setTimeout(() => {
+      // Check for wrong credentials
+      if (email === "wrong@example.com" || password === "wrongpass") {
+        setLoginState("error");
+        setErrorMessage("Invalid email or password");
+      } else {
+        // Success case - you can redirect or handle success here
+        alert("Login successful!");
+        setLoginState("default");
+        setEmail("");
+        setPassword("");
+      }
+    }, 1500);
+  };
+
+  // Simulate password reset
+  const handlePasswordReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResetState("loading");
+    
+    // Simulate API call
+    setTimeout(() => {
+      // Random error for demo (20% chance)
+      if (Math.random() > 0.8) {
+        setResetState("error");
+      } else {
+        setResetState("success");
+      }
+    }, 1500);
+  };
+
+  const handleBackToLogin = () => {
+    setViewMode("login");
+    setResetState("default");
+    setResetEmail("");
+  };
+
+  const handleReturnToLogin = () => {
+    setViewMode("login");
+    setResetState("default");
+    setResetEmail("");
+    setLoginState("default");
+  };
+
+  if (viewMode === "resetPassword") {
+    if (resetState === "success") {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-[#f3f3f5] p-4">
+          <div className="bg-white rounded-[14px] shadow-[0px_20px_25px_0px_rgba(0,0,0,0.1),0px_8px_10px_0px_rgba(0,0,0,0.1)] border-[0.635px] border-[rgba(0,0,0,0.1)] w-full max-w-[448px] p-6">
+            <div className="mb-6">
+              <button
+                onClick={handleBackToLogin}
+                className="flex items-center gap-2 text-[#717182] text-[14px] hover:text-[#030213] transition-colors mb-8"
+              >
+                <svg className="w-4 h-4" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9921 15.9921">
+                  <g>
+                    <path d={svgPaths.pacebb00} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                    <path d="M12.6604 7.99603H3.33168" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                  </g>
+                </svg>
+                Back to login
+              </button>
+              <h1 className="text-[24px] text-[#0a0a0a] mb-4">Reset Password</h1>
+              <p className="text-[16px] text-[#717182]">
+                Enter your email address and we'll send you a link to reset your password
+              </p>
             </div>
-            <div id='Divider_2'>
-              <div  id="Line_10"></div>
-              <div id="Sign_in_with">
-                <p id="or_sign_in_with">or sign in with</p>
 
+            <div className="space-y-4">
+              <div className="bg-[#f0fdf4] border-[0.635px] border-[#b9f8cf] rounded-[10px] p-4">
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0">
+                    <svg className="w-4 h-4" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9921 15.9921">
+                      <g clipPath="url(#clip0_success)">
+                        <path d={svgPaths.p2d997d00} stroke="#0A0A0A" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                        <path d={svgPaths.p2657f620} stroke="#0A0A0A" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_success">
+                          <rect fill="white" height="15.9921" width="15.9921" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </div>
+                  <p className="text-[14px] text-[#016630] leading-[20px]">
+                    Password reset instructions have been sent to your email address. Please check your inbox.
+                  </p>
+                </div>
               </div>
-            </div>
-            <button id="Button_Secondry" onClick={()=>{
-              dispatch(setPage("SignUp_With_Google"))
-              navigate("/SignUp_With_Google")
-            }}>
-              <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google G" width="30" height="30"  id="gogle_icon"/>
 
-              <p id="Continue_With_Google">Continue With Google</p>
-            </button>
+              <button
+                onClick={handleReturnToLogin}
+                className="w-full bg-[#030213] text-white rounded-[8px] px-4 py-2 text-[14px] hover:bg-[#1a1a2e] transition-colors"
+              >
+                Return to Login
+              </button>
+            </div>
           </div>
-          
         </div>
-        <Link to="/Signup" id="Creat_account">Create an account?</Link>
-      </>
+      );
+    }
+
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f3f3f5] p-4">
+        <div className="bg-white rounded-[14px] shadow-[0px_20px_25px_0px_rgba(0,0,0,0.1),0px_8px_10px_0px_rgba(0,0,0,0.1)] border-[0.635px] border-[rgba(0,0,0,0.1)] w-full max-w-[448px] p-6">
+          <div className="mb-6">
+            <button
+              onClick={handleBackToLogin}
+              disabled={resetState === "loading"}
+              className="flex items-center gap-2 text-[#717182] text-[14px] hover:text-[#030213] transition-colors mb-8 disabled:opacity-50"
+            >
+              <svg className="w-4 h-4" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9921 15.9921">
+                <g>
+                  <path d={svgPaths.pacebb00} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                  <path d="M12.6604 7.99603H3.33168" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                </g>
+              </svg>
+              Back to login
+            </button>
+            <h1 className="text-[24px] text-[#0a0a0a] mb-4">Reset Password</h1>
+            <p className="text-[16px] text-[#717182]">
+              Enter your email address and we'll send you a link to reset your password
+            </p>
+          </div>
+
+          <form onSubmit={handlePasswordReset} className="space-y-6">
+            {resetState === "error" && (
+              <div className="bg-white border-[0.635px] border-[rgba(0,0,0,0.1)] rounded-[10px] p-3">
+                <div className="flex gap-3">
+                  <div className="flex-shrink-0">
+                    <svg className="w-4 h-4" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9921 15.9921">
+                      <g clipPath="url(#clip0_error)">
+                        <path d={svgPaths.p2d997d00} stroke="#D4183D" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                        <path d="M7.99603 5.33069V7.99603" stroke="#D4183D" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                        <path d="M7.99603 10.6614H8.00269" stroke="#D4183D" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_error">
+                          <rect fill="white" height="15.9921" width="15.9921" />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </div>
+                  <p className="text-[14px] text-[rgba(212,24,61,0.9)] leading-[20px]">
+                    Failed to send reset email. Please try again.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div>
+              <label className="block text-[14px] text-[#0a0a0a] mb-2">Email Address</label>
+              <div className="relative">
+                <input
+                  type="email"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  placeholder="name@example.com"
+                  disabled={resetState === "loading"}
+                  className={`w-full bg-[#f3f3f5] rounded-[8px] pl-10 pr-3 py-2 text-[14px] text-[#0a0a0a] placeholder:text-[#717182] focus:outline-none focus:ring-2 focus:ring-[#030213] ${
+                    resetState === "loading" ? "opacity-50" : ""
+                  }`}
+                  required
+                />
+                <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                  <svg className="w-4 h-4" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9921 15.9921">
+                    <g clipPath="url(#clip0_email)">
+                      <path d={svgPaths.p1b29e200} stroke="#717182" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                      <path d={svgPaths.p24d56a00} stroke="#717182" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_email">
+                        <rect fill="white" height="15.9921" width="15.9921" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={resetState === "loading"}
+              className={`w-full bg-[#030213] text-white rounded-[8px] px-4 py-2 text-[14px] flex items-center justify-center gap-2 hover:bg-[#1a1a2e] transition-colors ${
+                resetState === "loading" ? "opacity-50" : ""
+              }`}
+            >
+              {resetState === "loading" && <Loader2 className="w-5 h-5 animate-spin" />}
+              {resetState === "loading" ? "Sending..." : "Send Reset Link"}
+            </button>
+          </form>
+        </div>
+      </div>
     );
   }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#f3f3f5] p-4">
+      <div className="bg-white rounded-[14px] shadow-[0px_20px_25px_0px_rgba(0,0,0,0.1),0px_8px_10px_0px_rgba(0,0,0,0.1)] border-[0.635px] border-[rgba(0,0,0,0.1)] w-full max-w-[448px] p-6">
+        <div className="mb-6 text-center">
+          <h1 className="text-[24px] text-[#0a0a0a] mb-2">Welcome Back</h1>
+          <p className="text-[16px] text-[#717182]">Enter your credentials to access your account</p>
+        </div>
+
+        <form onSubmit={handleLogin} className="space-y-6">
+          {loginState === "error" && (
+            <div className="bg-white border-[0.635px] border-[rgba(0,0,0,0.1)] rounded-[10px] p-3">
+              <div className="flex gap-3">
+                <div className="flex-shrink-0">
+                  <svg className="w-4 h-4" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9921 15.9921">
+                    <g clipPath="url(#clip0_login_error)">
+                      <path d={svgPaths.p2d997d00} stroke="#D4183D" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                      <path d="M7.99603 5.33069V7.99603" stroke="#D4183D" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                      <path d="M7.99603 10.6614H8.00269" stroke="#D4183D" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_login_error">
+                        <rect fill="white" height="15.9921" width="15.9921" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </div>
+                <p className="text-[14px] text-[rgba(212,24,61,0.9)] leading-[20px]">{errorMessage}</p>
+              </div>
+            </div>
+          )}
+
+          <div>
+            <label className="block text-[14px] text-[#0a0a0a] mb-2">Email</label>
+            <div className="relative">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (loginState === "error") setLoginState("default");
+                }}
+                placeholder="name@example.com"
+                disabled={loginState === "loading"}
+                className={`w-full bg-[#f3f3f5] rounded-[8px] pl-10 pr-3 py-2 text-[14px] text-[#0a0a0a] placeholder:text-[#717182] focus:outline-none focus:ring-2 focus:ring-[#030213] ${
+                  loginState === "loading" ? "opacity-50" : ""
+                }`}
+                required
+              />
+              <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                <svg className="w-4 h-4" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9921 15.9921">
+                  <g clipPath="url(#clip0_email_login)">
+                    <path d={svgPaths.p1b29e200} stroke="#717182" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                    <path d={svgPaths.p24d56a00} stroke="#717182" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_email_login">
+                      <rect fill="white" height="15.9921" width="15.9921" />
+                    </clipPath>
+                  </defs>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-[14px] text-[#0a0a0a] mb-2">Password</label>
+            <div className="relative">
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (loginState === "error") setLoginState("default");
+                }}
+                placeholder="Enter your password"
+                disabled={loginState === "loading"}
+                className={`w-full bg-[#f3f3f5] rounded-[8px] pl-10 pr-3 py-2 text-[14px] text-[#0a0a0a] placeholder:text-[#717182] focus:outline-none focus:ring-2 focus:ring-[#030213] ${
+                  loginState === "loading" ? "opacity-50" : ""
+                }`}
+                required
+              />
+              <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                <svg className="w-4 h-4" fill="none" preserveAspectRatio="none" viewBox="0 0 15.9921 15.9921">
+                  <g clipPath="url(#clip0_password)">
+                    <path d={svgPaths.p25bd600} stroke="#717182" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                    <path d={svgPaths.p2cd94240} stroke="#717182" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.33267" />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_password">
+                      <rect fill="white" height="15.9921" width="15.9921" />
+                    </clipPath>
+                  </defs>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={() => {
+                setViewMode("resetPassword");
+                setLoginState("default");
+              }}
+              disabled={loginState === "loading"}
+              className={`text-[14px] text-[#030213] hover:underline ${loginState === "loading" ? "opacity-50" : ""}`}
+            >
+              Forgot password?
+            </button>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loginState === "loading"}
+            className={`w-full bg-[#030213] text-white rounded-[8px] px-4 py-2 text-[14px] flex items-center justify-center gap-2 hover:bg-[#1a1a2e] transition-colors ${
+              loginState === "loading" ? "opacity-50" : ""
+            }`}
+          >
+            {loginState === "loading" && <Loader2 className="w-5 h-5 animate-spin" />}
+            {loginState === "loading" ? "Signing in..." : "Sign In"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
