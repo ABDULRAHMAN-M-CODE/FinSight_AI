@@ -92,3 +92,5 @@ wcwidth==0.3.5
 websockets==16.0
 xxhash==3.6.0
 zstandard==0.25.0
+python-jose==3.5.0
+passlib==1.7.4

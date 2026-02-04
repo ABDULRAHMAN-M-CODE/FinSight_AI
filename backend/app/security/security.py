@@ -4,7 +4,7 @@ import secrets
 from datetime import datetime, timedelta
 import hashlib
 import hmac
-from core.config import settings
+from app.core.config import settings
 
 # extra logic to hash passwords and create tokens
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

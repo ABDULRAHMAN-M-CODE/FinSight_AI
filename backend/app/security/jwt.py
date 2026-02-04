@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from jose import jwt
-from core.config import settings
+from app.core.config import settings
 
 # to create the JWT
 SECRET_KEY = settings.SECRET_KEY

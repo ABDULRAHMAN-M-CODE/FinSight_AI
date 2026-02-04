@@ -524,7 +524,7 @@ const [formData, setFormData] = useState<SignupFormData>({ //
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [showEmailVerification, setShowEmailVerification] = useState(true);
+  const [showEmailVerification, setShowEmailVerification] = useState(false);
   
   const [emailExistsError, setEmailExistsError] = useState(false);
   const [verificationSucceded, setVerificationSucceded] = useState(false);

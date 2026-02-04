@@ -1,13 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
-from database import SessionLocal, get_db    
-from models.registration import User,EmailVerificationToken 
-from core.dependencies import get_current_user
-from security.security import hash_password, verify_password,generate_raw_token,hash_token,token_expiry,generate_email_code
-from schemas.user import ChangePasswordRequest,ChangeNameRequest,ChangePhoneNumberRequest, ChangeEmailRequest
-from core.PWV import validate_password
-from core.email import send_email
 from datetime import datetime, timedelta
+
+
+from app.database import SessionLocal, get_db    
+from app.models.registration import User,EmailVerificationToken 
+from app.core.dependencies import get_current_user
+from app.security.security import hash_password, verify_password,generate_raw_token,hash_token,token_expiry,generate_email_code
+from app.schemas.user import ChangePasswordRequest,ChangeNameRequest,ChangePhoneNumberRequest, ChangeEmailRequest
+from app.core.PWV import validate_password
+from app.core.email import send_email
+
+
 
 router = APIRouter(prefix="/UserSettings")
 

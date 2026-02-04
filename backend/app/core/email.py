@@ -1,7 +1,8 @@
 import smtplib
 import secrets
+
 from email.message import EmailMessage
-from core.config import settings
+from app.core.config import settings
 
 
 def send_email(to: str, subject: str, body: str):
