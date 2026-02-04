@@ -105,7 +105,11 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
 
     if not db_user or not verify_password(user.password, db_user.password_hash):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        
+        raise HTTPException(
+             status_code=401,
+             detail="Invalid credentials"
+        )
 
     if not db_user.is_email_verified:
         raise HTTPException(

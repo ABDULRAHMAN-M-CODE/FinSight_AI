@@ -5,7 +5,7 @@ import { CheckCircle } from 'lucide-react';
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-
+// error's shape
   interface FormErrors {
   email?: string;
   password?: string;
@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
   general?: string;
 }
 
-
+// formData object's shape
 interface SignupFormData {
   email: string;
   password: string;
@@ -24,6 +24,7 @@ interface SignupFormData {
   phone_number: string;
 }
 
+// this interface is used as type of the props of the Default State component. 
 interface DefaultProbs{
   handleSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
   emailExistsError: boolean;
@@ -37,6 +38,7 @@ interface DefaultProbs{
   setShowConfirmPassword: (show: boolean) => void;
 }
 ////////////////////////////////////
+
 function VerificationSucceded(){
   const navigate=useNavigate();
   return (
@@ -62,9 +64,6 @@ function VerificationSucceded(){
     </div>
   );
 }
-
-
-
 
 //////////////////////////////////////
 function useEmailVerification({email,setVerificationSucceded}:{email:string, setVerificationSucceded:(b:boolean)=>void}) {

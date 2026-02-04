@@ -6,47 +6,68 @@
 import { useState } from "react";
 import svgPaths from "./imports/svg-i38a9njwbx";
 import { Loader2 } from "lucide-react";
-
+import { useNavigate } from "react-router-dom";
 type ViewMode = "login" | "resetPassword";
+
 type LoginState = "default" | "filled" | "loading" | "error";
 type ResetState = "default" | "loading" | "success" | "error";
 
-export  default function LoginPage() {
+function  useLoginPageLogic(){
+  
   const [viewMode, setViewMode] = useState<ViewMode>("login");
   const [loginState, setLoginState] = useState<LoginState>("default");
   const [resetState, setResetState] = useState<ResetState>("default");
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [resetEmail, setResetEmail] = useState("");
+  
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Simulate login
-  const handleLogin = async (e: React.FormEvent) => {
+  // Instead of Figma's Simulation code, I wrote this .
+  const navigate = useNavigate();
+  const handleLogin = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    
     e.preventDefault();
     setLoginState("loading");
     
-    // Simulate API call
-    setTimeout(() => {
-      // Check for wrong credentials
-      if (email === "wrong@example.com" || password === "wrongpass") {
-        setLoginState("error");
-        setErrorMessage("Invalid email or password");
-      } else {
-        // Success case - you can redirect or handle success here
-        alert("Login successful!");
+    try{
+    const response = await fetch("/auth/login", { 
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: email.trim().toLowerCase(),
+        password: password
+      }),
+    });
+
+
+    if (!response.ok) {
+      const data = await response.json();
+        setLoginState("error");// can't set error massege  if  not in the error state.
+        setErrorMessage( data.detail );
+        return;// don't allow user to continue to dashboard
+    }
+        //store access token, clear Login and Redirect user to the Dashboard
+      
+        const data = await response.json();
+        localStorage.setItem("access_token", data.access_token);// who will use this ? answer is : 
         setLoginState("default");
-        setEmail("");
-        setPassword("");
-      }
-    }, 1500);
+        navigate("/dashboard"); 
+      
+      
+    }catch{ // if Can't connect to the backend
+      setErrorMessage( "Network error. Try again." );
+    }
+
   };
 
   // Simulate password reset
-  const handlePasswordReset = async (e: React.FormEvent) => {
+  const handlePasswordReset = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setResetState("loading");
     
-    // Simulate API call
+    // Simulate API call "URL = forgot-password"
     setTimeout(() => {
       // Random error for demo (20% chance)
       if (Math.random() > 0.8) {
@@ -70,6 +91,49 @@ export  default function LoginPage() {
     setLoginState("default");
   };
 
+  return {
+    viewMode,
+    handleLogin,
+    loginState,
+    email,
+    errorMessage,
+    setEmail,
+    setLoginState,
+    password,
+    setPassword,
+    setViewMode,
+    resetState,
+    handleBackToLogin,
+    handleReturnToLogin,
+    handlePasswordReset,
+    resetEmail,
+    setResetEmail,
+  };
+}
+
+
+export  default function LoginPage() {
+
+    const { 
+      viewMode, 
+      handleLogin,
+      loginState,
+      email,
+      errorMessage,
+      setEmail,
+      setLoginState,
+      password,
+      setPassword,
+      setViewMode,
+      resetState,
+      handleBackToLogin,
+      handleReturnToLogin,
+      handlePasswordReset,
+      resetEmail,
+      setResetEmail
+    } = useLoginPageLogic();
+  //Login page has tow modes "states",  resetpassword is the second one .
+  // note : if function's implmentation is collapsed using vscode and there is errors, they want appear until you expand the function again.
   if (viewMode === "resetPassword") {
     if (resetState === "success") {
       return (
@@ -222,6 +286,7 @@ export  default function LoginPage() {
     );
   }
 
+  // second mode of the login page is the default one which is the login form itself.
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f3f3f5] p-4">
       <div className="bg-white rounded-[14px] shadow-[0px_20px_25px_0px_rgba(0,0,0,0.1),0px_8px_10px_0px_rgba(0,0,0,0.1)] border-[0.635px] border-[rgba(0,0,0,0.1)] w-full max-w-[448px] p-6">

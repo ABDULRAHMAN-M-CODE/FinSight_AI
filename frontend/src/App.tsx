@@ -8,13 +8,14 @@ import Questionarry from './pages/Questionarry';
 import EmailVerifiedPage  from "./pages/EmailVerifiedPage";
 
 function App() {    
-   
+   // [path="/"] is the  default route to be rendered 
    
    return(
     <Routes>
-      <Route path="/" element={<WelcomePage />}/>
+      <Route path='/' element={<Login />} />
+      <Route path="/Welcome" element={<WelcomePage />}/>
       <Route path='/Questionarry' element={<Questionarry />} />
-      <Route path='/Login' element={<Login />} />
+      
       <Route path="/IntroStepper"  element={<IntroStepper />}/>
       <Route path="/Signup"  element={ <SignUpForm /> } />
       <Route path="/verify-email" element={<EmailVerifiedPage  />} />
