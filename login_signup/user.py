@@ -1,28 +1,17 @@
-from sqlalchemy import (
-    Column, Integer, String, Boolean, DateTime
-)
-from sqlalchemy.sql import func
-from database import Base
 
-class User(Base):
-    __tablename__ = "users"
+from pydantic import BaseModel, Field
+# DTOs for user settings
 
-    id = Column(Integer, primary_key=True, index=True)
+class ChangeEmailRequest(BaseModel):
+    new_email: str = Field(..., max_length=255)
 
-    email = Column(String(255), unique=True, index=True, nullable=False)
-    password_hash = Column(String(255), nullable=False)
+class ChangePasswordRequest(BaseModel):
+    old_password: str 
+    new_password: str 
 
-    is_email_verified = Column(Boolean, default=False, nullable=False)
-    email_verified_at = Column(DateTime(timezone=True), nullable=True)
+class ChangePhoneNumberRequest(BaseModel):
+    new_number: str = Field(..., max_length=20)
 
-    is_first_login = Column(Boolean, default=True, nullable=False)
-
-    last_login_at = Column(DateTime(timezone=True), nullable=True)
-
-    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at = Column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now(),
-        nullable=False
-    )
+class ChangeNameRequest(BaseModel):
+    new_name: str = Field(..., max_length=255)
+    
