@@ -16,7 +16,7 @@ app = FastAPI(title="FinSight_AI")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://127.0.0.1:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -24,3 +24,6 @@ app.add_middleware(
 
 app.include_router(auth_router)
 app.include_router(user_settings_router)
+@app.get("/")
+def home():
+    return {"status": "success", "message": "FinSight AI API is running!"}

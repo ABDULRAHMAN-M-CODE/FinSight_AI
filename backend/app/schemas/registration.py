@@ -1,8 +1,9 @@
-from pydantic import BaseModel, EmailStr, Field
-# DTO for Register
+from typing import Optional
+from pydantic import BaseModel, EmailStr
+
 class UserRegister(BaseModel):
-    full_name: str
-    phone_number : str
+    full_name: Optional[str] = None
+    phone_number: Optional[str] = None
     email: EmailStr
     password: str 
     confirm_password: str 
@@ -23,4 +24,5 @@ class ResetPasswordRequest(BaseModel):
     
 #DTO for verification
 class VerifyEmailCodeRequest(BaseModel):
+    
     code: str
