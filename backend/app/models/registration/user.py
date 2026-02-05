@@ -3,6 +3,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.sql import func
 from app.database import Base
+from sqlalchemy.orm import relationship
 
 class User(Base):
     __tablename__ = "users"
@@ -27,3 +28,28 @@ class User(Base):
         onupdate=func.now(),
         nullable=False
     )
+    # Relationships with other tables
+financial_data = relationship(
+    "UserFinancialData",
+    back_populates="user",
+    uselist=False,
+    cascade="all, delete"
+)
+limited_advice = relationship(
+    "LimitedAdvice",
+    back_populates="user",
+    uselist=False,
+    cascade="all, delete-orphan"
+)
+investment_accounts = relationship(
+    "InvestmentAccount",
+    back_populates="user",
+    cascade="all, delete-orphan"
+)
+goals = relationship(
+    "Goal",
+    back_populates="user",
+    cascade="all, delete-orphan"
+)
+
+
