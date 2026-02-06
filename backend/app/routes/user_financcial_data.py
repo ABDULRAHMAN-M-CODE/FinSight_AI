@@ -15,6 +15,7 @@ from app.core.utils.finance_calculations import (
     compute_savings_rate,
     compute_projections,
 )
+from app.core.utils.json_safe import json_safe   
 
 router = APIRouter(prefix="/onboarding")
 
@@ -50,12 +51,18 @@ def submit_questionnaire(
         financial_data = UserFinancialData(
             user_id=current_user.id,
             household_income=total_household_income,
-            income_sources=income_sources,  # Stored as JSONB
+            income_sources=json_safe(income_sources), 
             monthly_budget=data.monthly_budget,
             # Store lists as JSONB
-            investment_accounts=[acc.dict() for acc in data.investment_accounts],
-            outstanding_debts=[debt.dict() for debt in data.outstanding_debts],
-            life_insurance=[ins.dict() for ins in data.life_insurance],
+            investment_accounts=json_safe(
+                [acc.dict() for acc in data.investment_accounts]
+            ),  
+            outstanding_debts=json_safe(
+                [debt.dict() for debt in data.outstanding_debts]
+            ),  
+            life_insurance=json_safe(
+                [ins.dict() for ins in data.life_insurance]
+            ),  
         )
         
         # 2. Save LimitedAdvice
@@ -73,8 +80,8 @@ def submit_questionnaire(
             user_id=current_user.id,
             monthly_income=data.monthly_income,
             monthly_expenses=data.monthly_expenses,
-            savings_rate=savings_rate,
-            projections=projections,
+            savings_rate=float(savings_rate),        
+            projections=json_safe(projections),      
         )
         
         # 3. Save InvestmentAccounts as separate table rows
