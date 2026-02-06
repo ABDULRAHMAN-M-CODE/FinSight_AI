@@ -1,32 +1,6 @@
 import { CheckCircle2 } from 'lucide-react';
-import { useState } from 'react';
-
-function usePostSignup(){
-
-  const [isNavigating, setIsNavigating] = useState(false);
-
-  const handleStartTutorial = () => {
-    setIsNavigating(true);
-    // Navigate to tutorial flow
-    console.log('Starting tutorial...');
-  };
-
-  const handleSkip = () => {
-    setIsNavigating(true);
-    // Navigate to main application
-    console.log('Skipping to main app...');
-  };
-
-  return {
-    handleStartTutorial,
-    isNavigating,
-
-  };
-}
-
+import { Link } from 'react-router-dom';
 export default function PostSignup() {
-
-  const {}= usePostSignup();
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
       <div className="w-full max-w-md">
@@ -53,26 +27,26 @@ export default function PostSignup() {
         </div>
 
         {/* Action Buttons */}
-        <div className="space-y-3">
+        <div className="space-y-3  ml-25">
           {/* Primary CTA - Start Tutorial */}
-          <button
-            onClick={handleStartTutorial}
-            disabled={isNavigating}
+          <Link
+            
+            to="/IntroStepper"
             className="w-full py-3 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Start guided tutorial"
           >
-            Start Tutorial
-          </button>
+          Quick intro
+          </Link>
 
           {/* Secondary CTA - Skip */}
-          <button
-            onClick={handleSkip}
-            disabled={isNavigating}
+          <Link
+            
+            to="/Questionarry"
             className="w-full py-3 px-4 bg-white text-gray-700 font-medium rounded-lg border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Skip tutorial and go to main application"
           >
             Skip for Now
-          </button>
+          </Link>
         </div>
 
         {/* Optional Supporting Text */}
