@@ -1,29 +1,30 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
-
-# --- CRITICAL: Import models so SQLAlchemy sees them ---
 from app.models.registration import user, email_verification_token, password_reset_token
 # -------------------------------------------------------
-
 from app.routes.auth import router as auth_router
 from app.routes.UserSetting import router as user_settings_router
-
+from app.routes.user_financcial_data import router as questionnaire_router
 # Create the tables in the database
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="FinSight_AI")
-
+# Create middlerware to allow access for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+# Add routes (endpoints)
 app.include_router(auth_router)
 app.include_router(user_settings_router)
+app.include_router(questionnaire_router)
 @app.get("/")
 def home():
     return {"status": "success", "message": "FinSight AI API is running!"}
