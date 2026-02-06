@@ -102,7 +102,7 @@ def submit_questionnaire(
             acc.current_value for acc in data.investment_accounts
         ) if data.investment_accounts else Decimal('0')
         
-        # NOTE: This logic might need revision - should all goals have same current_amount?
+        # This logic might need revision - should all goals have same current_amount?
         goal_rows = [
             Goal(
                 user_id=current_user.id,
@@ -127,7 +127,7 @@ def submit_questionnaire(
         
     except Exception as e:
         db.rollback()
-        # Log the actual error for debugging
+        # for debugging
         print(f"Error submitting questionnaire: {str(e)}")
         raise HTTPException(
             status_code=500,

@@ -17,11 +17,6 @@ class GoalCreate(BaseModel):
     target_amount: Decimal
     deadline: date | None = None
 
-from pydantic import BaseModel
-from decimal import Decimal
-from typing import Optional, List
-from datetime import date
-
 class HouseholdMember(BaseModel):
     member_name: str
     annual_income: Decimal
