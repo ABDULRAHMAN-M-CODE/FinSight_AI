@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-
 from decimal import Decimal
+
 from app.database import get_db
 from app.core.dependencies import get_current_user
 from app.models.registration.user import User
@@ -15,7 +15,7 @@ from app.core.utils.finance_calculations import (
     compute_savings_rate,
     compute_projections,
 )
-from app.core.utils.json_safe import json_safe   
+from app.core.utils.json_safe import json_safe
 
 router = APIRouter(prefix="/onboarding")
 
@@ -33,105 +33,109 @@ def submit_questionnaire(
         )
 
     try:
-        # Calculate total household income from members
+        # 1. Household income
         total_household_income = sum(
-            Decimal(str(member.annual_income)) for member in data.household_members
+            member.annual_income for member in data.household_income
         )
-        
-        # Aggregate income sources
+
         income_sources = {}
-        for member in data.household_members:
-            source = member.income_source
-            if source in income_sources:
-                income_sources[source] += Decimal(str(member.annual_income))
-            else:
-                income_sources[source] = Decimal(str(member.annual_income))
-        
-        # 1. Save UserFinancialData (with JSON fields)
+        for member in data.household_income:
+            income_sources.setdefault(member.income_source, Decimal("0"))
+            income_sources[member.income_source] += member.annual_income
+
+        # 2. Save UserFinancialData (JSONB-safe)
         financial_data = UserFinancialData(
             user_id=current_user.id,
             household_income=total_household_income,
-            income_sources=json_safe(income_sources), 
+            income_sources=json_safe(income_sources),
             monthly_budget=data.monthly_budget,
-            # Store lists as JSONB
             investment_accounts=json_safe(
                 [acc.dict() for acc in data.investment_accounts]
-            ),  
+            ),
             outstanding_debts=json_safe(
                 [debt.dict() for debt in data.outstanding_debts]
-            ),  
+            ),
             life_insurance=json_safe(
                 [ins.dict() for ins in data.life_insurance]
-            ),  
+            ),
         )
-        
-        # 2. Save LimitedAdvice
+
+        # 3. Derived financial metrics
+        monthly_income = total_household_income / Decimal("12")
+        monthly_expenses = data.monthly_budget
+
         savings_rate = compute_savings_rate(
-            data.monthly_income,
-            data.monthly_expenses,
+            monthly_income,
+            monthly_expenses,
         )
-        
+
         projections = compute_projections(
-            data.monthly_income,
-            data.monthly_expenses,
+            monthly_income,
+            monthly_expenses,
         )
-        
+
         limited_advice = LimitedAdvice(
             user_id=current_user.id,
-            monthly_income=data.monthly_income,
-            monthly_expenses=data.monthly_expenses,
-            savings_rate=float(savings_rate),        
-            projections=json_safe(projections),      
+            monthly_income=monthly_income,
+            monthly_expenses=monthly_expenses,
+            savings_rate=float(savings_rate),
+            projections=json_safe(projections),
         )
-        
-        # 3. Save InvestmentAccounts as separate table rows
+
+        # 4. Investment accounts table
         investment_rows = [
             InvestmentAccount(
                 user_id=current_user.id,
-                account_name=acc.account_name,
-                account_type=acc.account_type,
-                current_value=acc.current_value,
-                is_active=acc.is_active,
+                account_name=acc.type,
+                account_type=acc.type,
+                current_value=acc.current_balance,
+                is_active=True,
             )
             for acc in data.investment_accounts
         ]
-        
-        # 4. Save Goals
-        # Calculate total investments
-        total_investments = sum(
-            acc.current_value for acc in data.investment_accounts
-        ) if data.investment_accounts else Decimal('0')
-        
-        # This logic might need revision - should all goals have same current_amount?
-        goal_rows = [
-            Goal(
-                user_id=current_user.id,
-                goal_name=goal.goal_name,
-                goal_type=goal.goal_type,
-                target_amount=goal.target_amount,
-                current_amount=Decimal('0'),  # Start at 0, not total_investments
-                deadline=goal.deadline,
-            )
-            for goal in data.goals
-        ]
-        
-        # 5. Mark onboarding complete
+
+        # 5. Financial goals → Goal rows
+        goal_rows = []
+
+        if data.financial_goals:
+            if data.financial_goals.short_term:
+                goal_rows.append(
+                    Goal(
+                        user_id=current_user.id,
+                        goal_name=data.financial_goals.short_term,
+                        goal_type="short-term",
+                        target_amount=Decimal("0"),
+                        current_amount=Decimal("0"),
+                    )
+                )
+
+            if data.financial_goals.long_term:
+                goal_rows.append(
+                    Goal(
+                        user_id=current_user.id,
+                        goal_name=data.financial_goals.long_term,
+                        goal_type="long-term",
+                        target_amount=Decimal("0"),
+                        current_amount=Decimal("0"),
+                    )
+                )
+
+        # 6. Complete onboarding
         current_user.is_first_login = False
-        
-        # 6. Save everything
+
+        # 7. add to db
         db.add(financial_data)
         db.add(limited_advice)
         db.add_all(investment_rows)
         db.add_all(goal_rows)
         db.commit()
-        
+
     except Exception as e:
         db.rollback()
-        # for debugging
         print(f"Error submitting questionnaire: {str(e)}")
         raise HTTPException(
             status_code=500,
             detail="Failed to submit questionnaire",
         )
-    
+
     return {"message": "Questionnaire submitted successfully"}
