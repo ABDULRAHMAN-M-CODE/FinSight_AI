@@ -201,7 +201,7 @@ export default function IntroStepper() {
                 aria-label={isLastStep ? "Complete introduction and get started" : "Go to next step"}
               >
                 <span>
-                  {isLastStep ? "Let's get to know more about you" : 'Next'}
+                  {isLastStep ? "Continue" : 'Next'}
                 </span>
                 {!isLastStep && <ChevronRight className="w-5 h-5" aria-hidden="true" />}
               </button>
