@@ -7,10 +7,11 @@ from app.database import SessionLocal, get_db
 from app.models.registration import User,EmailVerificationToken 
 from app.core.dependencies import get_current_user
 from app.security.security import hash_password, verify_password,generate_raw_token,hash_token,token_expiry,generate_email_code
-from app.schemas.user import ChangePasswordRequest,ChangeNameRequest,ChangePhoneNumberRequest, ChangeEmailRequest
+from app.schemas.user import ChangePasswordRequest,ChangeNameRequest,ChangePhoneNumberRequest, ChangeEmailRequest , ConfirmEmailChangeRequest
 from app.core.PWV import validate_password
 from app.core.email import send_email
-
+from app.models.registration.email_change_token import EmailChangeToken
+from app.security.security import verify_token
 
 
 router = APIRouter(prefix="/UserSettings")
@@ -19,27 +20,21 @@ router = APIRouter(prefix="/UserSettings")
 def change_email(
     data: ChangeEmailRequest,
     background_tasks: BackgroundTasks,
-    payload: dict = Depends(get_current_user),
+    current_user: User = Depends(get_current_user), 
     db: Session = Depends(get_db)
 ):
-    user_id = payload.get("sub")
-
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+    user = current_user
 
     # Check if email already exists
     if db.query(User).filter(User.email == data.new_email).first():
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    # Store email temporarily
-    user.is_email_verified = False
-
     # Generate verification code
-    code = generate_email_code()   
+    code = generate_email_code()
 
-    verification = EmailVerificationToken(
+    verification = EmailChangeToken(
         user_id=user.id,
+        new_email=data.new_email,
         token_hash=hash_token(code),
         expires_at=datetime.utcnow() + timedelta(minutes=10)
     )
@@ -66,39 +61,64 @@ This code expires in 10 minutes.
     }
 
 
+@router.post("/confirm-email-change")
+def confirm_email_change(
+    data: ConfirmEmailChangeRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    verification = (
+        db.query(EmailChangeToken)
+        .filter(
+            EmailChangeToken.new_email == data.new_email,
+            EmailChangeToken.user_id == current_user.id,
+            EmailChangeToken.used == False,
+            EmailChangeToken.expires_at > datetime.utcnow()
+        )
+        .first()
+    )
+
+    if not verification or not verify_token(data.code, verification.token_hash):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid or expired verification code"
+        )
+    #  update email 
+    current_user.email = data.new_email
+    current_user.is_email_verified = True
+    current_user.email_verified_at = datetime.utcnow()
     
+    db.delete(verification)
+    db.commit()
+    
+    return {"message": "Email updated successfully, Please log in again"}
 
-
+    
 @router.post("/change-password")
 def change_password(
     data: ChangePasswordRequest,
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
-    # 1. Verify old password
+    #  Verify old password
     if not verify_password(data.old_password, current_user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Old password is incorrect"
         )
 
-    # 2. Prevent reuse 
-    if verify_password(data.new_password, current_user.password_hash):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="New password must be different"
-        )
-    # 3. ensure strong password is used
-    validate_password(data.new_password)
-    
-    # 4. Update password
-    current_user.password_hash = hash_password(data.new_password)
+    #  Check new password and confirm
+    if data.new_password != data.confirm_password:
+        raise HTTPException(status_code=400, detail="New passwords do not match")
 
+    #  Validate new password strength
+    validate_password(data.new_password)
+
+    #  Update password
+    current_user.password_hash = hash_password(data.new_password) 
     db.commit()
 
-    return {
-        "message": "Password updated successfully"
-    }
+    return {"message": "Password changed successfully. Please log in again."}
 
 @router.post("/change-name")
 def change_name(

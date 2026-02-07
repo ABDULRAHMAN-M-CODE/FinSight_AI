@@ -1,45 +1,42 @@
 from pydantic import BaseModel
 from decimal import Decimal
-from typing import Dict, Any, Optional,List
-from datetime import date
+from typing import List, Optional
 
 
-class InvestmentAccountCreate(BaseModel):
-    account_name: str
-    account_type: str
-    current_value: Decimal
-    is_active: bool = True
-
-
-class GoalCreate(BaseModel):
-    goal_name: str
-    goal_type: str  # short-term / long-term
-    target_amount: Decimal
-    deadline: date | None = None
-
-class HouseholdMember(BaseModel):
+class HouseholdIncomeMember(BaseModel):
     member_name: str
     annual_income: Decimal
     income_source: str
 
-class DebtCreate(BaseModel):
-    debt_type: str
+
+class InvestmentAccountIn(BaseModel):
+    type: str
+    current_balance: Decimal
+
+
+class DebtIn(BaseModel):
+    type: str
     balance: Decimal
     monthly_payment: Decimal
     interest_rate: Decimal
 
-class InsuranceCreate(BaseModel):
+
+class InsuranceIn(BaseModel):
     insurance_type: str
     death_benefit: Decimal
     cash_value: Optional[Decimal] = None
     monthly_premium: Decimal
 
+
+class FinancialGoalsIn(BaseModel):
+    short_term: Optional[str] = None
+    long_term: Optional[str] = None
+
+
 class QuestionnaireSubmit(BaseModel):
-    household_members: List[HouseholdMember]
+    household_income: List[HouseholdIncomeMember]
     monthly_budget: Decimal
-    monthly_income: Decimal
-    monthly_expenses: Decimal
-    investment_accounts: List[InvestmentAccountCreate] = []
-    outstanding_debts: List[DebtCreate] = []
-    life_insurance: List[InsuranceCreate] = []
-    goals: List[GoalCreate] = []
+    investment_accounts: List[InvestmentAccountIn] = []
+    outstanding_debts: List[DebtIn] = []
+    life_insurance: List[InsuranceIn] = []
+    financial_goals: Optional[FinancialGoalsIn] = None
