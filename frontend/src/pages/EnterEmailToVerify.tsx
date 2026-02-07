@@ -1,14 +1,19 @@
 import { useState } from 'react';
 import { Mail, ArrowRight } from 'lucide-react';
-
+import { useDispatch } from 'react-redux';
+import { setEmail as setGlobalEmail } from '../store/authSlice';
+import { useNavigate } from 'react-router-dom';
 // Not Deployable Logic Yet
 function useEnterEmailToVerify(){
   const [email, setEmail] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+   
+    //if (!email.trim()) return; 
     e.preventDefault();
-    console.log('Email submitted:', email);
-    // Handle email submission here
+    dispatch(setGlobalEmail(email));
+    navigate("/EmailVerification")
   };
   return{
    email,
@@ -34,7 +39,7 @@ export default function EnterEmailToVerify() {
             Enter Your Email
           </h1>
           <p className="text-slate-600 mb-8 text-center">
-            We'll use this to keep you updated on your financial journey
+            We'll use this email to send you a verification code
           </p>
 
           <form onSubmit={handleSubmit}>

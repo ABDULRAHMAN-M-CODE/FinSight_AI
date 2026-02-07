@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { AlertCircle, Clock,  Loader2, Mail } from "lucide-react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+
+import { useSelector } from "react-redux";
+import type { RootState } from "../store";
 
 function useEmailVerification({email}:{email:string}) {
   const [verificationCode, setVerificationCode] = useState("");
@@ -90,9 +92,9 @@ function useEmailVerification({email}:{email:string}) {
 
   }
 }
+
  export default function EmailVerification() {
-    const location=useLocation();
-    const email=location.state?.email;
+    const email= useSelector((state:RootState)=>state.auth.email);
     const
      {
         handleVerificationSubmit, 
@@ -136,7 +138,7 @@ function useEmailVerification({email}:{email:string}) {
               <p className="font-medium text-blue-900">Verification Code Sent</p>
               <p className="text-sm text-blue-800 mt-1">
                 Please check your email for the verification code. The code will expire in{" "}
-                <span className="font-semibold">24 hours</span>.
+                <span className="font-semibold">10 minutes</span>.
               </p>
             </div>
           </div>

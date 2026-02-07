@@ -69,7 +69,7 @@ function useIntroStepper(){
     if (isLastStep) {
       // I want to redirect user to other page,I do not know if I should use Link or useNavigate(): user-intention based vs side-effect navigation
       // decision using if statement : I will use useNavigate() !
-      navigate ("/Questionarry")
+      navigate ("/DataCollectionIntro")
     } else {
       setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
     }
@@ -220,7 +220,7 @@ export default function IntroStepper() {
         <div className="mt-6 text-center">
           <Link 
             className="text-sm text-slate-500 hover:text-slate-700 transition-colors duration-200 underline underline-offset-4"
-            to="/Questionarry"
+            to="/DataCollectionIntro"
             aria-label="Skip introduction"
           >
             Skip introduction

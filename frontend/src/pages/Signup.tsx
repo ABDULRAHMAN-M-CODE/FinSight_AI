@@ -4,6 +4,8 @@
 import React, {useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { setEmail as setGlobalEmail } from '../store/authSlice';
 
 // error's shape
   interface FormErrors {
@@ -39,6 +41,8 @@ const [formData, setFormData] = useState<SignupFormData>({ //
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [emailExistsError, setEmailExistsError] = useState(false);
+  
+  const dispatch= useDispatch();
   const navigate= useNavigate();
 
   const validateForm = (): boolean => {
@@ -75,6 +79,7 @@ const [formData, setFormData] = useState<SignupFormData>({ //
   
 const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
   // prerequists to ensure the logic works.
+  
   e.preventDefault();
   setErrors({});
   setEmailExistsError(false);
@@ -117,7 +122,8 @@ const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
 
     // succesfull regestriation : verify user's identity 
     setIsLoading(false);
-    navigate("/EmailVerification",{state:{email:formData.email}});
+    dispatch(setGlobalEmail(formData.email));
+    navigate("/EmailVerification");
   } catch {
     setErrors({ general: "Network error. Try again." });
   } 
@@ -197,7 +203,7 @@ export  default function SignupForm() {
                   <h3 className="font-semibold text-red-900 mb-1">Email Already Exists</h3>
                   <p className="text-sm text-red-800">
                     This email is already registered. Please{" "}
-                    <a href="#signin" className="underline font-medium">sign in</a>{" "}
+                    <Link to = "/Login" className="underline font-medium">sign in</Link>{" "}
                     or use a different email address.
                   </p>
                 </div>
@@ -419,4 +425,6 @@ export  default function SignupForm() {
   );
   
 }
+
+
 
