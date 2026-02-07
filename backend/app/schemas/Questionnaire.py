@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from decimal import Decimal
 from typing import List, Optional
-
+from datetime import date
 
 class HouseholdIncomeMember(BaseModel):
     member_name: str
@@ -10,8 +10,10 @@ class HouseholdIncomeMember(BaseModel):
 
 
 class InvestmentAccountIn(BaseModel):
+    name: str
     type: str
     current_balance: Decimal
+    is_active : bool
 
 
 class DebtIn(BaseModel):
@@ -29,8 +31,10 @@ class InsuranceIn(BaseModel):
 
 
 class FinancialGoalsIn(BaseModel):
-    short_term: Optional[str] = None
-    long_term: Optional[str] = None
+    name : str
+    type : str
+    amount : Decimal
+    deadLine : date 
 
 
 class QuestionnaireSubmit(BaseModel):

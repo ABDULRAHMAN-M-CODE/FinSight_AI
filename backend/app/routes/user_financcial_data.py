@@ -86,10 +86,10 @@ def submit_questionnaire(
         investment_rows = [
             InvestmentAccount(
                 user_id=current_user.id,
-                account_name=acc.type,
+                account_name=acc.name,
                 account_type=acc.type,
                 current_value=acc.current_balance,
-                is_active=True,
+                is_active=acc.is_active,
             )
             for acc in data.investment_accounts
         ]
@@ -98,28 +98,17 @@ def submit_questionnaire(
         goal_rows = []
 
         if data.financial_goals:
-            if data.financial_goals.short_term:
                 goal_rows.append(
                     Goal(
                         user_id=current_user.id,
-                        goal_name=data.financial_goals.short_term,
-                        goal_type="short-term",
-                        target_amount=Decimal("0"),
+                        goal_name=data.financial_goals.name,
+                        goal_type=data.financial_goals.type,
+                        target_amount=data.financial_goals.amount,
                         current_amount=Decimal("0"),
+                        deadline=data.financial_goals.deadLine,
                     )
                 )
-
-            if data.financial_goals.long_term:
-                goal_rows.append(
-                    Goal(
-                        user_id=current_user.id,
-                        goal_name=data.financial_goals.long_term,
-                        goal_type="long-term",
-                        target_amount=Decimal("0"),
-                        current_amount=Decimal("0"),
-                    )
-                )
-
+                
         # 6. Complete onboarding
         current_user.is_first_login = False
 

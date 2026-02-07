@@ -1,6 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel, EmailStr
 
+# DTO for register
 class UserRegister(BaseModel):
     full_name: Optional[str] = None
     phone_number: Optional[str] = None
@@ -24,5 +25,4 @@ class ResetPasswordRequest(BaseModel):
     
 #DTO for verification
 class VerifyEmailCodeRequest(BaseModel):
-    
     code: str
