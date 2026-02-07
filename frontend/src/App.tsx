@@ -8,6 +8,9 @@ import EmailVerification from './pages/EmailVerification';
 import Questionarry from './pages/Questionarry';
 import PostSignup from './pages/PostSignup';
 import DataCollectionIntro from './pages/DataCollectionIntro';
+import ResetPassword from './pages/resetPassword';
+import EnterEmailToVerify from './pages/EnterEmailToVerify';
+import Dashboard from './pages/Dashboard';
 function App() {    
    // [path="/"] is the  default route to be rendered 
    
@@ -21,6 +24,9 @@ function App() {
       <Route path="/Signup"  element={ <SignUpForm /> } />
       <Route path="/PostSignup" element={<PostSignup />}/>
       <Route path="/DataCollectionIntro" element={<DataCollectionIntro />}/>
+      <Route  path="/ResetPassword" element={  <ResetPassword/>   } />
+      <Route path="/EnterEmailToVerify" element={<EnterEmailToVerify />}/>
+      <Route path="/Dashboard" element={<Dashboard />}/>
     </Routes>
   );
       

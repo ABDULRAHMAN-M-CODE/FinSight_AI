@@ -76,6 +76,7 @@ def register(user: UserRegister, background_tasks: BackgroundTasks, db: Session 
 
     return {"message": "User registered successfully. Please check your email for verify"}
 
+
 @router.post("/verify-email")
 def verify_email(
     data: VerifyEmailCodeRequest,
@@ -114,17 +115,20 @@ def verify_email(
 def login(user: UserLogin, db: Session = Depends(get_db)):
 
     db_user = db.query(User).filter(User.email == user.email).first()
-    # check for password correctness
+    # if user is not even registered in db or if he prvoided wrong password, raise Exception
     if not db_user or not verify_password(user.password, db_user.password_hash):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    # check if email is verified or not
+        raise HTTPException(status_code=401, detail="Invalid Email or password")
+    # if email is registered but not verified, Tell the user to do some action
     if not db_user.is_email_verified:
         raise HTTPException(
             status_code=403,
-            detail="Email not verified"
+            detail="This email address is registered but not verified.\nPlease verify your email to continue.\n"
         )
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+
+    #if this code is reached, Login Successful.
+
     # code for JWT for authorization
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={
             "sub": str(db_user.id),
@@ -140,6 +144,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         "token_type": "bearer",
         "first_login": db_user.is_first_login
     }
+
 
 @router.post("/forgot-password")
 def forgot_password(
