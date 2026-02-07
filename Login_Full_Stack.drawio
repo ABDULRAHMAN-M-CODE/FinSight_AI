@@ -1,0 +1,170 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/140.0.7339.249 Electron/38.7.0 Safari/537.36" version="29.0.3">
+  <diagram name="Page-1" id="MS0WqRgQNcFamZUhmLOR">
+    <mxGraphModel dx="2045" dy="810" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="GnCDbtM61hniwt4AIbQG-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="160" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="470" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-1" value="login successful ?&amp;nbsp;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="220" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-4" value="yes" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="170" y="290" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-5" value="NO" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="420" y="290" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-6" value="Show Dashboard&amp;nbsp;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="130" y="380" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-7">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="290" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="GnCDbtM61hniwt4AIbQG-19">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="628.07" y="1020" as="targetPoint" />
+            <mxPoint x="531.82" y="440" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="640" y="440" />
+              <mxPoint x="640" y="1020" />
+              <mxPoint x="290" y="1020" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-7" value="Client Side Validation ? violated&amp;nbsp;&amp;nbsp;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="370" width="205" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-10" value="YES" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="330" y="500" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-11" value="NO" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="550" y="500" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="290" y="790" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-12" value="Show Error on frontend" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="250" y="660" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-15" target="GnCDbtM61hniwt4AIbQG-12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="460" y="700" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="290" y="920" />
+              <mxPoint x="470" y="920" />
+              <mxPoint x="470" y="700" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-15">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="289" y="990" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-15" value="Client Side Validation pass?&amp;nbsp;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="187.5" y="820" width="205" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-19">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="50" y="1220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-19">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="510" y="1220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-19" value="is user registered ?&amp;nbsp;" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="1040" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-26" value="YES" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="70" y="1020" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-27" value="NO" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="400" y="1020" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-28" target="GnCDbtM61hniwt4AIbQG-6">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-120" y="390" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-150" y="1290" />
+              <mxPoint x="-150" y="390" />
+              <mxPoint x="130" y="390" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-28">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="190" y="1470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-28" value="is user verified ?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-20" y="1250" width="140" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-31" value="YES" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-110" y="1240" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-33" value="NO" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="120" y="1240" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-34" value="Reuse Verification component (Already implmented)" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="150" y="1760" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-35" target="GnCDbtM61hniwt4AIbQG-44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-35" value="Show Error massege&amp;nbsp;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="470" y="1240" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-40" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-36" target="GnCDbtM61hniwt4AIbQG-39">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-36" value="Show Error2 on frontEnd" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="150" y="1490" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-37" target="GnCDbtM61hniwt4AIbQG-36">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-37" value="&lt;font style=&quot;color: rgb(255, 51, 51);&quot;&gt;Error Telling user that he must Click some button On the Page So that he is routed to the verification page to verify his identity&amp;nbsp;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-340" y="1500" width="450" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-41" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-39" target="GnCDbtM61hniwt4AIbQG-34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-39" value="User clicksLink element on the page&amp;nbsp;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="150" y="1610" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-42">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="1280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-42" value="&lt;font style=&quot;color: rgb(255, 51, 51);&quot;&gt;Error massege Should Tell The User That he Must Click some Link or button on the UI that will only redirect him to the Signupp age&amp;nbsp;&amp;nbsp;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="590" y="1245" width="220" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="GnCDbtM61hniwt4AIbQG-44" target="GnCDbtM61hniwt4AIbQG-46">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-44" value="User clicks&amp;nbsp; Link Tag on the UI" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="470" y="1370" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="GnCDbtM61hniwt4AIbQG-46" value="Reuse Use the Signup component" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="470" y="1510" width="80" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -3,7 +3,7 @@
 
 import React, {useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 
 // error's shape
   interface FormErrors {
@@ -410,7 +410,8 @@ export  default function SignupForm() {
           </button>
           <p className="text-sm text-center text-gray-600">
             Already have an account?{" "}
-            <a href="#signin" className="text-blue-600 hover:underline">Sign in</a>
+            <Link to="/Login" className="text-blue-600 hover:underline">Sign in</Link>
+
           </p>
         </div>
       </form>
