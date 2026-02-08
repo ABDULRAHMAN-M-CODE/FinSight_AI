@@ -18,6 +18,8 @@ from app.security.security import generate_raw_token,hash_token, token_expiry,ge
 from app.core.email import send_email
 from app.core.PWV import validate_password
 from app.security.security import verify_token
+
+
 router = APIRouter(prefix="/auth")
 
 
@@ -75,6 +77,9 @@ def register(user: UserRegister, background_tasks: BackgroundTasks, db: Session 
     )
 
     return {"message": "User registered successfully. Please check your email for verify"}
+
+
+
 
 
 @router.post("/verify-email")
@@ -146,6 +151,9 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     }
 
 
+
+
+
 @router.post("/forgot-password")
 def forgot_password(
     data: ForgotPasswordRequest,
@@ -188,7 +196,7 @@ If you did not request this, please ignore this email.
 """
         )
 
-    # ALWAYS return the same message (security best practice)
+    # ALWAYS return the same message (security best practice) .
     return {
         "message": "If the email exists, a reset link was sent"
     }

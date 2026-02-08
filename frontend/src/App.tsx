@@ -8,9 +8,12 @@ import EmailVerification from './pages/EmailVerification';
 import Questionarry from './pages/Questionarry';
 import PostSignup from './pages/PostSignup';
 import DataCollectionIntro from './pages/DataCollectionIntro';
-import ResetPassword from './pages/resetPassword';
+import ResetPassword from './pages/ForgotPassword';
 import EnterEmailToVerify from './pages/EnterEmailToVerify';
 import Dashboard from './pages/Dashboard';
+import ForgotPassword from './pages/ForgotPassword';
+import SetPasswordPage from './pages/SetPasswordPage';
+import ForgotPassword_SuccessfullReset from './pages/ForgotPassword_SuccessfullReset';
 function App() {    
    // [path="/"] is the  default route to be rendered 
    
@@ -27,6 +30,11 @@ function App() {
       <Route  path="/ResetPassword" element={  <ResetPassword/>   } />
       <Route path="/EnterEmailToVerify" element={<EnterEmailToVerify />}/>
       <Route path="/Dashboard" element={<Dashboard />}/>
+      <Route path="/ForgotPassword" element={<ForgotPassword />}/>
+      <Route path="/SetPasswordPage" element={<SetPasswordPage />}/>
+      
+      <Route path="/ForgotPassword_SuccessfullReset" element={<ForgotPassword_SuccessfullReset />}/>
+      
     </Routes>
   );
       
