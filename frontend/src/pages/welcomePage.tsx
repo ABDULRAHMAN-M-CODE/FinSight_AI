@@ -6,6 +6,7 @@ import screenshot1 from '../assets/Dashboard2.png';
 import screenshot3 from '../assets/whatIF.png';
 import screenshot2 from '../assets/image.png';
 import FinanceLogo from './Logo';
+import { Link } from 'react-router-dom';
 export default function WelcomePage() {
   //what the first div styling is doing: min-h-screen makes sure the div takes at least the full height of the viewport,the reason we want the first div to have full heigh is to ensure that the welcome page covers the entire screen height regardless of the content inside it.
   //bg-[#0a2540] sets the background color to a dark blue shade
@@ -51,9 +52,9 @@ export default function WelcomePage() {
             </div>
             
             <div>
-              <button className="px-8 py-3.5 bg-white text-[#0a2540] rounded-md font-medium hover:bg-gray-100 transition-colors" onClick={()=> navigateTO("/Questionarry")}>
+              <Link to="/MultiStepFlow" className="px-8 py-3.5 bg-white text-[#0a2540] rounded-md font-medium hover:bg-gray-100 transition-colors" >
                 See a Demo
-              </button>
+              </Link>
             </div>
           </div>
 

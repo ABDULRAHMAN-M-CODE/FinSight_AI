@@ -14,6 +14,7 @@ import Dashboard from './pages/Dashboard';
 import ForgotPassword from './pages/ForgotPassword';
 import SetPasswordPage from './pages/SetPasswordPage';
 import ForgotPassword_SuccessfullReset from './pages/ForgotPassword_SuccessfullReset';
+import MultiStepFlow from './pages/MultiStepFlow';
 function App() {    
    // [path="/"] is the  default route to be rendered 
    
@@ -32,8 +33,8 @@ function App() {
       <Route path="/Dashboard" element={<Dashboard />}/>
       <Route path="/ForgotPassword" element={<ForgotPassword />}/>
       <Route path="/SetPasswordPage" element={<SetPasswordPage />}/>
-      
       <Route path="/ForgotPassword_SuccessfullReset" element={<ForgotPassword_SuccessfullReset />}/>
+      <Route path="/MultiStepFlow" element={<MultiStepFlow />}/>
       
     </Routes>
   );
