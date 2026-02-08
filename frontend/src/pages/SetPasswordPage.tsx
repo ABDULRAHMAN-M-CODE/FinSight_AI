@@ -2,6 +2,7 @@ import { Eye, EyeOff, ArrowRight, Check, X } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import svgPaths from "./imports/svg-i38a9njwbx";
+import { useSearchParams } from "react-router-dom";
 type PasswordStrength = "weak" | "medium" | "strong" | null;
 
 function PasswordRequirement({ met, text }: { met: boolean; text: string }) {
@@ -17,7 +18,10 @@ function PasswordRequirement({ met, text }: { met: boolean; text: string }) {
 
 function useSetPasswordPage(){ 
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get("token");
     const [password, setPassword] = useState("");
+    
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -27,8 +31,10 @@ function useSetPasswordPage(){
     const [touched, setTouched] = useState({ password: false, confirm: false });
     const passwordsMatch = confirmPassword && password === confirmPassword;
     const passwordsDontMatch = confirmPassword && password !== confirmPassword;
-    const isValid = password.length >= 12 && passwordsMatch;
-  
+    //const isValid = password.length >= 12 && passwordsMatch;
+    const isValid =password.length >= 12 &&/[A-Z]/.test(password) &&/[0-9]/.test(password) &&/[^A-Za-z0-9]/.test(password) &&
+    passwordsMatch;
+
     const strengthColor = {
         weak: "#ef4444",
         medium: "#f59e0b",
@@ -62,7 +68,8 @@ function useSetPasswordPage(){
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                password:password.trim()
+                token,
+                new_password:password.trim()
             }),
             });
             if (!response.ok){

@@ -176,7 +176,7 @@ def forgot_password(
         db.commit()
 
         reset_link = (
-            f"https://your-frontend.com/reset-password?"
+            f"http://127.0.0.1:5173/setPasswordPage?" # Abd's comment : in production, we need  real hose name like  : FinSightAI.com  , instead of local host, but for now , we are not just prototyping !
             f"token={raw_token}"
         )
 
