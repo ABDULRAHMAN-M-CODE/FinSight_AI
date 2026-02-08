@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 
 export default function ForgotPassword_SuccessfullReset() {
-
-
   return (
     <div className="min-h-screen bg-[#2a2d34] flex items-center justify-center p-6">
       <div className="max-w-lg w-full text-center space-y-8">

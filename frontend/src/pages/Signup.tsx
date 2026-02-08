@@ -124,8 +124,10 @@ const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     setIsLoading(false);
     dispatch(setGlobalEmail(formData.email));
     navigate("/EmailVerification");
-  } catch {
-    setErrors({ general: "Network error. Try again." });
+  } catch (error) {
+    console.log(error);// Executed correctly
+    setIsLoading(false);// Executed correctly
+    setErrors({ general: "Network error. Try again." });// I do not see errror on the UI!!
   } 
 };
 
@@ -192,8 +194,9 @@ export  default function SignupForm() {
 
       <form onSubmit={handleSubmit} className="p-6">
         <div className="space-y-4">
-          {/* STATE 6: Email already exists error */}
-          {emailExistsError && errors.general && (
+
+          {/*Email already exists error : conditional rendering */}
+          {emailExistsError && (
             <div className="border border-red-300 bg-red-50 rounded-lg p-4">
               <div className="flex items-start gap-3">
                 <svg className="w-5 h-5 text-red-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -208,6 +211,13 @@ export  default function SignupForm() {
                   </p>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/**Network error: conditonal rendering */}
+          {errors.general && !emailExistsError && (
+            <div className="border border-red-300 bg-red-50 rounded-lg p-4 text-red-800">
+              {errors.general}
             </div>
           )}
 
@@ -393,7 +403,8 @@ export  default function SignupForm() {
               </p>
             )}
           </div>
-        </div>
+        </div>{/*here*/}
+        
 
         <div className="mt-6 space-y-4">
           {/* STATE 3: Loading state */}

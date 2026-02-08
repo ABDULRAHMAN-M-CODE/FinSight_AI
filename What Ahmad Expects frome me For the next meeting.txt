@@ -1,6 +1,6 @@
-Make the Forget password full Stack
 
-Reset password
+
+Reset password (For Later , user can do this while he is inside the app)
 
 UI Eye Bug 
 
