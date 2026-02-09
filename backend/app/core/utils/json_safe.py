@@ -1,7 +1,7 @@
 from decimal import Decimal
 from datetime import date, datetime
 from uuid import UUID
-
+# logic for json receive from frontend
 def json_safe(value):
     if isinstance(value, Decimal):
         return float(value)

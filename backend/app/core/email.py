@@ -4,7 +4,7 @@ import secrets
 from email.message import EmailMessage
 from app.core.config import settings
 
-
+# logic made to send emails using Simple mail transfer protocol (SMTP)
 def send_email(to: str, subject: str, body: str):
     msg = EmailMessage()
     msg["From"] = settings.FROM_EMAIL

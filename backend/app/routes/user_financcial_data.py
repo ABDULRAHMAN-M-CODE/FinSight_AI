@@ -10,7 +10,7 @@ from app.models.limited_advice import LimitedAdvice
 from app.models.investment_account import InvestmentAccount
 from app.models.goal import Goal
 
-from app.schemas.Questionnaire import QuestionnaireSubmit
+from app.schemas.Questionnaire import QuestionnaireSubmit , LimitedQuestionnaireSubmit
 from app.core.utils.finance_calculations import (
     compute_savings_rate,
     compute_projections,
@@ -19,7 +19,7 @@ from app.core.utils.json_safe import json_safe
 
 router = APIRouter(prefix="/onboarding")
 
-
+# this endpoint is meant to serve the first login questionnaire page (authorization required, first time login only )
 @router.post("/questionnaire", status_code=status.HTTP_201_CREATED)
 def submit_questionnaire(
     data: QuestionnaireSubmit,
@@ -128,3 +128,21 @@ def submit_questionnaire(
         )
 
     return {"message": "Questionnaire submitted successfully"}
+
+# this endpoint is meant to serve the demo (no authorization required)
+@router.post("/Limited-questionnaire", status_code=status.HTTP_201_CREATED)
+def submit_questionnaire(
+    data: LimitedQuestionnaireSubmit
+):
+    try: 
+         pass
+    # no logic and db commit yet , this endpoint just receives the json data from ui for the  demo.
+
+    except Exception as e:
+            print(f"Error submitting questionnaire: {str(e)}")
+            raise HTTPException(
+                status_code=500,
+                detail="Failed to submit questionnaire",
+            )
+    return data
+

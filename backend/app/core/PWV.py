@@ -1,6 +1,6 @@
 import re
 from fastapi import HTTPException, status
-
+# logic to ensure strog passwords only (chars :atleast 12 characters, atleast 1 uppercase ,atleast 1 lowercase and atleast 1 symbol)
 def validate_password(password: str) -> None:
     """
     Strong password validation (OWASP-aligned).

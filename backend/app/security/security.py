@@ -6,7 +6,7 @@ import hashlib
 import hmac
 from app.core.config import settings
 
-# extra logic to hash passwords and create tokens
+# extra logic to handle passwords, tokens and email codes 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash_password(password: str) -> str:
