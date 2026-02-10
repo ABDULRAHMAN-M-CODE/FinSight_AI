@@ -1,6 +1,6 @@
 from pydantic import BaseModel,Field
 from decimal import Decimal
-from typing import List, Optional
+from typing import List, Optional,Literal
 from datetime import date
 
 # DTO for House hold members
