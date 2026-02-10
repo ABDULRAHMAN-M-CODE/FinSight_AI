@@ -1,0 +1,9 @@
+App
+ └── Store (single global container)
+      ├── Slice: auth
+      │    ├── state
+      │    └── reducers
+      └── Slice: limitedAdvice
+           ├── state
+           └── reducers
+      |___Slice:...... 

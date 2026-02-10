@@ -1,0 +1,119 @@
+import { useState } from 'react';
+import { 
+  Briefcase, 
+} from 'lucide-react';
+import { HouseholdIncomeSection } from './HouseholdIncomeSection';
+import { MonthlyBudgetSection } from './MonthlyBudgetSection';
+import { InvestmentAccountsSection } from './InvestmentAccountsSection';
+import { OutstandingDebtsSection } from './OutstandingDebtsSection';
+import { LifeInsuranceSection } from './LifeInsuranceSection';
+import { FinancialGoalsSection } from './FinancialGoalsSection';
+import type { HouseholdMember, InvestmentAccount, Debt, Goal, InsuranceInfo } from './financial';
+
+function useFinancialProfileForm(){
+ const [householdMembers, setHouseholdMembers] = useState<HouseholdMember[]>([
+    { name: '', income: '', source: '' }
+  ]);
+  
+  const [monthlyBudget, setMonthlyBudget] = useState('');
+  
+  const [investmentAccounts, setInvestmentAccounts] = useState<InvestmentAccount[]>([
+    { id: '1', accountName: '', accountType: '', currentBalance: '', isActive: true }
+  ]);
+  
+  const [debts, setDebts] = useState<Debt[]>([
+    { id: '1', type: '', balance: '', monthlyPayment: '', interestRate: '' }
+  ]);
+  
+  const [insurance, setInsurance] = useState<InsuranceInfo>({
+    type: '',
+    deathBenefit: '',
+    cashValue: '',
+    monthlyPremium: ''
+  });
+  
+  const [goals, setGoals] = useState<Goal[]>([
+    { id: '1', name: '', type: 'short-term', targetAmount: '', deadline: '' }
+  ]);
+  return{
+     householdMembers
+     ,setHouseholdMembers
+     , monthlyBudget
+     ,setMonthlyBudget
+    ,investmentAccounts
+    ,setInvestmentAccounts
+    ,debts
+    ,setDebts
+    ,insurance
+    ,setInsurance
+    ,goals
+    ,setGoals
+  }
+
+}
+export default function FinancialProfileForm  ()  {
+ 
+  const {householdMembers
+     ,setHouseholdMembers     
+     , monthlyBudget
+     ,setMonthlyBudget
+     , investmentAccounts
+     ,setInvestmentAccounts,
+    debts
+    ,setDebts
+    ,insurance
+    ,setInsurance
+    ,goals
+    ,setGoals} = useFinancialProfileForm();
+ 
+    return (
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4">
+          <Briefcase className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-gray-900 mb-2">Financial Profile</h1>
+        <p className="text-gray-600 text-sm">
+          Help us understand your financial situation to provide personalized guidance
+        </p>
+      </div>
+
+      {/* Household Income */}
+      <HouseholdIncomeSection
+        members={householdMembers}
+        onUpdate={setHouseholdMembers}
+      />
+
+      {/* Monthly Household Budget */}
+      <MonthlyBudgetSection
+        budget={monthlyBudget}
+        onUpdate={setMonthlyBudget}
+      />
+
+      {/* Investment Accounts */}
+      <InvestmentAccountsSection
+        accounts={investmentAccounts}
+        onUpdate={setInvestmentAccounts}
+      />
+
+      {/* Outstanding Debts */}
+      <OutstandingDebtsSection
+        debts={debts}
+        onUpdate={setDebts}
+      />
+
+      {/* Life Insurance Coverage */}
+      <LifeInsuranceSection
+        insurance={insurance}
+        onUpdate={setInsurance}
+      />
+
+      {/* Financial Goals */}
+      <FinancialGoalsSection
+        goals={goals}
+        onUpdate={setGoals}
+      />
+    </div>
+  );
+};

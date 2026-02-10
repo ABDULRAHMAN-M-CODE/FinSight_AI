@@ -282,6 +282,7 @@ export  default function SignupForm() {
                 )}
               </button>
             </div>
+            
             {/* STATE 5: Weak password error */}
             {errors.password && (
               <div className="border border-red-300 bg-red-50 rounded-lg p-3">

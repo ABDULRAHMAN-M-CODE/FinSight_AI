@@ -1,7 +1,7 @@
 //import { useDispatch } from 'react-redux';
 //import { setPage } from '../mainSlice';
 
-import {useNavigate } from 'react-router-dom';
+
 import screenshot1 from '../assets/Dashboard2.png';
 import screenshot3 from '../assets/whatIF.png';
 import screenshot2 from '../assets/image.png';
@@ -12,7 +12,7 @@ export default function WelcomePage() {
   //bg-[#0a2540] sets the background color to a dark blue shade
   //text-white sets the default text color to white for better contrast against the dark background
   // in css, I used to say "border: solid red", how to make this effect in tailwind? -> border border-red-500
-    const navigateTO= useNavigate();
+    
   return (
     <div className="min-h-screen bg-[#0a2540] text-white">
       {/* Header */}
@@ -27,12 +27,10 @@ export default function WelcomePage() {
         </div>
         
         <div className="flex items-center gap-4">
-          <button className="px-6 py-2.5 border border-white/30 rounded-md text-white hover:bg-white/10 cursor-pointer  transition-colors" onClick={()=>navigateTO("/Login") }>
-            Login
-          </button>
-          <button className="px-6 py-2.5 border border-white/30 rounded-md text-white hover:bg-white/10 cursor-pointer transition-colors" onClick={() => navigateTO("/Signup")}>
+          <Link to="/Login" className=" px-6 py-2.5 border border-white/30 rounded-md text-white hover:bg-white/10 cursor-pointer  transition-colors"  >Login</Link>
+          <Link to="/Signup" className="px-6 py-2.5 border border-white/30 rounded-md text-white hover:bg-white/10 cursor-pointer transition-colors" >
             Sign up
-          </button>
+          </Link>
         </div>
       </header>
 
@@ -52,7 +50,7 @@ export default function WelcomePage() {
             </div>
             
             <div>
-              <Link to="/MultiStepFlow" className="px-8 py-3.5 bg-white text-[#0a2540] rounded-md font-medium hover:bg-gray-100 transition-colors" >
+              <Link to="/MultiStepFlow" className="px-8 py-3.5 bg-white text-[#0a2540] rounded-md font-medium hover:bg-gray-100 transition-colors"  onClick={()=> localStorage.removeItem("currentStep")}>
                 See a Demo
               </Link>
             </div>

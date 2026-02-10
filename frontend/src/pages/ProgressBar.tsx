@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 
+
 interface ProgressBarProps {
   currentStep: number;
   totalSteps: number;

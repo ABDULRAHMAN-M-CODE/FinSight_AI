@@ -1,11 +1,13 @@
-
+// React Router Related
 import { Routes,Route} from 'react-router-dom';
+
+// components related
 import IntroStepper from './pages/IntroStepper';
 import WelcomePage from "./pages/welcomePage";
 import Login from "./pages/Login";
 import SignUpForm  from "./pages/Signup";
 import EmailVerification from './pages/EmailVerification';
-import Questionarry from './pages/Questionarry';
+import FinancialProfileForm from './pages/FinancialProfileForm';
 import PostSignup from './pages/PostSignup';
 import DataCollectionIntro from './pages/DataCollectionIntro';
 import ResetPassword from './pages/ForgotPassword';
@@ -15,14 +17,16 @@ import ForgotPassword from './pages/ForgotPassword';
 import SetPasswordPage from './pages/SetPasswordPage';
 import ForgotPassword_SuccessfullReset from './pages/ForgotPassword_SuccessfullReset';
 import MultiStepFlow from './pages/MultiStepFlow';
+
 function App() {    
    // [path="/"] is the  default route to be rendered 
    
    return(
     <Routes>
+
       <Route path="/" element={<WelcomePage />}/>
       <Route path='/Login' element={<Login />} />
-      <Route path='/Questionarry' element={<Questionarry />} />
+      <Route path='/FinancialProfileForm' element={<FinancialProfileForm />} />
       <Route path="/EmailVerification" element={<EmailVerification/>}/>
       <Route path="/IntroStepper"  element={<IntroStepper />}/>
       <Route path="/Signup"  element={ <SignUpForm /> } />
@@ -35,6 +39,7 @@ function App() {
       <Route path="/SetPasswordPage" element={<SetPasswordPage />}/>
       <Route path="/ForgotPassword_SuccessfullReset" element={<ForgotPassword_SuccessfullReset />}/>
       <Route path="/MultiStepFlow" element={<MultiStepFlow />}/>
+      
       
     </Routes>
   );

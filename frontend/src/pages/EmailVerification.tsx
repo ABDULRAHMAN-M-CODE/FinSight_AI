@@ -1,12 +1,21 @@
-//Only Question to chatGPT: does this UI generate or the email field ? if not , should we consider to pass it to this component as prop, or should we define redux store that stores the email as golobal field, or should we use fetch to query the database to get the user's email?
-import { useNavigate } from "react-router-dom";
+
+
+
+//reusable UI components
 import { AlertCircle, Clock,  Loader2, Mail } from "lucide-react";
+
+//  hooks
 import { useEffect } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
+
+//Redux Related: Reading State from Store
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
 
+
+// Logic and States Lives here
 function useEmailVerification({email}:{email:string}) {
   const [verificationCode, setVerificationCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -93,8 +102,12 @@ function useEmailVerification({email}:{email:string}) {
   }
 }
 
- export default function EmailVerification() {
+
+//Rendering Lives here 
+export default function EmailVerification() {
+    // Redux Related : Read state from the store
     const email= useSelector((state:RootState)=>state.auth.email);
+    
     const
      {
         handleVerificationSubmit, 
@@ -106,6 +119,8 @@ function useEmailVerification({email}:{email:string}) {
         emailResendingSucceded,
         setEmailResendingSucceded
     }= useEmailVerification({email});
+    
+    //I do not understand why I needed this useEffect.
     useEffect(() => { //  
     if (emailResendingSucceded) {
       const timer = setTimeout(() => {
@@ -116,6 +131,7 @@ function useEmailVerification({email}:{email:string}) {
     }
   }, [emailResendingSucceded]); 
 
+  
   return (
     <div className="w-full max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
       {/* Header */}

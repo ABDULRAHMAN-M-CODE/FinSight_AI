@@ -1,16 +1,24 @@
 import { useState } from 'react';
-import { Mail, ArrowRight } from 'lucide-react';
-import { useDispatch } from 'react-redux';
-import { setEmail as setGlobalEmail } from '../store/authSlice';
+
 import { useNavigate } from 'react-router-dom';
+
+import { useDispatch } from 'react-redux'; // Redux related
+import { setEmail as setGlobalEmail } from '../store/authSlice';// Redux Related :  " Email is shared"
+
+import { Mail, ArrowRight } from 'lucide-react';
+
 // Not Deployable Logic Yet
 function useEnterEmailToVerify(){
+  
   const [email, setEmail] = useState('');
+  
   const dispatch = useDispatch();
+  
   const navigate = useNavigate();
+
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
    
-    //if (!email.trim()) return; 
+   
     e.preventDefault();
     dispatch(setGlobalEmail(email));
     navigate("/EmailVerification")

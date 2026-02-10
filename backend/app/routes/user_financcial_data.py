@@ -129,15 +129,24 @@ def submit_questionnaire(
 
     return {"message": "Questionnaire submitted successfully"}
 
+
 # this endpoint is meant to serve the demo (no authorization required)
+
 @router.post("/Limited-questionnaire", status_code=status.HTTP_201_CREATED)
-def submit_questionnaire(
-    data: LimitedQuestionnaireSubmit
-):
+    
+    #Server-side validation using pydantic model.
+    def submit_questionnaire(
+    data: LimitedQuestionnaireSubmit 
+    ):
     try: 
          pass
     # no logic and db commit yet , this endpoint just receives the json data from ui for the  demo.
+    
 
+
+
+
+    #Logic Ends here.
     except Exception as e:
             print(f"Error submitting questionnaire: {str(e)}")
             raise HTTPException(

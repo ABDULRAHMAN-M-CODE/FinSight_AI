@@ -2,8 +2,6 @@
 
 Reset password (For Later , user can do this while he is inside the app)
 
-UI Eye Bug 
-
 Progress Bar
 
 Intermediate UI "شاشة تعريفية"

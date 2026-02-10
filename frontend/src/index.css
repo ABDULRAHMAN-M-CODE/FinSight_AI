@@ -1,4 +1,8 @@
+/* Tailwind css fro styling*/
 @import "tailwindcss";
+
+
+/* prevent broswer from adding Additional Eye Icon during password Writing*/
 input::-ms-reveal,
 input::-ms-clear {
   display: none;

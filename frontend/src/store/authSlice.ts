@@ -1,26 +1,34 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
+
+
+
 interface AuthState {
   email: string;
 }
 
 const initialState: AuthState = {
-  email: '',
+  email: ''
+  
 };
+
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+
     setEmail: (state, action: PayloadAction<string>) => {
       state.email = action.payload;
     },
+    // prevent data from being stuck on the store 
     clearAuth: (state) => {
       state.email = '';
+      
     },
   },
 });
 
-export const { setEmail, clearAuth } = authSlice.actions;
+export const { setEmail, clearAuth} = authSlice.actions;
 export default authSlice.reducer;
