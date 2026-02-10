@@ -1,7 +1,4 @@
-#I got this from langChain docs.
-from langchain.agents import create_agent
-from app.prompts import SYSTEM_PROMPT
-from app.schemas.Demo_AI_Response import DemoResponseFormat
+
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -136,17 +133,23 @@ def submit_questionnaire(
 
 # this endpoint is meant to serve the demo (no authorization required)
 
-@router.post("/Limited-questionnaire", status_code=status.HTTP_201_CREATED)
+@router.post("/limited-questionnaire", status_code=status.HTTP_201_CREATED)
     
 
-def submit_questionnaire(
+def submit_limited_questionnaire(    # prevent two functions with the same name issue    
     data: LimitedQuestionnaireSubmit 
     ):
     
     try: 
         
-      
-      user_context = data.model_dump_json()              # turn the data to data type that the LLM is expert to deal with       
+      # turn the data to data type that the LLM is expert to deal with
+      user_context = data.model_dump_json()                     
+    
+      #mandatory imports, don't move them from here, keep those imports in this place, we will copy-paste LangChain codes alot, we want to copy the imports with the  to reduce Errors
+      from langchain.agents.structured_output import ToolStrategy  
+      from langchain.agents import create_agent
+      from app.prompts import SYSTEM_PROMPT
+      from app.schemas.Demo_AI_Response import DemoResponseFormat
       
       agent = create_agent(                              # Abstraction note : inside the Agent, the os.getenv("OPENAI_API_KEY") is called, this is hidden from us.                                 
         model="gpt-5-nano",                              # we can choose any LLM supported by openAI.
@@ -173,5 +176,5 @@ def submit_questionnaire(
                 status_code=500,
                 detail="Failed to submit questionnaire",
             )
-    return data
+      
 

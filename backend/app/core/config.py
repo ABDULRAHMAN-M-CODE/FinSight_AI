@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str = "HS256"
     TOKEN_SECRET: str
-    
+    OPENAI_API_KEY: str
     SMTP_HOST: str
     SMTP_PORT: int
     SMTP_USERNAME: str

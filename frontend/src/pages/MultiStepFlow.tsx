@@ -19,7 +19,7 @@
    //State+ Logic
   function useMultiStepFlow(){
 
-        //const [currentStep, setCurrentStep]=useState(1); → This causes Lose of progress if page reloads or if the component is remounted
+       // const [currentStep, setCurrentStep]=useState(1); //→ This causes Lose of progress if page reloads or if the component is remounted
         
         // use Local Storage instead
         // state Lives inside the component for once, Then it's always outside component ,therefore , no loosing of progress
@@ -73,7 +73,7 @@
               const goalsArray = goalIndices.map(index => ({
                 name: formData.get(`goals[${index}][name]`),
                 type: formData.get(`goals[${index}][type]`),
-                target_amount: parseFloat(formData.get(`goals[${index}][target_amount]`) as string) || 0,
+                amount: parseFloat(formData.get(`goals[${index}][amount]`) as string) || 0,
                 deadline: formData.get(`goals[${index}][deadline]`)
               }));
               const payload = {
@@ -81,11 +81,11 @@
                 financial_goals: goalsArray, // <--- Add the 'n' here
               };
 
-              console.log("Final Payload for Python:", payload);
+              console.log("Final Payload for Python:", JSON.stringify(payload));
 
         // frontend calls backend, backend calls LLM , LLm return repsonse to backend, backend return final response
       try {
-        const response = await fetch("http://127.0.0.1:8000/Limited-questionnaire", { // check URL later 
+        const response = await fetch("http://127.0.0.1:8000/onboarding/limited-questionnaire", { // check URL later 
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -109,12 +109,19 @@
         
 
         //
-        //The AI result is  guaranteed or promised to be of some shape "interface" 
+        //The AI result is  guaranteed or promised to be of some shape "interface"
+        alert("LangChain Agent worked perfectly, ur Advice is ready ") 
         const AI_RESPONSE:limitedAdvice= await response.json();
-        setFinishedProcessing(true);
+        console.log(AI_RESPONSE);
+        
         dispatch(setGlobalLimitedAdviceData(AI_RESPONSE) );
         setIsLoading(false);
-        alert("Form Submitted Succesfully ")
+        // ADD THIS LINE:
+        setFinishedProcessing(true);
+        setCurrentStep(3); 
+        localStorage.setItem("currentStep", "3");
+        
+        
       } catch (error) {
         setIsLoading(false);
         alert("Connection failed, pleas check your internet connection and try again")
