@@ -132,6 +132,7 @@ export default function LimitedAdvice() {
                       <h4 className="text-base font-semibold text-slate-900">{account.account_name}</h4>
                       <p className="text-xs text-slate-600 mt-0.5">{account.account_type}</p>
                     </div>
+                    
                     <div className={`px-3 py-1 rounded-xl ${effColors.bg} border ${effColors.border}`}>
                       <p className={`text-xs font-bold ${effColors.text}`}>{account.efficiency_score_percent}% Efficient</p>
                     </div>
