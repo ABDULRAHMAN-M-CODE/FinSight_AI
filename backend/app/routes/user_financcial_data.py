@@ -27,7 +27,7 @@ def submit_questionnaire(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    if not current_user.is_first_login:
+    if not current_user.is_first_login:   
         raise HTTPException(
             status_code=400,
             detail="Questionnaire already completed",
