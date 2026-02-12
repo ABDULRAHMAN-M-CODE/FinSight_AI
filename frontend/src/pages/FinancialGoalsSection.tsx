@@ -6,7 +6,7 @@ import { Label } from './Label';
 import { Button } from './Button';
 import { Select } from './Select';
 import { IconButton } from './IconButton';
-import type { Goal } from './financial';
+import type { Goal } from '../types/financial';
 
 interface FinancialGoalsSectionProps {
   goals: Goal[];
@@ -29,7 +29,7 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
       id: Date.now().toString(),
       name: '',
       type: 'short-term',
-      targetAmount: '',
+      target_amount: 0,
       deadline: ''
     };
     onUpdate([...goals, newGoal]);
@@ -100,9 +100,9 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
                   id={`goal-amount-${goal.id}`}
                   name={`goals[${index}][target_amount]`}
                   placeholder="$50,000"
-                  value={goal.targetAmount}
+                  value={goal.target_amount}
                   type='number'
-                  onChange={(e) => updateGoal(goal.id, 'targetAmount', e.target.value)}
+                  onChange={(e) => updateGoal(goal.id, 'target_amount', e.target.value)}
                 />
               </div>
               <div className="space-y-2">

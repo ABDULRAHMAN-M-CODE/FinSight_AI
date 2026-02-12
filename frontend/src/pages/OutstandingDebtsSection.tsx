@@ -5,7 +5,7 @@ import { Input } from './Input';
 import { Label } from './Label';
 import { Button } from './Button';
 import { IconButton } from './IconButton';
-import type { Debt } from './financial';
+import type { Debt } from '../types/financial';
 
 interface OutstandingDebtsSectionProps {
   debts: Debt[];
@@ -27,9 +27,9 @@ export const OutstandingDebtsSection: React.FC<OutstandingDebtsSectionProps> = (
     const newDebt: Debt = {
       id: Date.now().toString(),
       type: '',
-      balance: '',
-      monthlyPayment: '',
-      interestRate: ''
+      balance: 0,
+      monthly_payment:0,
+      interest_rate: 0
     };
     onUpdate([...debts, newDebt]);
   };
@@ -71,6 +71,7 @@ export const OutstandingDebtsSection: React.FC<OutstandingDebtsSectionProps> = (
               <Label htmlFor={`debt-type-${debt.id}`}>Debt Type</Label>
               <Input
                 id={`debt-type-${debt.id}`}
+                pattern="[A-Za-z\s]+"
                 placeholder="e.g., Mortgage, Student Loan, Credit Card"
                 value={debt.type}
                 onChange={(e) => updateDebt(debt.id, 'type', e.target.value)}
@@ -81,6 +82,7 @@ export const OutstandingDebtsSection: React.FC<OutstandingDebtsSectionProps> = (
                 <Label htmlFor={`debt-balance-${debt.id}`}>Balance</Label>
                 <Input
                   id={`debt-balance-${debt.id}`}
+                  type='number'
                   placeholder="$350,000"
                   value={debt.balance}
                   onChange={(e) => updateDebt(debt.id, 'balance', e.target.value)}
@@ -90,18 +92,20 @@ export const OutstandingDebtsSection: React.FC<OutstandingDebtsSectionProps> = (
                 <Label htmlFor={`debt-payment-${debt.id}`}>Monthly Payment</Label>
                 <Input
                   id={`debt-payment-${debt.id}`}
+                  type='number'
                   placeholder="$2,100"
-                  value={debt.monthlyPayment}
-                  onChange={(e) => updateDebt(debt.id, 'monthlyPayment', e.target.value)}
+                  value={debt.monthly_payment}
+                  onChange={(e) => updateDebt(debt.id, 'monthly_payment', e.target.value)}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor={`debt-rate-${debt.id}`}>Interest Rate</Label>
                 <Input
                   id={`debt-rate-${debt.id}`}
+                  type='number'
                   placeholder="3.5%"
-                  value={debt.interestRate}
-                  onChange={(e) => updateDebt(debt.id, 'interestRate', e.target.value)}
+                  value={debt.interest_rate}
+                  onChange={(e) => updateDebt(debt.id, 'interest_rate', e.target.value)}
                 />
               </div>
             </div>

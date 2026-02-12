@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent } from './Card';
 import { Input } from './Input';
 import { Label } from './Label';
 import { Button } from './Button';
-import type { HouseholdMember } from './financial';
+import type { HouseholdMember } from '../types/financial';
 
 interface HouseholdIncomeSectionProps {
   members: HouseholdMember[];
@@ -22,7 +22,7 @@ export const HouseholdIncomeSection: React.FC<HouseholdIncomeSectionProps> = ({
   };
 
   const addMember = () => {
-    onUpdate([...members, { name: '', income: '', source: '' }]);
+    onUpdate([...members, { member_name: '', annual_income: 0, income_source: '' }]);
   };
 
   return (
@@ -48,18 +48,21 @@ export const HouseholdIncomeSection: React.FC<HouseholdIncomeSectionProps> = ({
                 <Label htmlFor={`member-name-${index}`}>Member Name</Label>
                 <Input
                   id={`member-name-${index}`}
+                  type='text'
+                  pattern="^[A-Za-z\s]+$"
                   placeholder="e.g., John Doe"
-                  value={member.name}
-                  onChange={(e) => updateMember(index, 'name', e.target.value)}
+                  value={member.member_name}
+                  onChange={(e) => updateMember(index, 'member_name', e.target.value)}
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor={`member-income-${index}`}>Annual Income</Label>
                 <Input
                   id={`member-income-${index}`}
+                  type='number'
                   placeholder="$120,000"
-                  value={member.income}
-                  onChange={(e) => updateMember(index, 'income', e.target.value)}
+                  value={member.annual_income}
+                  onChange={(e) => updateMember(index, 'annual_income', e.target.value)}
                 />
               </div>
             </div>
@@ -67,9 +70,10 @@ export const HouseholdIncomeSection: React.FC<HouseholdIncomeSectionProps> = ({
               <Label htmlFor={`member-source-${index}`}>Income Source</Label>
               <Input
                 id={`member-source-${index}`}
+                pattern="^[A-Za-z\s]+$"
                 placeholder="e.g., Salary, Business, Investments"
-                value={member.source}
-                onChange={(e) => updateMember(index, 'source', e.target.value)}
+                value={member.income_source}
+                onChange={(e) => updateMember(index, 'income_source', e.target.value)}
               />
             </div>
           </div>

@@ -1,18 +1,17 @@
 import { Check } from "lucide-react";
 
 
+interface Step{
+  number: number,
+  label:string
+}
 interface ProgressBarProps {
   currentStep: number;
   totalSteps: number;
+  steps:Step[]
 }
 
-export function ProgressBar({ currentStep, totalSteps }: ProgressBarProps) {
-  const steps = [
-    { number: 1, label: "Introduction" },
-    { number: 2, label: "Financial Context" },
-    { number: 3, label: "Recommendation" },
-  ];
-
+export function ProgressBar({ currentStep, totalSteps, steps}: ProgressBarProps) {
   return (
     <div className="w-full max-w-3xl mx-auto px-4 py-6">
       <div className="flex items-center justify-between relative">

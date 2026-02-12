@@ -16,7 +16,7 @@
    import { Link } from "react-router-dom";
    import LimitedAdvice from "./LimitedAdvice";
   
-   //State+ Logic
+   //State+ Logic : custome hook
   function useMultiStepFlow(){
 
        // const [currentStep, setCurrentStep]=useState(1); //→ This causes Lose of progress if page reloads or if the component is remounted
@@ -30,16 +30,15 @@
         // Redux related, we dispatch actions(intents, whether intention of updating or clearing global value)
         const dispatch = useDispatch();
 
+        const steps = [
+          { number: 1, label: "Introduction" },
+          { number: 2, label: "Financial Context" },
+          { number: 3, label: "Recommendation" },
+        ];
         // Two custome Flags
         const [finishedProcessing, setFinishedProcessing]= useState(false);
         const [isLoading, setIsLoading]=useState(false);
 
-        const handleNext = () => {
-          if (currentStep < 3) {
-            setCurrentStep(currentStep + 1);
-            localStorage.setItem("currentStep",(currentStep+1).toString())// either adding the "currentStep" key or updating it's value
-          }
-        };
 
         
        const generateAdvice = async (e: React.SubmitEvent<HTMLFormElement>)=>{
@@ -72,7 +71,7 @@
 
               const goalsArray = goalIndices.map(index => ({
                 name: formData.get(`goals[${index}][name]`),
-                type: formData.get(`goals[${index}][type]`),
+                type: formData.get(`goal  s[${index}][type]`),
                 target_amount: parseFloat(formData.get(`goals[${index}][amount]`) as string) || 0,
                 deadline: formData.get(`goals[${index}][deadline]`)
               }));
@@ -127,6 +126,13 @@
         alert("Connection failed, pleas check your internet connection and try again")
       } 
        };
+        const handleNext = () => {
+          if (currentStep < 3) {
+            setCurrentStep(currentStep + 1);
+            localStorage.setItem("currentStep",(currentStep+1).toString())// either adding the "currentStep" key or updating it's value
+          }
+        };
+
 
        
        const handleBack = () => {
@@ -142,26 +148,27 @@
           currentStep,
           finishedProcessing,
           generateAdvice,
-          isLoading
+          isLoading,
+          steps
         };
         
   }
 
   //Rendering 
   export  default function MultiStepFlow() {
-    const {handleNext,handleBack,currentStep,finishedProcessing,generateAdvice,isLoading}=useMultiStepFlow();
-    
+    const {handleNext,handleBack,currentStep,finishedProcessing,generateAdvice,isLoading,steps}=useMultiStepFlow();
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 ">
         {/* Progress Bar */}
-
         <div className="pt-8">
-          <ProgressBar currentStep={currentStep} totalSteps={3} />
+          <ProgressBar currentStep={currentStep}  steps={steps}totalSteps={3} />
         </div>
 
         {/* Content Area */}
 
         <div className="max-w-2xl mx-auto px-4 py-12">
+          
           {/* Step 1: Introduction */}
           {currentStep === 1 && (
             <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">

@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { InvestmentAccountsSection } from './InvestmentAccountsSection';
 import { FinancialGoalsSection } from './FinancialGoalsSection';
-import type {InvestmentAccount, Goal} from './financial';
+import type {InvestmentAccount, Goal} from '../types/financial';
 function useSubFinancialProfileForm(){
 
   const [investmentAccounts, setInvestmentAccounts] = useState<InvestmentAccount[]>([
-    { id: '1', accountName: '', accountType: '', currentBalance: '', isActive: true }
+    { id: '1', name: '', type: '', current_balance: 0, is_active: true }
   ]);
 
   const [goals, setGoals] = useState<Goal[]>([
-    { id: '1', name: '', type: 'short-term', targetAmount: '', deadline: '' }
+    { id: '1', name: '', type: 'short-term', target_amount:0, deadline: '' }
   ]);
 
   return{

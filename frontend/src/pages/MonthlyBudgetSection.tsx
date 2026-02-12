@@ -5,8 +5,8 @@ import { Input } from './Input';
 import { Label } from './Label';
 
 interface MonthlyBudgetSectionProps {
-  budget: string;
-  onUpdate: (budget: string) => void;
+  budget: number;
+  onUpdate: (budget: number) => void;
 }
 
 export const MonthlyBudgetSection: React.FC<MonthlyBudgetSectionProps> = ({ 
@@ -33,9 +33,10 @@ export const MonthlyBudgetSection: React.FC<MonthlyBudgetSectionProps> = ({
           <Label htmlFor="monthly-budget">Monthly Budget</Label>
           <Input
             id="monthly-budget"
+            type='number'
             placeholder="$8,500"
             value={budget}
-            onChange={(e) => onUpdate(e.target.value)}
+            onChange={(e) => onUpdate(Number(e.target.value))}
           />
           <p className="text-xs text-gray-500">
             Include all housing, food, transportation, utilities, etc.

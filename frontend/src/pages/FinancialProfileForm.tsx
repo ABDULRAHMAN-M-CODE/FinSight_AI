@@ -8,33 +8,36 @@ import { InvestmentAccountsSection } from './InvestmentAccountsSection';
 import { OutstandingDebtsSection } from './OutstandingDebtsSection';
 import { LifeInsuranceSection } from './LifeInsuranceSection';
 import { FinancialGoalsSection } from './FinancialGoalsSection';
-import type { HouseholdMember, InvestmentAccount, Debt, Goal, InsuranceInfo } from './financial';
+import type { HouseholdMember, InvestmentAccount, Debt, Goal, InsuranceInfo } from '../types/financial';
 
 function useFinancialProfileForm(){
- const [householdMembers, setHouseholdMembers] = useState<HouseholdMember[]>([
-    { name: '', income: '', source: '' }
+ 
+  const [householdMembers, setHouseholdMembers] = useState<HouseholdMember[]>([
+    { member_name: '', annual_income: 0, income_source: '' }
   ]);
   
   const [monthlyBudget, setMonthlyBudget] = useState('');
   
   const [investmentAccounts, setInvestmentAccounts] = useState<InvestmentAccount[]>([
-    { id: '1', accountName: '', accountType: '', currentBalance: '', isActive: true }
+    { id: '1', name: '', type: '', current_balance: 0, is_active: true }
   ]);
   
   const [debts, setDebts] = useState<Debt[]>([
-    { id: '1', type: '', balance: '', monthlyPayment: '', interestRate: '' }
+    { id: '1', type: '', balance: 0, monthly_payment:0, interest_rate:0 }
   ]);
   
   const [insurance, setInsurance] = useState<InsuranceInfo>({
-    type: '',
-    deathBenefit: '',
-    cashValue: '',
-    monthlyPremium: ''
+    insurance_type: '',
+    death_benefit: 0,
+    cash_value: 0,
+    monthly_premium: 0
   });
   
   const [goals, setGoals] = useState<Goal[]>([
-    { id: '1', name: '', type: 'short-term', targetAmount: '', deadline: '' }
+    { id: '1', name: '', type: 'short-term', target_amount: 0, deadline: '' }
   ]);
+  
+
   return{
      householdMembers
      ,setHouseholdMembers
@@ -114,6 +117,7 @@ export default function FinancialProfileForm  ()  {
         goals={goals}
         onUpdate={setGoals}
       />
+
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { Label } from './Label';
 import { Button } from './Button';
 
 import { IconButton } from './IconButton';
-import type { InvestmentAccount } from './financial';
+import type { InvestmentAccount } from '../types/financial';
 
 interface InvestmentAccountsSectionProps {
   accounts: InvestmentAccount[];
@@ -27,10 +27,10 @@ export const InvestmentAccountsSection: React.FC<InvestmentAccountsSectionProps>
   const addAccount = () => {
     const newAccount: InvestmentAccount = {
       id: Date.now().toString(),
-      accountName: '',
-      accountType: '',
-      currentBalance: '',
-      isActive: true
+      name: '',
+      type: '',
+      current_balance: 0,
+      is_active: true
     };
     onUpdate([...accounts, newAccount]);
   };
@@ -75,8 +75,8 @@ export const InvestmentAccountsSection: React.FC<InvestmentAccountsSectionProps>
                   id={`account-name-${account.id}`}
                   name={`accounts[${index}][name]`}
                   placeholder="e.g., Vanguard 401(k)"
-                  value={account.accountName}
-                  onChange={(e) => updateAccount(account.id, 'accountName', e.target.value)}
+                  value={account.name}
+                  onChange={(e) => updateAccount(account.id, 'name', e.target.value)}
                 />
               </div>
               <div className="space-y-2">
@@ -86,8 +86,8 @@ export const InvestmentAccountsSection: React.FC<InvestmentAccountsSectionProps>
                 id={`account-type-${account.id}`}
                 name={`accounts[${index}][type]`}
                 required
-                value={account.accountType} // <- controlled
-                onChange={(e) => updateAccount(account.id, 'accountType', e.target.value)} // <- update state
+                value={account.type} // <- controlled
+                onChange={(e) => updateAccount(account.id, 'type', e.target.value)} // <- update state
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               >
                 <option value="">Select account type</option>
@@ -124,8 +124,8 @@ export const InvestmentAccountsSection: React.FC<InvestmentAccountsSectionProps>
                   name={`accounts[${index}][current_balance]`}
                   placeholder="$85,000"
                   type='number'
-                  value={account.currentBalance}
-                  onChange={(e) => updateAccount(account.id, 'currentBalance', e.target.value)}
+                  value={account.current_balance}
+                  onChange={(e) => updateAccount(account.id, 'current_balance', e.target.value)}
                 />
               </div>
               <div className="space-y-2">
@@ -134,12 +134,12 @@ export const InvestmentAccountsSection: React.FC<InvestmentAccountsSectionProps>
                     <input 
                       type="checkbox" 
                       name={`accounts[${index}][is_active]`} // Pydantic shcema expects 'is_active'
-                      checked={account.isActive}
-                      onChange={(e) => updateAccount(account.id, 'isActive', e.target.checked)}
+                      checked={account.is_active}
+                      onChange={(e) => updateAccount(account.id, 'is_active', e.target.checked)}
                     />
                   
                   <span className="text-sm text-gray-700">
-                    {account.isActive ? 'Active' : 'Inactive'}
+                    {account.is_active ? 'Active' : 'Inactive'}
                   </span>
                 </div>
               </div>

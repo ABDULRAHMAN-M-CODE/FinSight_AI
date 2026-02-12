@@ -7,7 +7,7 @@ import WelcomePage from "./pages/welcomePage";
 import Login from "./pages/Login";
 import SignUpForm  from "./pages/Signup";
 import EmailVerification from './pages/EmailVerification';
-import FinancialProfileForm from './pages/FinancialProfileForm';
+
 import PostSignup from './pages/PostSignup';
 import DataCollectionIntro from './pages/DataCollectionIntro';
 import ResetPassword from './pages/ForgotPassword';
@@ -19,6 +19,7 @@ import ForgotPassword_SuccessfullReset from './pages/ForgotPassword_SuccessfullR
 import MultiStepFlow from './pages/MultiStepFlow';
 import InsuranceAdvice from './pages/InsuranceAdvice';
 import DebtAnalysis from './pages/DebtAnalysis';
+import MultiStepContex from './pages/MultiStepContex';
 function App() {    
    // [path="/"] is the  default route to be rendered 
    
@@ -26,9 +27,7 @@ function App() {
     <Routes>
 
       <Route path="/" element={<WelcomePage />}/>
-      
       <Route path='/Login' element={<Login />} />
-      <Route path='/FinancialProfileForm' element={<FinancialProfileForm />} />
       <Route path="/EmailVerification" element={<EmailVerification/>}/>
       <Route path="/IntroStepper"  element={<IntroStepper />}/>
       <Route path="/Signup"  element={ <SignUpForm /> } />
@@ -43,6 +42,7 @@ function App() {
       <Route path="/MultiStepFlow" element={<MultiStepFlow />}/>
       <Route path="/InsuranceAdvice" element={<InsuranceAdvice />}/>
       <Route path="/DebtAnalysis" element={<DebtAnalysis />}/>
+      <Route path='/MultiStepContex' element={<MultiStepContex />} />
       
     </Routes>
   );

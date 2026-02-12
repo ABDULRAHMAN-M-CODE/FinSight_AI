@@ -3,7 +3,7 @@ import { Shield } from 'lucide-react';
 import { Card, CardHeader, CardContent } from './Card';
 import { Input } from './Input';
 import { Label } from './Label';
-import type { InsuranceInfo } from './financial';
+import type { InsuranceInfo } from '../types/financial';
 
 interface LifeInsuranceSectionProps {
   insurance: InsuranceInfo;
@@ -38,9 +38,10 @@ export const LifeInsuranceSection: React.FC<LifeInsuranceSectionProps> = ({
           <Label htmlFor="insurance-type">Insurance Type</Label>
           <Input
             id="insurance-type"
+            pattern="[A-Za-z\s]+"
             placeholder="e.g., Term, Whole Life, Universal"
-            value={insurance.type}
-            onChange={(e) => updateField('type', e.target.value)}
+            value={insurance.insurance_type}
+            onChange={(e) => updateField('insurance_type', e.target.value)}
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -49,8 +50,8 @@ export const LifeInsuranceSection: React.FC<LifeInsuranceSectionProps> = ({
             <Input
               id="death-benefit"
               placeholder="$500,000"
-              value={insurance.deathBenefit}
-              onChange={(e) => updateField('deathBenefit', e.target.value)}
+              value={insurance.death_benefit}
+              onChange={(e) => updateField('death_benefit', e.target.value)}
             />
           </div>
           <div className="space-y-2">
@@ -58,8 +59,8 @@ export const LifeInsuranceSection: React.FC<LifeInsuranceSectionProps> = ({
             <Input
               id="cash-value"
               placeholder="$12,000"
-              value={insurance.cashValue}
-              onChange={(e) => updateField('cashValue', e.target.value)}
+              value={insurance.cash_value}
+              onChange={(e) => updateField('cash_value', e.target.value)}
             />
           </div>
           <div className="space-y-2">
@@ -67,8 +68,8 @@ export const LifeInsuranceSection: React.FC<LifeInsuranceSectionProps> = ({
             <Input
               id="monthly-premium"
               placeholder="$125"
-              value={insurance.monthlyPremium}
-              onChange={(e) => updateField('monthlyPremium', e.target.value)}
+              value={insurance.monthly_premium}
+              onChange={(e) => updateField('monthly_premium', e.target.value)}
             />
           </div>
         </div>
