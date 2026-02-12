@@ -98,7 +98,7 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
                 <Label htmlFor={`goal-amount-${goal.id}`}>Target Amount</Label>
                 <Input
                   id={`goal-amount-${goal.id}`}
-                  name={`goals[${index}][amount]`}
+                  name={`goals[${index}][target_amount]`}
                   placeholder="$50,000"
                   value={goal.targetAmount}
                   type='number'

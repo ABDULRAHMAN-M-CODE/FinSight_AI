@@ -1,6 +1,6 @@
 from pydantic import BaseModel,Field
 from decimal import Decimal
-from typing import List, Optional,Literal
+from typing import List
 from datetime import date
 
 # DTO for House hold members
@@ -27,23 +27,24 @@ class DebtIn(BaseModel):
 class InsuranceIn(BaseModel):
     insurance_type: str
     death_benefit: Decimal
-    cash_value: Optional[Decimal] = None
+    cash_value: Decimal 
     monthly_premium: Decimal
 
 # DTO for user finance goals 
 class FinancialGoalsIn(BaseModel):
     name : str
     type : str
-    amount : Decimal
+    target_amount : Decimal
     deadline : date 
 
 # DTO for Questionnaire form
+# Field must be used, why import something if you are not gonna use it ??
 class QuestionnaireSubmit(BaseModel):
-    household_income: List[HouseholdIncomeMember]
+    household_income: List[HouseholdIncomeMember] =Field(default_factory=list)
     monthly_budget: Decimal
-    investment_accounts: List[InvestmentAccountIn] = []
-    outstanding_debts: List[DebtIn] = []
-    life_insurance: List[InsuranceIn] = []
-    financial_goals: Optional[FinancialGoalsIn] = None
+    investment_accounts: List[InvestmentAccountIn] = Field(default_factory=list)
+    outstanding_debts: List[DebtIn] =Field(default_factory=list)
+    life_insurance: List[InsuranceIn] = Field(default_factory=list)
+    financial_goals: List[FinancialGoalsIn] = Field(default_factory=list)
     
 

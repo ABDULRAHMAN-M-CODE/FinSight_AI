@@ -73,7 +73,7 @@
               const goalsArray = goalIndices.map(index => ({
                 name: formData.get(`goals[${index}][name]`),
                 type: formData.get(`goals[${index}][type]`),
-                amount: parseFloat(formData.get(`goals[${index}][amount]`) as string) || 0,
+                target_amount: parseFloat(formData.get(`goals[${index}][amount]`) as string) || 0,
                 deadline: formData.get(`goals[${index}][deadline]`)
               }));
               const payload = {
