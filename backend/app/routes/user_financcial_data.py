@@ -18,6 +18,11 @@ from app.core.utils.finance_calculations import (
 )
 from app.core.utils.json_safe import json_safe
 
+from app.schemas.full_ai_response_shape import (
+    ProtectionAdvice,
+    DebtsAdvice
+)
+
 router = APIRouter(prefix="/onboarding")
 
 # this endpoint is meant to serve the first login questionnaire page (authorization required, first time login only )
@@ -177,4 +182,3 @@ def submit_limited_questionnaire(    # prevent two functions with the same name 
                 detail="Failed to submit questionnaire",
             )
       
-
