@@ -13,7 +13,7 @@ from app.models.registration import user, email_verification_token, password_res
 
 # -------------------------------------------------------
 from app.routes.auth import router as auth_router
-from app.routes.UserSetting import router as user_settings_router
+from app.routes.user_settings import router as user_settings_router
 #------------------------------------------------------------------------
 from app.routes.user_financcial_data import router as questionnaire_router # Langchain's agent lives here.
 

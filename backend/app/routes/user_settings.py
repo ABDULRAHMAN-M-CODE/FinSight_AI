@@ -5,12 +5,11 @@ from datetime import datetime, timedelta
 from app.database import SessionLocal, get_db    
 from app.models.registration import User,EmailVerificationToken 
 from app.core.dependencies import get_current_user
-from app.security.security import hash_password, verify_password,generate_raw_token,hash_token,token_expiry,generate_email_code
-from app.schemas.user import ChangePasswordRequest,ChangeNameRequest,ChangePhoneNumberRequest
-from app.core.PWV import validate_password
-from app.core.email import send_email
+from app.core.security.security import hash_password, verify_password,generate_raw_token,hash_token,token_expiry,generate_email_code, verify_token
+from app.schemas.user_settings_schemas import ChangePasswordRequest,ChangeNameRequest,ChangePhoneNumberRequest
+from app.core.utils.PWV_utils import validate_password
+from app.core.utils.email_utils import send_email
 from app.models.registration.email_change_token import EmailChangeToken
-from app.security.security import verify_token
 
 
 router = APIRouter(prefix="/UserSettings")

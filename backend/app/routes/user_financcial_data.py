@@ -14,16 +14,16 @@ from app.models.investment_account import InvestmentAccount
 from app.models.goal import Goal
 
 
-from app.core.utils.finance_calculations import (
+from app.core.utils.finance_calculations_utils import (
     compute_savings_rate,
     compute_projections,
 )
-from app.core.utils.json_safe import json_safe
+from app.core.utils.json_safe_utils import json_safe
 
 router = APIRouter(prefix="/onboarding")
 
 
-from app.schemas.Questionnaire import QuestionnaireSubmit
+from app.schemas.Questionnaire_schemas import QuestionnaireSubmit
 
 @router.post("/questionnaire", status_code=status.HTTP_201_CREATED)
 def submit_questionnaire(
@@ -47,7 +47,7 @@ def submit_questionnaire(
         # ... other logic ...
         
     except Exception as e:
-        db.rollback()
+       # db.rollback()
         print(f"Error submitting questionnaire: {str(e)}")
         raise HTTPException(
             status_code=500,
@@ -62,7 +62,7 @@ def submit_questionnaire(
 # Demo endpoint, no authorization required.
 
 
-from app.schemas.limited_questionnaire_shape  import LimitedQuestionnaireShape
+from app.schemas.limited_questionnaire_schemas  import LimitedQuestionnaireShape
 @router.post("/limited-questionnaire", status_code=status.HTTP_201_CREATED)
 def submit_limited_questionnaire(    
     data: LimitedQuestionnaireShape 
@@ -78,7 +78,7 @@ def submit_limited_questionnaire(
       from langchain.agents import create_agent
       from app.prompts import SYSTEM_PROMPT
       from langchain.agents.structured_output import ToolStrategy
-      from app.schemas.demo_ai_response_shape import DemoResponseFormat
+      from app.schemas.demo_ai_response_schemas import DemoResponseFormat
       
       agent = create_agent(                              # Abstraction note : inside the Agent, the os.getenv("OPENAI_API_KEY") is called, this is hidden from us.                                 
         model="gpt-5-nano",                             
