@@ -23,8 +23,7 @@ from app.core.utils.json_safe_utils import json_safe
 router = APIRouter(prefix="/onboarding")
 
 
-from app.schemas.Questionnaire_schemas import QuestionnaireSubmit
-
+from app.schemas.questionnaire_schemas import QuestionnaireSubmit
 @router.post("/questionnaire", status_code=status.HTTP_201_CREATED)
 def submit_questionnaire(
     data: QuestionnaireSubmit,
@@ -62,9 +61,9 @@ def submit_questionnaire(
 # Demo endpoint, no authorization required.
 
 
-from app.schemas.limited_questionnaire_schemas  import LimitedQuestionnaireShape
-@router.post("/limited-questionnaire", status_code=status.HTTP_201_CREATED)
-def submit_limited_questionnaire(    
+from app.schemas.demo_questionnaire_schemas  import LimitedQuestionnaireShape
+@router.post("/demo-questionnaire", status_code=status.HTTP_201_CREATED)
+def submit_demo_questionnaire(    
     data: LimitedQuestionnaireShape 
     ):
     

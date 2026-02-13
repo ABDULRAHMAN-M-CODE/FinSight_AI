@@ -84,7 +84,7 @@
 
         // frontend calls backend, backend calls LLM , LLm return repsonse to backend, backend return final response
       try {
-        const response = await fetch("http://127.0.0.1:8000/onboarding/limited-questionnaire", { // check URL later 
+        const response = await fetch("http://127.0.0.1:8000/onboarding/demo-questionnaire", { // check URL later 
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
