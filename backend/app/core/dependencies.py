@@ -3,7 +3,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
-from app.security.jwt import SECRET_KEY, ALGORITHM
+from app.core.security.jwt import SECRET_KEY, ALGORITHM
 from app.models.registration.user import User
 from app.database import get_db
 

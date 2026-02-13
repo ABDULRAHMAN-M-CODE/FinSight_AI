@@ -1,8 +1,8 @@
 
 from pydantic import BaseModel,Field
 from typing import List
-from app.schemas.Questionnaire import InvestmentAccountIn
-from app.schemas.Questionnaire import FinancialGoalsIn
+from app.schemas.Questionnaire_schemas import InvestmentAccountIn
+from app.schemas.Questionnaire_schemas import FinancialGoalsIn
 
 # DTO for 
 #Using Field(default_factory=list) ensures that each instance gets its own separate list, avoiding the pitfalls of shared mutable defaults
