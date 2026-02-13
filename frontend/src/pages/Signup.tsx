@@ -17,6 +17,7 @@ import { setEmail as setGlobalEmail } from '../store/authSlice';
   general?: string;
 }
 
+
 // formData object's shape
 interface SignupFormData {
   email: string;
@@ -29,7 +30,7 @@ interface SignupFormData {
 
 function useSignupForm() {
 
-const [formData, setFormData] = useState<SignupFormData>({ // 
+ const [formData, setFormData] = useState<SignupFormData>({ // 
     email: "",
     password: "",
     confirmPassword: "",

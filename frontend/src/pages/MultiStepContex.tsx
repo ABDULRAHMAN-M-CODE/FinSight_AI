@@ -10,44 +10,24 @@ import { InvestmentAccountsSection } from './InvestmentAccountsSection';
 import { OutstandingDebtsSection } from './OutstandingDebtsSection';
 import { LifeInsuranceSection } from './LifeInsuranceSection';
 import { FinancialGoalsSection } from './FinancialGoalsSection';
-import { ArrowRight } from "lucide-react";
+import BackAndContinueButtons from "./imports/BackAndContinueButtons";
+
+
 // types
 import type { HouseholdMember, InvestmentAccount, Debt, Goal, InsuranceInfo } from '../types/financial';
 
 
-
-function BackAndContinueButtons({handleBack}:{handleBack:()=>void}){
-    return(
-               <div className="flex gap-4 justify-center translate-y-12">
-                  <button
-                    onClick={handleBack}
-                    type="button"
-                    className="px-6 py-2.5 border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    Back
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-2.5 rounded-lg transition-colors flex items-center gap-2  disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                      Continue
-                    <ArrowRight className="w-5 h-5" />
-                  </button>
-                </div>        
-    )
-}
-
+// custome hook : Logic and States 
 function useMultiStepContex(){
         
         const key="step";
         const [step, setStep]= useState(Number(localStorage.getItem(key))||1);
-        
-        
 
-       // const [processingFinished, setProcessingFinished]=useState(false);//  for last stage , when reach last card
-    
-       
-        const steps = [
+
+        // Problem : decide how to use the processing flag to Redirect the user to "SUCCESS,NAVIGATE TO DASHBOARD UI".
+       // const [processingFinished, setProcessingFinished]=useState(false); 
+        
+       const steps = [
         { number: 1, label: "Household income" },
         { number: 2, label: "Monthly budget" },
         { number: 3, label: "Investestments accounts" },
@@ -56,8 +36,6 @@ function useMultiStepContex(){
         { number: 6, label: "Goals" }
         ];
         
-        //const numberOfSteps=steps.length // we may need it later .
-   
         // problem : when user add additional member, he cannot delete that memeber, but he should be able to do so.
         const [householdMembers, setHouseholdMembers] = useState<HouseholdMember[]>([
             { member_name: '', annual_income: 0, income_source: '' }
@@ -72,15 +50,13 @@ function useMultiStepContex(){
         const [debts, setDebts] = useState<Debt[]>([
             { id:'', type: '', balance: 0, monthly_payment: 0, interest_rate: 0 }
         ]);
-  
-  
         // problem : user is able to provide only one insurence , but he should be able to Provide more than one.
-        const [insurance, setInsurance] = useState<InsuranceInfo>({
+        const [insurance, setInsurance] = useState<InsuranceInfo[]>([{
             insurance_type: '',
             death_benefit: 0,
             cash_value: 0,
             monthly_premium: 0
-        });
+        }]);
         
         const [goals, setGoals] = useState<Goal[]>([
             { id:'', name: '', type: 'short-term', target_amount:0, deadline:"" }
@@ -93,7 +69,8 @@ function useMultiStepContex(){
             // problem : when user back , should we Pop Data he entered in the current Step that was before back?  
         }
         };
-const handleNext = async (e: React.SubmitEvent<HTMLFormElement>) => {
+
+        const handleNext = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Steps 1 to 5: Just move to the next step
@@ -120,7 +97,7 @@ const handleNext = async (e: React.SubmitEvent<HTMLFormElement>) => {
             is_active: a.is_active
         })),
         outstanding_debts: debts, // Map this if needed
-        life_insurance: [insurance].map(i => ({
+        life_insurance: insurance.map(i => ({
             insurance_type: i.insurance_type,
             death_benefit: Number(i.death_benefit),
             cash_value: Number(i.cash_value),
@@ -160,9 +137,9 @@ const handleNext = async (e: React.SubmitEvent<HTMLFormElement>) => {
         console.error(e);
         alert("Network Error");
     }
-};
+        };
     
-    // return object, thus, user destructing at calling site is good practice
+    // returns object, thus, destructing at calling site is preferred.
     return{
         step,
         
@@ -184,9 +161,13 @@ const handleNext = async (e: React.SubmitEvent<HTMLFormElement>) => {
         
     }
 }
+
+// UI
 export default function MultiStepContex(){
     
-    const {step,
+    //use the custome hook
+    const {
+        step,
         steps,
         householdMembers,
         setHouseholdMembers,
@@ -201,19 +182,21 @@ export default function MultiStepContex(){
         goals,
         setGoals,
         handleBack,
-        handleNext}= useMultiStepContex();
+        handleNext
+    }= useMultiStepContex();
    
+   
+    // rendering 
     return (
      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 ">
         
+        {/** progress bard is always rendered */}
         <div className="pt-8">
           <ProgressBar currentStep={step} steps={steps} totalSteps={6} />
         </div>
         
         <div className="max-w-2xl mx-auto px-4 py-12">
-
-            {/** Conditional Rendering is Deployed */}
-            
+            {/** Cards are cpnditionally rendered*/}
                 {step==1 && (
                     <form onSubmit={handleNext}>
                         {/**problem , Different cards have differnt width and hight, that makes the Position of the Buttons  varies, bad user experience, must enforce Fixed Width */}
@@ -265,7 +248,7 @@ export default function MultiStepContex(){
                 {step==5 && (
                     <form onSubmit={handleNext}>
                         <LifeInsuranceSection
-                            insurance={insurance}
+                            insuranceList={insurance}
                             onUpdate={setInsurance}
                         />        
                                     
@@ -285,18 +268,7 @@ export default function MultiStepContex(){
 
                     // should I put button here ? 
         )}              
- 
-
-       
-            {/** Problem: This Function is currently intended for naviagation between steps only, But in the Future, We must add the functionality of  adding Each card info to Object, for Example , in step 1 , user fills his Household members info, when user clicks continue, this info must be added to object, same with other cards, but in the last step, we introduce fetch(), which will send the Whole Commulative object to the backend, this , the continue button must  have two modes, one mode for collecting info into object, other mode is for collecting info and Submitting data to backend  */}
-            
-          
-
         </div>
- 
-
-
-
      </div>
 )
 

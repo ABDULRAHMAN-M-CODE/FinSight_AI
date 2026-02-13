@@ -1,21 +1,37 @@
 import React from 'react';
-import { Shield } from 'lucide-react';
+import { Shield, Plus, Trash } from 'lucide-react';
 import { Card, CardHeader, CardContent } from './Card';
 import { Input } from './Input';
 import { Label } from './Label';
+import { Button } from './Button';
 import type { InsuranceInfo } from '../types/financial';
 
 interface LifeInsuranceSectionProps {
-  insurance: InsuranceInfo;
-  onUpdate: (insurance: InsuranceInfo) => void;
+  insuranceList: InsuranceInfo[];
+  onUpdate: (insuranceList: InsuranceInfo[]) => void;
 }
 
-export const LifeInsuranceSection: React.FC<LifeInsuranceSectionProps> = ({ 
-  insurance, 
-  onUpdate 
+export const LifeInsuranceSection: React.FC<LifeInsuranceSectionProps> = ({
+  insuranceList,
+  onUpdate
 }) => {
-  const updateField = (field: keyof InsuranceInfo, value: string) => {
-    onUpdate({ ...insurance, [field]: value });
+
+  const updateField = (index: number, field: keyof InsuranceInfo, value: string) => {
+    const updatedList = [...insuranceList];
+    updatedList[index] = { ...updatedList[index], [field]: value };
+    onUpdate(updatedList);
+  };
+
+  const addInsurance = () => {
+    onUpdate([
+      ...insuranceList,
+      { insurance_type: '', death_benefit: 0, cash_value: 0, monthly_premium: 0 }
+    ]);
+  };
+
+  const removeInsurance = (index: number) => {
+    const updatedList = insuranceList.filter((_, i) => i !== index);
+    onUpdate(updatedList);
   };
 
   return (
@@ -33,46 +49,62 @@ export const LifeInsuranceSection: React.FC<LifeInsuranceSectionProps> = ({
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="insurance-type">Insurance Type</Label>
-          <Input
-            id="insurance-type"
-            pattern="[A-Za-z\s]+"
-            placeholder="e.g., Term, Whole Life, Universal"
-            value={insurance.insurance_type}
-            onChange={(e) => updateField('insurance_type', e.target.value)}
-          />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="death-benefit">Death Benefit</Label>
-            <Input
-              id="death-benefit"
-              placeholder="$500,000"
-              value={insurance.death_benefit}
-              onChange={(e) => updateField('death_benefit', e.target.value)}
-            />
+      <CardContent className="space-y-6">
+        {insuranceList.map((insurance, index) => (
+          <div key={index} className="border p-4 rounded-md space-y-4 relative">
+            {insuranceList.length > 1 && (
+              <button
+                type="button"
+                className="absolute top-2 right-2 text-red-500"
+                onClick={() => removeInsurance(index)}
+              >
+                <Trash className="w-4 h-4" />
+              </button>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor={`insurance-type-${index}`}>Insurance Type</Label>
+              <Input
+                id={`insurance-type-${index}`}
+                pattern="[A-Za-z\s]+"
+                placeholder="e.g., Term, Whole Life, Universal"
+                value={insurance.insurance_type}
+                onChange={(e) => updateField(index, 'insurance_type', e.target.value)}
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor={`death-benefit-${index}`}>Death Benefit</Label>
+                <Input
+                  id={`death-benefit-${index}`}
+                  placeholder="$500,000"
+                  value={insurance.death_benefit}
+                  onChange={(e) => updateField(index, 'death_benefit', e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor={`cash-value-${index}`}>Cash Value</Label>
+                <Input
+                  id={`cash-value-${index}`}
+                  placeholder="$12,000"
+                  value={insurance.cash_value}
+                  onChange={(e) => updateField(index, 'cash_value', e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor={`monthly-premium-${index}`}>Monthly Premium</Label>
+                <Input
+                  id={`monthly-premium-${index}`}
+                  placeholder="$125"
+                  value={insurance.monthly_premium}
+                  onChange={(e) => updateField(index, 'monthly_premium', e.target.value)}
+                />
+              </div>
+            </div>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="cash-value">Cash Value</Label>
-            <Input
-              id="cash-value"
-              placeholder="$12,000"
-              value={insurance.cash_value}
-              onChange={(e) => updateField('cash_value', e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="monthly-premium">Monthly Premium</Label>
-            <Input
-              id="monthly-premium"
-              placeholder="$125"
-              value={insurance.monthly_premium}
-              onChange={(e) => updateField('monthly_premium', e.target.value)}
-            />
-          </div>
-        </div>
+        ))}
+        <Button type="button" onClick={addInsurance} className="flex items-center gap-2">
+          <Plus className="w-4 h-4" /> Add Another Policy
+        </Button>
       </CardContent>
     </Card>
   );
