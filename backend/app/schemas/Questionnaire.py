@@ -52,4 +52,7 @@ class QuestionnaireSubmit(BaseModel):
     life_insurance: List[InsuranceIn] = Field(default_factory=list)
     financial_goals: List[FinancialGoalsIn] = Field(default_factory=list)
     
-
+# DTO for limited service ( the demo service)
+class LimitedQuestionnaireSubmit(BaseModel):
+    investment_accounts: List[InvestmentAccountIn] = Field(default_factory=list)
+    financial_goals: List[FinancialGoalsIn] = Field(default_factory=list)

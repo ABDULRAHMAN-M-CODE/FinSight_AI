@@ -20,6 +20,11 @@ from app.core.utils.finance_calculations import (
 )
 from app.core.utils.json_safe import json_safe
 
+from app.schemas.full_ai_response_shape import (
+    ProtectionAdvice,
+    DebtsAdvice
+)
+
 router = APIRouter(prefix="/onboarding")
 
 
@@ -105,3 +110,5 @@ def submit_limited_questionnaire(
                 status_code=500,
                 detail="Failed to submit questionnaire",
             )
+      
+
