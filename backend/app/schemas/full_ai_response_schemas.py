@@ -1,4 +1,6 @@
-
+from pydantic import BaseModel,Field
+from typing import List, Literal
+from datetime import date
 # Protection Gap Section
 
 class MonthlyData(BaseModel):
@@ -37,10 +39,6 @@ class Recommendation(BaseModel):
 class ProtectionAdvice(BaseModel):
     protectionGap: ProtectionGap
     recommendations: List[Recommendation]
-
-from pydantic import BaseModel
-from typing import List, Literal
-from datetime import date
 
 
 # Monthly Projections
@@ -81,3 +79,8 @@ class DebtsAdvice(BaseModel):
     monthlyProjections: List[MonthlyProjection]
     debts: List[Debt]
     riskMetrics: RiskMetrics
+
+# Full response
+class QuestionnarieResponseSchemas(BaseModel):
+    protectionAdvice: List [ProtectionAdvice] = Field(default_factory=list)
+    debtsAdvice: List [DebtsAdvice] = Field(default_factory=list)
