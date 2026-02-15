@@ -16,7 +16,8 @@ function useFinancialProfileForm(){
     { member_name: '', annual_income: 0, income_source: '' }
   ]);
   
-  const [monthlyBudget, setMonthlyBudget] = useState('');
+// After
+  const [monthlyBudget, setMonthlyBudget] = useState<number>(0);
   
   const [investmentAccounts, setInvestmentAccounts] = useState<InvestmentAccount[]>([
     { id: '1', name: '', type: '', current_balance: 0, is_active: true }
@@ -26,12 +27,9 @@ function useFinancialProfileForm(){
     { id: '1', type: '', balance: 0, monthly_payment:0, interest_rate:0 }
   ]);
   
-  const [insurance, setInsurance] = useState<InsuranceInfo>({
-    insurance_type: '',
-    death_benefit: 0,
-    cash_value: 0,
-    monthly_premium: 0
-  });
+const [insurance, setInsurance] = useState<InsuranceInfo[]>([
+  { insurance_type: '', death_benefit: 0, cash_value: 0, monthly_premium: 0 }
+]);
   
   const [goals, setGoals] = useState<Goal[]>([
     { id: '1', name: '', type: 'short-term', target_amount: 0, deadline: '' }
@@ -99,7 +97,11 @@ export default function FinancialProfileForm  ()  {
         accounts={investmentAccounts}
         onUpdate={setInvestmentAccounts}
       />
-
+      {/* Financial Goals */}
+      <FinancialGoalsSection
+        goals={goals}
+        onUpdate={setGoals}
+      />
       {/* Outstanding Debts */}
       <OutstandingDebtsSection
         debts={debts}
@@ -108,15 +110,11 @@ export default function FinancialProfileForm  ()  {
 
       {/* Life Insurance Coverage */}
       <LifeInsuranceSection
-        insurance={insurance}
+        insuranceList={insurance}
         onUpdate={setInsurance}
       />
 
-      {/* Financial Goals */}
-      <FinancialGoalsSection
-        goals={goals}
-        onUpdate={setGoals}
-      />
+
 
     </div>
   );

@@ -17,7 +17,7 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
   goals, 
   onUpdate 
 }) => {
-  const updateGoal = (id: string, field: keyof Goal, value: string) => {
+  const updateGoal = (id: string, field: keyof Goal, value: Goal[keyof Goal] )=> {
     const updatedGoals = goals.map(goal => 
       goal.id === id ? { ...goal, [field]: value } : goal
     );
@@ -77,7 +77,7 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
                   placeholder="e.g., Build emergency fund"
                   type='text'
                   value={goal.name}
-                  onChange={(e) => updateGoal(goal.id, 'name', e.target.value)}
+                  onChange={(e) => updateGoal(goal.id, 'name',   e.target.value)}
                 />
               </div>
               <div className="space-y-2">
@@ -102,7 +102,7 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
                   placeholder="$50,000"
                   value={goal.target_amount}
                   type='number'
-                  onChange={(e) => updateGoal(goal.id, 'target_amount', e.target.value)}
+                  onChange={(e) => updateGoal(goal.id, 'target_amount', Number(e.target.value))}
                 />
               </div>
               <div className="space-y-2">

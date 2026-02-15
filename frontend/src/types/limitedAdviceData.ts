@@ -1,17 +1,23 @@
    // shape of AI response
    export interface limitedAdvice {
-  strategic_time_horizon_map: Array<{
-    goal_id: string;
-    goal_name: string;
-    timeline_alignment_summary: string;
-    goal_advice: string;
+    strategic_time_horizon_map: Array<{
+    id:string;
+    name: string;
+    type: string;
+    target_date: string;
+    years_away: number
+    riskLevel:"low"| "high";
+    allocation_status:string;
+    advice:string;
   }>;
   tax_efficiency_optimizer: Array<{
-    account_id: string;
-    account_name: string;
-    account_type: string;
-    efficiency_score_percent: number;
-    funding_goals: Array<{ goal_id: string; goal_name: string }>;
-    tax_strategy_analysis: string;
+    name: string;
+    type: string;
+    balance: number;
+    status: string // = "Active"; 
+    tax_category: "Taxable"| "Tax-Deferred"| "Tax-Free";
+    efficiency: number
+    linked_goals: string[];
+    tax_strategy_advice: string
   }>;
 }

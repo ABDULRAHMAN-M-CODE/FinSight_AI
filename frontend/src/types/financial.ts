@@ -13,6 +13,16 @@ export interface InvestmentAccount {
   is_active : boolean;
 }
 
+export interface Goal {
+  id: string;
+  name: string;
+  type: "short-term" | "long-term";
+  target_amount: number;
+  deadline: string ;
+
+}
+
+
 export interface Debt {
   id: string;
   type: string;
@@ -30,14 +40,7 @@ export interface InsuranceInfo {
 }
 
 
-export interface Goal {
-  id: string;
-  name: string;
-  type: 'short-term' | 'long-term';
-  target_amount: number;
-  deadline: string ;
 
-}
 
 export interface QuestionnaireSubmit {
   household_income: HouseholdMember[];

@@ -1,86 +1,67 @@
    // Hook
    import { useState } from "react";
   
-   // Redux related : Dispatching  actions using Reducers
-   import { useDispatch } from 'react-redux'; // Redux related  
-   import { setLimitedAdviceData  as setGlobalLimitedAdviceData} from '../store/limitedAdviceSlice';
+
    
-   //interface "Shape" of AI response
+   //types
    import { type limitedAdvice } from "../types/limitedAdviceData"; 
-  
+   import type { InvestmentAccount } from "../types/financial";
+    import type { Goal } from "../types/financial";
   // custome reusable UI
    import { ProgressBar } from "./ProgressBar";
    import { ArrowRight, Sparkles, TrendingUp } from "lucide-react";
-   import SubFinancialProfileForm from "./SubFinancialProfileForm";
    import { Button } from "./Button";
    import { Link } from "react-router-dom";
    import LimitedAdvice from "./LimitedAdvice";
-  
+   import { InvestmentAccountsSection } from "./InvestmentAccountsSection";
+   import { FinancialGoalsSection } from "./FinancialGoalsSection";
+
    //State+ Logic : custome hook
   function useMultiStepFlow(){
 
-       // const [currentStep, setCurrentStep]=useState(1); //→ This causes Lose of progress if page reloads or if the component is remounted
-        
-        // use Local Storage instead
-        // state Lives inside the component for once, Then it's always outside component ,therefore , no loosing of progress
-        // Even if React schedualed a Rerender, progress will not be Lost because the state Lives outside the component
-        // state is stored as key/value pairs
-        const [currentStep, setCurrentStep]= useState(Number(localStorage.getItem("currentStep"))||1)
-        
-        // Redux related, we dispatch actions(intents, whether intention of updating or clearing global value)
-        const dispatch = useDispatch();
 
+        // local storage is used to withstand the case when  the user reloads some specific pages.
+        const [currentStep, setCurrentStep]= useState( Number( localStorage.getItem("currentStep") ) || 1 )
+        const [finishedOnboarding,setFinishedOnboarding]=useState( Boolean( localStorage.getItem("finishedOnboarding") ) );
+        
+        // do not use Boolean class, because Boolean("false")== true , it's confusing , better to not use it.
+        const [finishedProcessing, setFinishedProcessing]= useState( localStorage.getItem("finishedProcessing") ==="true" );
+        
+        // simple flag for reload effect.
+        const [isLoading, setIsLoading]=useState(false);
+
+        // we can add any number of steps with specific names.
         const steps = [
           { number: 1, label: "Introduction" },
           { number: 2, label: "Financial Context" },
           { number: 3, label: "Recommendation" },
         ];
-        // Two custome Flags
-        const [finishedProcessing, setFinishedProcessing]= useState(false);
-        const [isLoading, setIsLoading]=useState(false);
 
+        const [investmentAccounts, setInvestmentAccounts] = useState<InvestmentAccount[]>([
+          {  id:'',name: '', type: '', current_balance: 0, is_active: true }
+        ]);
 
-        
-       const generateAdvice = async (e: React.SubmitEvent<HTMLFormElement>)=>{
+        const [goals, setGoals] = useState<Goal[]>([
+          
+          { id:'', name: '', type: 'short-term', target_amount:0, deadline:"" }
+        ]);
+
+        // when user clicks submit, generate advice for him and save it in redux store.
+        const generateAdvice = async (e: React.SubmitEvent<HTMLFormElement>)=>{
 
               e.preventDefault();
               setIsLoading(true);
               // using formData was bad practice , I will never use it again to submit form data to backend
-              const formData= new FormData(e.currentTarget)
 
-             // We loop through your 'accounts' state just to know how many there are
-            // But we pull the actual VALUE from the formData
-            // 1. Get all unique indices from the form keys (e.g., "0", "1")
-              const indices = Array.from(formData.keys())
-                .filter(key => key.startsWith('accounts['))
-                .map(key => key.match(/\d+/)?.[0])
-                .filter((value, index, self) => self.indexOf(value) === index);
+               
 
-              // 2. Reconstruct the array by pulling values for each index
-              const accountsArray = indices.map(index => ({
-                name: formData.get(`accounts[${index}][name]`),
-                type: formData.get(`accounts[${index}][type]`),
-                current_balance: parseFloat(formData.get(`accounts[${index}][current_balance]`) as string) || 0,
-                is_active: formData.get(`accounts[${index}][is_active]`) === 'on'
-              }));
-              // Inside generateAdvice...
-              const goalIndices = Array.from(formData.keys())
-                .filter(key => key.startsWith('goals['))
-                .map(key => key.match(/\d+/)?.[0])
-                .filter((v, i, a) => a.indexOf(v) === i);
 
-              const goalsArray = goalIndices.map(index => ({
-                name: formData.get(`goals[${index}][name]`),
-                type: formData.get(`goal  s[${index}][type]`),
-                target_amount: parseFloat(formData.get(`goals[${index}][amount]`) as string) || 0,
-                deadline: formData.get(`goals[${index}][deadline]`)
-              }));
               const payload = {
-                investment_accounts: accountsArray,
-                financial_goals: goalsArray, // <--- Add the 'n' here
+                investment_accounts: investmentAccounts,
+                financial_goals:goals, // <--- Add the 'n' here
               };
 
-              console.log("Final Payload for Python:", JSON.stringify(payload));
+             console.table(payload);
 
         // frontend calls backend, backend calls LLM , LLm return repsonse to backend, backend return final response
       try {
@@ -104,30 +85,54 @@
 
         // 
         
-        //Dispatch the LLM response to Redux so that other UI can access this response 
+        
         
 
-        //
-        //The AI result is  guaranteed or promised to be of some shape "interface"
-        alert("LangChain Agent worked perfectly, ur Advice is ready ") 
+
+         
         const AI_RESPONSE:limitedAdvice= await response.json();
-        console.log(AI_RESPONSE);
+        //console.log(AI_RESPONSE);
         
-        dispatch(setGlobalLimitedAdviceData(AI_RESPONSE) );
+        // persist the ai response to withstand page reloads.
+        localStorage.setItem("AI_RESPONSE", JSON.stringify(AI_RESPONSE));
+        
         setIsLoading(false);
-        // ADD THIS LINE:
+        
         setFinishedProcessing(true);
-        setCurrentStep(3); 
-        localStorage.setItem("currentStep", "3");
+        localStorage.setItem("finishedProcessing","true");
+        
+        setFinishedOnboarding(false);
+        localStorage.setItem("finishedOnboarding","false");
         
         
       } catch (error) {
         setIsLoading(false);
-        alert("Connection failed, pleas check your internet connection and try again")
+        alert("Connection failed, please check your internet connection and try again")
       } 
-       };
+        };
+
+
+       // when user clicks button
         const handleNext = () => {
+          
           if (currentStep < 3) {
+            // subset logic  
+            if (currentStep===1){
+                // always show fresh cards to the user
+                setFinishedProcessing(false);
+                localStorage.setItem("finishedProcessing","false");
+                
+              }
+            // subset logic when step is 2
+              if (currentStep==2){
+                //  if  current step is 2,finished processing (mandatory),  and user clicks button →  we finished onboarding.
+                setFinishedOnboarding(true);
+                localStorage.setItem("finishedOnboarding","true")
+              } 
+            // think if we need subset logic for step 3
+              
+              
+           // increasing step always happen.
             setCurrentStep(currentStep + 1);
             localStorage.setItem("currentStep",(currentStep+1).toString())// either adding the "currentStep" key or updating it's value
           }
@@ -137,10 +142,26 @@
        
        const handleBack = () => {
           if (currentStep > 1) {
+             if (currentStep===2&& finishedProcessing){
+                   
+                   localStorage.setItem("currentStep","2");
+                   setFinishedProcessing(false);
+                   localStorage.setItem("finishedProcessing","false");
+
+                   return // ensure the user stay in step 2  to see the form 
+             }
+             
             setCurrentStep(currentStep - 1);
             localStorage.setItem("currentStep",(currentStep-1).toString()); // here, updates the key's value
           }
         };
+
+       const didNotLikeAdvice=()=>{
+           handleBack();
+           setFinishedProcessing(false);
+           localStorage.setItem("finishedProcessing","false");
+        }
+
 
         return {
           handleNext,
@@ -149,14 +170,31 @@
           finishedProcessing,
           generateAdvice,
           isLoading,
-          steps
+          steps,
+          didNotLikeAdvice,
+          finishedOnboarding,
+          investmentAccounts,
+          setInvestmentAccounts,
+          goals,
+          setGoals
         };
         
   }
 
   //Rendering 
   export  default function MultiStepFlow() {
-    const {handleNext,handleBack,currentStep,finishedProcessing,generateAdvice,isLoading,steps}=useMultiStepFlow();
+    const {
+          handleNext,handleBack,
+          didNotLikeAdvice,
+          generateAdvice, 
+          currentStep,
+          finishedProcessing,
+          isLoading,steps,
+          finishedOnboarding, 
+          investmentAccounts,
+          setInvestmentAccounts,
+          goals,
+          setGoals}=useMultiStepFlow();
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 ">
@@ -240,22 +278,28 @@
           )}
 
 
-          {/* Step 2: Collect context from " Form of cards" */} 
+          {/* Step 2: context collection : formData is used in the custome hook */} 
           {currentStep === 2 && (
             <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
               <div className="text-center py-16">
 
-                {/** Optional : provide  condtionally Rendered massege here 
-                 *
-
-                */}
+                {/** Optional : provide  condtionally Rendered error massege here */}
 
 
                 {/** cards are conditionally rendered , only if backend  processing is not done  */}
                 {!finishedProcessing &&(
 
                   <form onSubmit={generateAdvice} >
-                    <SubFinancialProfileForm />
+                    {/* Investment Accounts */}
+                    <InvestmentAccountsSection
+                      accounts={investmentAccounts}
+                      onUpdate={setInvestmentAccounts}
+                    />
+                    {/* Financial Goals */}
+                    <FinancialGoalsSection
+                      goals={goals}
+                      onUpdate={setGoals}
+                    />
                     <Button type="submit" variant="primary" className="translate-y-5  translate-x-[-15px]">{isLoading ? (
                     <>
                       <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
@@ -268,17 +312,27 @@
                         "Submit"
                       )}</Button>
                   </form>
+
                 )}
 
-
                 {/** success msg is rendered, only if processing is done successfully  */}
-                {finishedProcessing &&(<h1>We have Finished processing your data.  now you can see the result in the next step</h1>)}
+                  {finishedProcessing&& (
+                  <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+                    <div className="text-center py-16">
+                      <h1>We have Finished processing your data.  now you can see the result in the next step</h1>
+
+                    </div>
+
+                  </div>
+                  )}
+                
+                {/**buttons */}
                 <div className="flex gap-4 justify-center translate-y-12">
                   <button
                     onClick={handleBack}
                     className="px-6 py-2.5 border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
                   >
-                    Back
+                    {finishedProcessing?(<p>I want to update my info</p>):(<p>back</p>)}
                   </button>
                   <button
                     disabled={!finishedProcessing}
@@ -288,13 +342,17 @@
                       Continue
                     <ArrowRight className="w-5 h-5" />
                   </button>
+
                 </div>
+             
               </div>
             </div>
           )}
 
-          {/* Step 3: Placeholder */}
-          {currentStep === 3 && (
+
+
+          {/* Step 3: Show advice */}
+          {currentStep === 3 && finishedOnboarding&& (
             
             
             <> 
@@ -307,7 +365,12 @@
                   >
                     Back
                   </button>
-                  
+                 <button
+                    onClick={didNotLikeAdvice}
+                    className="px-6 py-2.5 border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    did not Like the advice ?
+                  </button>
                   <Link to="/Signup"
                     
                     className="px-6 py-2.5 border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"

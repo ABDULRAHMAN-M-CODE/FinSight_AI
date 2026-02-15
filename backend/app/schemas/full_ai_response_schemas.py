@@ -80,7 +80,7 @@ class DebtsAdvice(BaseModel):
     debts: List[Debt]
     riskMetrics: RiskMetrics
 
-# Full response
+# the name of the schema is suck, the name is misleading, why the hell you mention "Questionnarie" in the name? I want you to  give proper names to the schemas.
 class QuestionnarieResponseSchemas(BaseModel):
     protectionAdvice: List [ProtectionAdvice] = Field(default_factory=list)
     debtsAdvice: List [DebtsAdvice] = Field(default_factory=list)

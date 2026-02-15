@@ -46,7 +46,10 @@ function useMultiStepContex(){
         const [investmentAccounts, setInvestmentAccounts] = useState<InvestmentAccount[]>([
             {  id:'',name: '', type: '', current_balance: 0, is_active: true }
         ]);
-        
+
+        const [goals, setGoals] = useState<Goal[]>([
+            { id:'', name: '', type: 'short-term', target_amount:0, deadline:"" }
+        ]);        
         const [debts, setDebts] = useState<Debt[]>([
             { id:'', type: '', balance: 0, monthly_payment: 0, interest_rate: 0 }
         ]);
@@ -58,9 +61,7 @@ function useMultiStepContex(){
             monthly_premium: 0
         }]);
         
-        const [goals, setGoals] = useState<Goal[]>([
-            { id:'', name: '', type: 'short-term', target_amount:0, deadline:"" }
-        ]);
+
 
         const handleBack = () => {
           if (step > 1) {
