@@ -4,8 +4,9 @@ import { Card, CardHeader, CardContent } from './Card';
 import { Input } from './Input';
 import { Label } from './Label';
 import { Button } from './Button';
-import type { InsuranceInfo } from '../types/financial';
 
+
+import type { InsuranceInfo } from '../Types/InsuranceInfo';
 interface LifeInsuranceSectionProps {
   insuranceList: InsuranceInfo[];
   onUpdate: (insuranceList: InsuranceInfo[]) => void;

@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent } from './Card';
 import { Input } from './Input';
 import { Label } from './Label';
 import { Button } from './Button';
-import type { HouseholdMember } from '../types/financial';
+import type { HouseholdMember } from '../Types/HouseHoldMember';
 
 interface HouseholdIncomeSectionProps {
   members: HouseholdMember[];

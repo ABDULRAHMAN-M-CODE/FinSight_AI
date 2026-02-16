@@ -2,24 +2,24 @@
 import { Routes,Route} from 'react-router-dom';
 
 // components related
-import IntroStepper from './pages/IntroStepper';
-import WelcomePage from "./pages/welcomePage";
-import Login from "./pages/Login";
-import SignUpForm  from "./pages/Signup";
-import EmailVerification from './pages/EmailVerification';
+import IntroStepper from './Pages/IntroStepper';
+import WelcomePage from "./Pages/welcomePage";
+import Login from "./Pages/Login";
+import SignUpForm  from "./Pages/Signup";
+import EmailVerification from './Pages/EmailVerification';
 
-import PostSignup from './pages/PostSignup';
-import DataCollectionIntro from './pages/DataCollectionIntro';
-import ResetPassword from './pages/ForgotPassword';
-import EnterEmailToVerify from './pages/EnterEmailToVerify';
-import Dashboard from './pages/Dashboard';
-import ForgotPassword from './pages/ForgotPassword';
-import SetPasswordPage from './pages/SetPasswordPage';
-import ForgotPassword_SuccessfullReset from './pages/ForgotPassword_SuccessfullReset';
-import MultiStepFlow from './pages/MultiStepFlow';
-import InsuranceAdvice from './pages/InsuranceAdvice';
-import DebtAnalysis from './pages/DebtAnalysis';
-import MultiStepContex from './pages/MultiStepContex';
+import PostSignup from './Pages/PostSignup';
+import DataCollectionIntro from './Pages/DataCollectionIntro';
+import ResetPassword from './Pages/ForgotPassword';
+import EnterEmailToVerify from './Pages/EnterEmailToVerify';
+import Dashboard from './Pages/Dashboard';
+import ForgotPassword from './Pages/ForgotPassword';
+import SetPasswordPage from './Pages/SetPasswordPage';
+import ForgotPassword_SuccessfullReset from './Pages/ForgotPassword_SuccessfullReset';
+import MultiStepFlow from './Pages/MultiStepFlow';
+import InsuranceAdvice from './Pages/InsuranceAdvice';
+import DebtAnalysis from './Pages/DebtAnalysis';
+import MultiStepContex from './Pages/MultiStepContex';
 function App() {    
    // [path="/"] is the  default route to be rendered 
    

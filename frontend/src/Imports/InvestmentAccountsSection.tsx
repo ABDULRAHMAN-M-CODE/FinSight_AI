@@ -6,7 +6,8 @@ import { Label } from './Label';
 import { Button } from './Button';
 
 import { IconButton } from './IconButton';
-import type { InvestmentAccount } from '../types/financial';
+
+import type { InvestmentAccount } from '../Types/InvestmentAccount';
 
 interface InvestmentAccountsSectionProps {
   accounts: InvestmentAccount[];

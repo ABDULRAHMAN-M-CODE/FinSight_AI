@@ -5,7 +5,7 @@ import { Input } from './Input';
 import { Label } from './Label';
 import { Button } from './Button';
 import { IconButton } from './IconButton';
-import type { Debt } from '../types/financial';
+import { type  Debt } from '../Types/Debt';
 
 interface OutstandingDebtsSectionProps {
   debts: Debt[];

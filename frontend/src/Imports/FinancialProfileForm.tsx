@@ -8,8 +8,11 @@ import { InvestmentAccountsSection } from './InvestmentAccountsSection';
 import { OutstandingDebtsSection } from './OutstandingDebtsSection';
 import { LifeInsuranceSection } from './LifeInsuranceSection';
 import { FinancialGoalsSection } from './FinancialGoalsSection';
-import type { HouseholdMember, InvestmentAccount, Debt, Goal, InsuranceInfo } from '../types/financial';
-
+import type { HouseholdMember } from '../Types/HouseHoldMember';
+import type { InvestmentAccount } from '../Types/InvestmentAccount';
+import type { Debt } from '../Types/Debt';
+import type { Goal } from '../Types/Goal';
+import type { InsuranceInfo } from '../Types/InsuranceInfo';
 function useFinancialProfileForm(){
  
   const [householdMembers, setHouseholdMembers] = useState<HouseholdMember[]>([

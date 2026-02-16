@@ -9,7 +9,7 @@ interface MonthlyProjection {
   interestCost: number;
 }
 
-export interface Debt {
+export interface DebtData {
   id: number;
   name: string;
   balance: number;
@@ -31,7 +31,7 @@ interface RiskMetrics {
 //  for the sake of simplifying apperance of the Component signature, we define addtional interface.
 interface DebtRiskVisualizationProps {
   monthlyProjections: MonthlyProjection[];
-  debts: Debt[];
+  debts: DebtData[];
   riskMetrics: RiskMetrics;
 }
 

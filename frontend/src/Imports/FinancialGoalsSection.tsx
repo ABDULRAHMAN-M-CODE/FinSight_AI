@@ -6,7 +6,7 @@ import { Label } from './Label';
 import { Button } from './Button';
 import { Select } from './Select';
 import { IconButton } from './IconButton';
-import type { Goal } from '../types/financial';
+import { type Goal } from '../Types/Goal';
 
 interface FinancialGoalsSectionProps {
   goals: Goal[];

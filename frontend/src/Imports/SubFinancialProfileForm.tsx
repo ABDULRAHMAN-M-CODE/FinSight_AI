@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { InvestmentAccountsSection } from './InvestmentAccountsSection';
 import { FinancialGoalsSection } from './FinancialGoalsSection';
-import type {InvestmentAccount, Goal} from '../types/financial';
+import { type InvestmentAccount } from '../Types/InvestmentAccount';
+import { type Goal } from '../Types/Goal';
 function useSubFinancialProfileForm(){
 
   const [investmentAccounts, setInvestmentAccounts] = useState<InvestmentAccount[]>([

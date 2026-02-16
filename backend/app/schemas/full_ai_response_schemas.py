@@ -84,3 +84,4 @@ class DebtsAdvice(BaseModel):
 class QuestionnarieResponseSchemas(BaseModel):
     protectionAdvice: List [ProtectionAdvice] = Field(default_factory=list)
     debtsAdvice: List [DebtsAdvice] = Field(default_factory=list)
+    #advice for goals and investements

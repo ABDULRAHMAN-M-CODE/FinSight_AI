@@ -28,26 +28,29 @@ from app.schemas.questionnaire_schemas import QuestionnaireSubmit
 
 def submit_questionnaire(
     data: QuestionnaireSubmit,
-    #db: Session = Depends(get_db),
-    #current_user: User = Depends(get_current_user),
+    #db: Session = Depends(get_db),    # commented for testing purposes.
+    #current_user: User = Depends(get_current_user), # commented for testing purposes.
 ):
-    # I intentionally commented this logic for testing. Most of this logic must be changed to match the frontend.
+   
     
-   # if not current_user.is_first_login:   
-    #    raise HTTPException(
-     #       status_code=400,
-     #       detail="Questionnaire already completed",
-      #  )
+  #  if not current_user.is_first_login:                        # commented for testing purposes.
+   #     raise HTTPException(                                   # commented for testing purposes.
+    #        status_code=400,                                   # commented for testing purposes.
+     #       detail="Questionnaire already completed",          # commented for testing purposes.
+     #   )
     
     try:
-        pass
-        # You can put commented code here using either `#` per line
-        # Example:
-        # total_household_income = sum(member.annual_income for member in data.household_income)
-        # ... other logic ...
-        
+        pass     # this pass must be deleted once logic is ready      
+
+        #Logic
+        #stroe JSON1 in the database .
+        #backend will not compute any thing .
+        #send pompt to the LLM , the prompt will contain : 1.contex , 2. structured output 
+        #send data 2 to the frontend
+
+
     except Exception as e:
-       # db.rollback()
+        db.rollback()
         print(f"Error submitting questionnaire: {str(e)}")
         raise HTTPException(
             status_code=500,
@@ -60,7 +63,6 @@ def submit_questionnaire(
 
 
 # Demo endpoint, no authorization required.
-
 
 from app.schemas.demo_questionnaire_schemas  import LimitedQuestionnaireShape
 @router.post("/demo-questionnaire", status_code=status.HTTP_201_CREATED)

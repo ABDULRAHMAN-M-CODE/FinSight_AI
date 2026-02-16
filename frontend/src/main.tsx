@@ -12,7 +12,7 @@ import { BrowserRouter } from 'react-router-dom'
 
  // Redux Related
 import { Provider } from 'react-redux'
-import store from './store'
+import store from './Store/index.ts'
 
 
 createRoot(document.getElementById('root')!).render(
