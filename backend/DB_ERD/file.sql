@@ -1,25 +1,10 @@
---File 2--
--- THERE IS NO AI USED AT ALL IN THE CREATION OF THIS FILE --
--- ** Database generated with pgModeler (PostgreSQL Database Modeler).
--- ** pgModeler version: 1.2.2
--- ** PostgreSQL version: 18.0
--- ** Project Site: pgmodeler.io
--- ** Model Author:  عبدالرحمن اشرف  ---
 
--- ** COMMENT 1 : Database creation must be performed outside a multi lined SQL file. 
--- **  COMMENT 2 : These commands were put in this file only as a convenience.
 
--- object: new_database | type: DATABASE --
--- DROP DATABASE IF EXISTS new_database;
- 
-CREATE DATABASE new_database; -- Question A to chatGPT: after I execute this , will next SQL commands be executed in the new_database or other database  ?  --
+
+SET check_function_bodies = false;-- Auto generated  --
 -- ddl-end --
 
-
-SET check_function_bodies = false;-- what is this ?  --
--- ddl-end --
-
-SET search_path TO pg_catalog,public;-- what is this ? --
+SET search_path TO pg_catalog,public;-- Auto generated --
 -- ddl-end --
 
 -- object: public.users | type: TABLE --

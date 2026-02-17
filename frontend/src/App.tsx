@@ -7,7 +7,6 @@ import WelcomePage from "./Pages/welcomePage";
 import Login from "./Pages/Login";
 import SignUpForm  from "./Pages/Signup";
 import EmailVerification from './Pages/EmailVerification';
-
 import PostSignup from './Pages/PostSignup';
 import DataCollectionIntro from './Pages/DataCollectionIntro';
 import ResetPassword from './Pages/ForgotPassword';

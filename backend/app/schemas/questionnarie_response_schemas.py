@@ -75,13 +75,23 @@ class RiskMetrics(BaseModel):
 # Full Debt Advice Response
 
 class DebtsAdvice(BaseModel):
-    householdIncome: float
+    #householdIncome: float  , # Note 1:  sorry this should not exist, because my UI does not even use it
     monthlyProjections: List[MonthlyProjection]
     debts: List[Debt]
     riskMetrics: RiskMetrics
 
 # DTO for Questionnarie response. direction(AI --> backend --> frontend).
+
+# Note 2 : this name is so bad , why would you even call it  "QuestionnarieResponse" ?? the name is so misleading.
+#Justification to change the  name  : AI sends data backend, so it should called something like : FullAiResponse, 
+#Frontend's questionarry is not even fucking  envolved .
 class QuestionnarieResponse(BaseModel):
-    protectionAdvice: List [ProtectionAdvice] = Field(default_factory=list)
-    debtsAdvice: List [DebtsAdvice] = Field(default_factory=list)
-    #advice for goals and investements
+    protectionAdvice: List [ProtectionAdvice] = Field(default_factory=list) # Note 3 : why this is array ?  this should  be object, not List of Objects!!!
+    debtsAdvice: List [DebtsAdvice] = Field(default_factory=list)          # Note 4 : why this is array ?  this should  be object, not List of Objects!!!
+    
+    # Note 5 : Suggested fix by me 
+    #protectionAdvice:ProtectionAdvice #(instead of List)
+    #debtsAdvice     :DebtsAdvice     #(instead of List)
+
+    # Note :  advice for goals  will be added later.
+    # Note :  advice for goals will be added later.

@@ -3,11 +3,9 @@ import { type DebtData } from '../Imports/DebtRiskVisualization';
 
 
 // Dynamic mock data - easily adjustable to show different debt scenarios
-export const mockDebtData = {
+// the mock data is supposed to be AI response , now , I want to Store all this Response in single, standalone Table in the Database, What should the table be "Depending on standards"
+export const debtsAdvice = {
   
-  householdIncome: 8500, // NOTE : this is not used at all , check if I should remove it 
-
-
   monthlyProjections: [
     { month: 0, totalDebt: 86200, highInterestDebt: 20700, debtToIncome: 0.52, interestCost: 950 },
     { month: 6, totalDebt: 78400, highInterestDebt: 15200, debtToIncome: 0.47, interestCost: 820 },
@@ -93,9 +91,9 @@ export default function DebtAnalysis() {
         {/* Debt Risk Stress Visualization */}
         <section>
           <DebtRiskVisualization 
-            monthlyProjections={mockDebtData.monthlyProjections}
-            debts={mockDebtData.debts as DebtData[]}
-            riskMetrics={mockDebtData.riskMetrics}
+            monthlyProjections={debtsAdvice.monthlyProjections}
+            debts={debtsAdvice.debts as DebtData[]}
+            riskMetrics={debtsAdvice.riskMetrics}
           />
         </section>
       </div>

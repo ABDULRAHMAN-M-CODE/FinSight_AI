@@ -2,9 +2,12 @@ import { ProtectionGapChart } from '../Imports/ProtectionGapChart';
 import { CoverageRecommendations } from '../Imports/CoverageRecommendations';
 import { type Recommendation } from '../Imports/CoverageRecommendations';
 // Dynamic mock data - easily adjustable to show different scenarios
+    
 
-export const mockFinancialData = {
+
+export const protectionAdvice = {
   
+    //  I think we need to store as JSONB , is that true ? 
     protectionGap: {
 
     currentCoverage: 500000,
@@ -21,44 +24,45 @@ export const mockFinancialData = {
       { month: 20, required: 850000, current: 500000, gap: 350000 },
       { month: 25, required: 650000, current: 500000, gap: 150000 },
     ]
-  },
-
-
-  recommendations: [
-    {
-      id: 1,
-      policyName: 'Term Life Insurance',
-      currentCoverage: 500000,
-      recommendedCoverage: 1200000,
-      gap: 700000,
-      action: 'Increase coverage by $700,000 to protect household income for 10+ years',
-      priority: 'High',
-      reason: 'Current coverage only replaces 3.3 years of income vs recommended 8 years',
-      estimatedCost: '+$85/month'
     },
-    {
-      id: 2,
-      policyName: 'Disability Insurance',
-      currentCoverage: 0,
-      recommendedCoverage: 112500,
-      gap: 112500,
-      action: 'Establish disability coverage at 75% income replacement',
-      priority: 'High',
-      reason: 'No income protection if unable to work - high risk exposure',
-      estimatedCost: '$120/month'
-    },
-    {
-      id: 3,
-      policyName: 'Critical Illness Coverage',
-      currentCoverage: 50000,
-      recommendedCoverage: 150000,
-      gap: 100000,
-      action: 'Increase coverage to align with annual income',
-      priority: 'Medium',
-      reason: 'Current coverage insufficient for medical expenses and income loss',
-      estimatedCost: '+$45/month'
-    }
-  ]
+    
+    //  I think we need to store as JSONB , is that true ? 
+    recommendations:[
+      {
+        id: 1,
+        policyName: 'Term Life Insurance',
+        currentCoverage: 500000,
+        recommendedCoverage: 1200000,
+        gap: 700000,
+        action: 'Increase coverage by $700,000 to protect household income for 10+ years',
+        priority: 'High',
+        reason: 'Current coverage only replaces 3.3 years of income vs recommended 8 years',
+        estimatedCost: '+$85/month'
+      },
+      {
+        id: 2,
+        policyName: 'Disability Insurance',
+        currentCoverage: 0,
+        recommendedCoverage: 112500,
+        gap: 112500,
+        action: 'Establish disability coverage at 75% income replacement',
+        priority: 'High',
+        reason: 'No income protection if unable to work - high risk exposure',
+        estimatedCost: '$120/month'
+      },
+      {
+        id: 3,
+        policyName: 'Critical Illness Coverage',
+        currentCoverage: 50000,
+        recommendedCoverage: 150000,
+        gap: 100000,
+        action: 'Increase coverage to align with annual income',
+        priority: 'Medium',
+        reason: 'Current coverage insufficient for medical expenses and income loss',
+        estimatedCost: '+$45/month'
+      }
+    ]
+
 };
 
 export default function InsuranceAdvice() {
@@ -75,12 +79,12 @@ export default function InsuranceAdvice() {
 
         {/* Section 1: Protection Gap Visualization */}
         <section className="mb-8">
-          <ProtectionGapChart data={mockFinancialData.protectionGap} />
+          <ProtectionGapChart data={protectionAdvice.protectionGap} />
         </section>
 
         {/* Section 2: Actionable Coverage Recommendations */}
         <section>
-          <CoverageRecommendations recommendations={mockFinancialData.recommendations  as Recommendation[]} />
+          <CoverageRecommendations recommendations={protectionAdvice.recommendations  as Recommendation[]} />
         </section>
       </div>
     </div>
