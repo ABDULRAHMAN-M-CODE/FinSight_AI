@@ -28,7 +28,7 @@ from app.core.security.jwt import create_access_token, ACCESS_TOKEN_EXPIRE_MINUT
 from app.core.utils.email_utils import send_email
 from app.core.utils.PWV_utils import validate_password
 
-
+# Auth router (register, verify email, login, reset password).
 router = APIRouter(prefix="/auth")
 
 
@@ -178,7 +178,7 @@ def forgot_password(
         db.commit()
 
         reset_link = (
-            f"http://localhost:5173/setPasswordPage?" # Abd's comment : in production, we need  real hose name like  : FinSightAI.com  , instead of local host, but for now , we are not just prototyping !
+            f"http://localhost:5173/setPasswordPage?" 
             f"token={raw_token}"
         )
 
@@ -198,7 +198,6 @@ If you did not request this, please ignore this email.
 """
         )
 
-    # ALWAYS return the same message (security best practice) .
     return {
         "message": "If the email exists, a reset link was sent"
     }

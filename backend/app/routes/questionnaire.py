@@ -2,12 +2,8 @@ from fastapi import APIRouter, HTTPException, status
 
 from app.schemas.questionnaire_schemas import QuestionnaireSubmit
 
-
-router = APIRouter(
-    prefix="/onboarding",
-    tags=["Onboarding"]
-)
-
+# questionnaire router (questionnaire only).
+router = APIRouter(prefix="/onboarding")
 
 @router.post("/questionnaire", status_code=status.HTTP_201_CREATED)
 def submit_questionnaire(
@@ -22,7 +18,6 @@ def submit_questionnaire(
         # 3. Return generated financial plan to frontend
 
     except Exception as e:
-        print(f"Error submitting questionnaire: {str(e)}")
         raise HTTPException(
             status_code=500,
             detail="Failed to submit questionnaire",

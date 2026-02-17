@@ -14,7 +14,7 @@ from app.schemas.user_settings_schemas import (
 from app.core.security.security import hash_password, verify_password
 from app.core.utils.PWV_utils import validate_password
 
-
+# User settings router (change name, change password, change phone number).
 router = APIRouter(prefix="/UserSettings")
 
 

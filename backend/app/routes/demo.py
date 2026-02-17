@@ -2,10 +2,9 @@ from fastapi import APIRouter, HTTPException, status
 
 from app.schemas.demo_schemas import DemoSubmit
 
-
+# Demo router (demo service only).
 router = APIRouter(prefix="/demo")
 
-# Demo Endpoint
 # No authentication or database interaction is required.
 
 @router.post("/demo", status_code=status.HTTP_201_CREATED)
@@ -46,8 +45,7 @@ def submit_demo(data: DemoSubmit):
         return response["structured_response"]
 
     except Exception as e:
-        print(f"Error submitting demo questionnaire: {str(e)}")
         raise HTTPException(
             status_code=500,
-            detail="Failed to submit questionnaire",
+            detail="Failed to run demo",
         )
