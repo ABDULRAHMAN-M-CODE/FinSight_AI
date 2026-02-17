@@ -8,7 +8,7 @@ SessionLocal = sessionmaker(bind=engine)
 
 Base = declarative_base()
 
-# to open the session
+# to open the session for services
 def get_db():
     db = SessionLocal()
     try:

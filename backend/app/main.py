@@ -10,12 +10,13 @@ from app.database import Base, engine
 
 #--------------------------------------------------------------------------------------
 from app.models.registration import user, email_verification_token, password_reset_token
-
+from app.models import goal, investment_account, limited_advice, user_financial_data
 # -------------------------------------------------------
 from app.routes.auth import router as auth_router
 from app.routes.user_settings import router as user_settings_router
-#------------------------------------------------------------------------
-from app.routes.user_financcial_data import router as questionnaire_router # Langchain's agent lives here.
+from app.routes.questionnaire import router as questionnaire_router 
+from app.routes.demo import router as demo_router
+# -------------------------------------------------------
 
 # Create the tables in the database
 Base.metadata.create_all(bind=engine)
@@ -38,6 +39,9 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(user_settings_router)
 app.include_router(questionnaire_router)
+app.include_router(demo_router)
+
+# main endpoint
 @app.get("/")
 def home():
     return {"status": "success", "message": "FinSight AI API is running!"}

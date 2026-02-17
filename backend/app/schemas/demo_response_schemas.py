@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List,Literal
 
-#Those models Are required to Define the output of the LLM, which will be used to populate the UI in the frontend
+# Those DTOs Are required to Define the output of the LLM, which will be used to populate the UI in the frontend
 class FinancialGoal(BaseModel):
     id:str
     name: str
@@ -22,7 +22,7 @@ class InvestmentAccount(BaseModel):
     linked_goals: List[str]=Field(default_factory=list)
     tax_strategy_advice: str
 
-# Final Expected output from AI ,related to Demo service
-class DemoResponseFormat(BaseModel):
+# DTO for demo response. dircetion (AI --> backend --> frontend)
+class DemoResponse(BaseModel):
     strategic_time_horizon_map: List[FinancialGoal]
     tax_efficiency_optimizer: List[InvestmentAccount]

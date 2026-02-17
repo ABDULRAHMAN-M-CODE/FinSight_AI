@@ -42,8 +42,7 @@ class InsuranceIn(BaseModel):
     monthly_premium: Decimal
 
 
-
-# it's better to put this in another file ; because the above schemas are shared.
+# DTO for questionnaire submit. direction(frontend --> backend --> AI).
 class QuestionnaireSubmit(BaseModel):
     household_income: List[HouseholdIncomeMember] =Field(default_factory=list)
     monthly_budget: Decimal

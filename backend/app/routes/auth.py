@@ -1,22 +1,32 @@
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
-from sqlalchemy.orm import Session
-from datetime import timedelta
 from datetime import datetime, timedelta
 
-from app.database import SessionLocal, get_db    
-from app.models.registration import User, EmailVerificationToken , PasswordResetToken
-from app.schemas.auth_schemas import UserRegister, UserLogin,VerifyEmailCodeRequest
-from app.core.security.security import hash_password, verify_password
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
+from sqlalchemy.orm import Session
+
+from app.database import get_db
+from app.models.registration import User, EmailVerificationToken, PasswordResetToken
+
+from app.schemas.auth_schemas import (
+    UserRegister,
+    UserLogin,
+    VerifyEmailCodeRequest,
+    ForgotPasswordRequest,
+    ResetPasswordRequest,
+)
+
+from app.core.security.security import (
+    hash_password,
+    verify_password,
+    generate_reset_token,
+    generate_raw_token,
+    hash_token,
+    generate_email_code,
+    verify_token,
+)
 
 from app.core.security.jwt import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
-from app.schemas.auth_schemas import ForgotPasswordRequest
-
-from app.core.security.security import generate_reset_token
-from app.schemas.auth_schemas import ResetPasswordRequest
-from app.core.security.security import generate_raw_token,hash_token, token_expiry,generate_email_code
 from app.core.utils.email_utils import send_email
 from app.core.utils.PWV_utils import validate_password
-from app.core.security.security import verify_token
 
 
 router = APIRouter(prefix="/auth")
@@ -75,9 +85,6 @@ def register(user: UserRegister, background_tasks: BackgroundTasks, db: Session 
     )
 
     return {"message": "User registered successfully. Please check your email for verify"}
-
-
-
 
 
 @router.post("/verify-email")
@@ -149,9 +156,6 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     }
 
 
-
-
-
 @router.post("/forgot-password")
 def forgot_password(
     data: ForgotPasswordRequest,
@@ -198,6 +202,7 @@ If you did not request this, please ignore this email.
     return {
         "message": "If the email exists, a reset link was sent"
     }
+
 
 @router.post("/reset-password")
 def reset_password(

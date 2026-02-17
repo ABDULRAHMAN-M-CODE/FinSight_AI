@@ -3,8 +3,8 @@ from pydantic import BaseModel, EmailStr
 
 # DTO for register
 class UserRegister(BaseModel):
-    full_name: Optional[str] = None    # good 
-    phone_number: Optional[str] = None  #good
+    full_name: Optional[str] = None   
+    phone_number: Optional[str] = None  
     email: EmailStr
     password: str 
     confirm_password: str 
