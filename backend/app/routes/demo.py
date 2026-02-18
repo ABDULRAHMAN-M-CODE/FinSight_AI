@@ -1,6 +1,9 @@
 from fastapi import APIRouter, HTTPException, status
 
 from app.schemas.demo_schemas import DemoSubmit
+from app.prompts import demo_service_system_prompt
+from app.schemas.demo_response_schemas import DemoResponse
+from app.reusable_functions.llm_utils import call_llm
 
 # Demo router (demo service only).
 router = APIRouter(prefix="/demo")
@@ -11,40 +14,21 @@ router = APIRouter(prefix="/demo")
 def submit_demo(data: DemoSubmit):
     try:
 
-        # Convert Pydantic model into JSON string
-        # This is the format the LLM handles best
+        #LLM is native in dealing with strings
         user_context = data.model_dump_json()
-
-        from langchain.agents import create_agent
-        from app.prompts import SYSTEM_PROMPT
-        from langchain.agents.structured_output import ToolStrategy
-        from backend.app.schemas.demo_response_schemas import DemoResponse
-
-        # Create LLM agent
-        # Note: OPENAI_API_KEY is internally loaded via environment variables
-        agent = create_agent(
-            model="gpt-5-nano",
-            system_prompt=SYSTEM_PROMPT,
-            response_format=ToolStrategy(DemoResponse)
-        )
-
-        # Invoke the LLM with user financial data
-        response = agent.invoke({
-            "messages": [
-                {
-                    "role": "user",
-                    "content": (
-                        f"Analyze this financial data and provide "
-                        f"Financial recommendations: {user_context}"
-                    )
-                }
-            ]
-        })
-
-        # Return structured response to frontend
-        return response["structured_response"]
+        
+        
+        # I rewrote the function to be reusable , the monitoring service will likely use it, because some LLM will monitor the Database to detect patterns inside it  !        
+        role="user"
+        user_prompt="I'm a Full Stack developer, I have some goals and investements detailed context, please give me most efficient Advice that tells me exactly what to do , given I have the following info "
+        desired_output_shape=DemoResponse
+        system_prompt=demo_service_system_prompt
+        model="gpt-5"
+        advice=call_llm(model ,user_context, system_prompt, desired_output_shape, role,  user_prompt)
+        return advice
 
     except Exception as e:
+        print(e)
         raise HTTPException(
             status_code=500,
             detail="Failed to run demo",

@@ -1,6 +1,7 @@
 // API calling : function, not component
 import { type FetchDataProps} from "../Types/FetchDataProps";
 import { type limitedAdvice } from "../Types/limitedAdviceData";
+ // Task 1 : make this function fully reusable
 export  const FetchData = async (e: React.SubmitEvent<HTMLFormElement>, {setIsLoading,setFinishedProcessing, setFinishedOnboarding,investmentAccounts,goals}: FetchDataProps)=>{
       
        // dont call custom hook inside async function or any function.
@@ -21,7 +22,8 @@ export  const FetchData = async (e: React.SubmitEvent<HTMLFormElement>, {setIsLo
 
       // frontend → backend → LLM → backend→ frontend .
       try {
-      const response = await fetch("http://127.0.0.1:8000/onboarding/demo-questionnaire", { // check URL later 
+        // make the URL reusable
+      const response = await fetch("http://127.0.0.1:8000/demo/demo", { // check URL later 
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
