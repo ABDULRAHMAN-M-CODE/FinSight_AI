@@ -17,9 +17,10 @@ class UserFinancialData(Base):
         Integer,
         ForeignKey("users.id", ondelete="CASCADE"),
         primary_key=True,
-        nullable=False
+        nullable=False,
+        index= True
     )
-
+    
     household_income = Column(DECIMAL(12, 2), nullable=False)
 
     income_sources = Column(JSONB, nullable=False)

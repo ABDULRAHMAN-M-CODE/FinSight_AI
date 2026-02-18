@@ -74,24 +74,24 @@ class RiskMetrics(BaseModel):
 
 # Full Debt Advice Response
 
-class DebtsAdvice(BaseModel):
-    #householdIncome: float  , # Note 1:  sorry this should not exist, because my UI does not even use it
+class DebtsAdvice(BaseModel):# note 1 solved.
     monthlyProjections: List[MonthlyProjection]
     debts: List[Debt]
     riskMetrics: RiskMetrics
 
+# later to add goalsAdvice.
+#class GoalsAdvice(BaseModel):
+    # add fields later.
+
+# for note 2 : the name (QuestionnarieResponse) referese to the following:
+# (when Questionnarie is submited by user in frontend, the backend will receive it, then it will call the-
+#   ai using langchain, then ai will respond to this call with some advices..., so this respond is called QuestionnarieResponse) it means the response of the questionnarie call.
+# also note that this name will not effect the route, the route uses (data) as a name of the object of this class so dont worry about it.
+
 # DTO for Questionnarie response. direction(AI --> backend --> frontend).
-
-# Note 2 : this name is so bad , why would you even call it  "QuestionnarieResponse" ?? the name is so misleading.
-#Justification to change the  name  : AI sends data backend, so it should called something like : FullAiResponse, 
-#Frontend's questionarry is not even fucking  envolved .
 class QuestionnarieResponse(BaseModel):
-    protectionAdvice: List [ProtectionAdvice] = Field(default_factory=list) # Note 3 : why this is array ?  this should  be object, not List of Objects!!!
-    debtsAdvice: List [DebtsAdvice] = Field(default_factory=list)          # Note 4 : why this is array ?  this should  be object, not List of Objects!!!
-    
-    # Note 5 : Suggested fix by me 
-    #protectionAdvice:ProtectionAdvice #(instead of List)
-    #debtsAdvice     :DebtsAdvice     #(instead of List)
-
+    # notes 3, 4 and 5 solved.
+    protectionAdvice:ProtectionAdvice 
+    debtsAdvice     :DebtsAdvice     
     # Note :  advice for goals  will be added later.
-    # Note :  advice for goals will be added later.
+

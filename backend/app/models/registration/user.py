@@ -33,20 +33,21 @@ class User(Base):
         uselist=False,
         cascade="all, delete"
     )
-
-    limited_advice = relationship(
-        "LimitedAdvice",
+    debts_advices = relationship(
+        "DebtsAdvices",
         back_populates="user",
-        uselist=False,
         cascade="all, delete-orphan"
     )
-
+    protection_advices = relationship(
+    "ProtectionAdvices",
+    back_populates="user",
+    cascade="all, delete-orphan"
+    )
     investment_accounts = relationship(
         "InvestmentAccount",
         back_populates="user",
         cascade="all, delete-orphan"
     )
-
     goals = relationship(
         "Goal",
         back_populates="user",
