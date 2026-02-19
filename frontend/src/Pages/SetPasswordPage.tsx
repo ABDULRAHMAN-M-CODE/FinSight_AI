@@ -5,6 +5,7 @@ import svgPaths from "../Imports/svg-i38a9njwbx";
 import { useSearchParams } from "react-router-dom";
 type PasswordStrength = "weak" | "medium" | "strong" | null;
 
+// reusable component
 function PasswordRequirement({ met, text }: { met: boolean; text: string }) {
   return (
     <div className="flex items-center gap-2 text-[13px]">
@@ -16,6 +17,7 @@ function PasswordRequirement({ met, text }: { met: boolean; text: string }) {
 }
 
 
+// custom hook
 function useSetPasswordPage(){ 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -26,12 +28,12 @@ function useSetPasswordPage(){
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isThereError,setIsThereError]= useState(false);
-    const [errorMsg,setErrorMsg]= useState(""); // think of How we should use it using conditional rendering  
+    const [errorMsg,setErrorMsg]= useState("");  
     const [isLoading, setIsLoading] = useState(false);
     const [touched, setTouched] = useState({ password: false, confirm: false });
     const passwordsMatch = confirmPassword && password === confirmPassword;
     const passwordsDontMatch = confirmPassword && password !== confirmPassword;
-    //const isValid = password.length >= 12 && passwordsMatch;
+   
     const isValid =password.length >= 12 &&/[A-Z]/.test(password) &&/[0-9]/.test(password) &&/[^A-Za-z0-9]/.test(password) &&
     passwordsMatch;
 
@@ -124,6 +126,7 @@ function useSetPasswordPage(){
 }
 
 
+// rendering
 export default  function SetPasswordPage() {
   const {
 

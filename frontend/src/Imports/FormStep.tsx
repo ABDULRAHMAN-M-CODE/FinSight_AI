@@ -2,51 +2,58 @@
 import { type FormStepProps } from "../Types/FormStepProps";
 
 
-// funcitons
-import { FetchData } from "../Functions/FetchData";
+
+// custom hook(s)
+import useFormStep from "../CustomHooks/useFormStep";
+
+// custome or  standard functions
+
+import { handleDemoSubmit } from "../Functions/api/reusable_functions/handleDemoSubmit";
 
 //reusable components
-
 import { InvestmentAccountsSection } from "./InvestmentAccountsSection";
 import { FinancialGoalsSection } from "./FinancialGoalsSection";
 import { Button } from "./Button";
 import { ArrowRight } from "lucide-react";
+import React from "react";
 
-export  default function FormStep(
-   {finishedProcessing, setIsLoading,
-    setFinishedProcessing,setFinishedOnboarding,
-    investmentAccounts,goals, 
-    setInvestmentAccounts, setGoals, 
-    handleBack, handleNext,isLoading}:FormStepProps ){
   
-   {/* Step 2: context collection : */} 
+// Rendering 
+export  default function FormStep({finishedProcessing, setIsLoading,setFinishedProcessing,setFinishedOnboarding,investment_accounts,financial_goals, setInvestmentAccounts, setGoals, handleBack, handleNext,isLoading}:FormStepProps ){
+   // custome hook is called.
+   const {
+    payload,
+    url,
+    localStorageKey
+   }=useFormStep({investment_accounts,financial_goals });
+    
+
+   {/* Step 2 in Demo: context collection : */} 
    return(
       <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
         <div className="text-center py-16">
 
           {/** Optional : provide  condtionally Rendered error massege here */}
-{/**{setIsLoading,setFinishedProcessing, setFinishedOnboarding,investmentAccounts,goals} */}
+
 
           {/** cards are conditionally rendered , only if backend  processing is not done  */}
           {!finishedProcessing &&(
             
-            <form onSubmit={(e: React.SubmitEvent<HTMLFormElement>)=>  
-                  FetchData(e,{
-                    setIsLoading,
-                    setFinishedProcessing,
-                    setFinishedOnboarding,
-                    investmentAccounts,
-                    goals
-                  })
+            <form onSubmit={
+              async (e: React.SubmitEvent<HTMLFormElement>)=>{
+                     
+                   handleDemoSubmit ({e,setIsLoading, payload, url, localStorageKey, setFinishedProcessing, setFinishedOnboarding })
+              }  
+                  
             }>
               {/* Investment Accounts */}
               <InvestmentAccountsSection
-                accounts={investmentAccounts}
+                accounts={investment_accounts}
                 onUpdate={setInvestmentAccounts}
               />
               {/* Financial Goals */}
               <FinancialGoalsSection
-                goals={goals}
+                goals={financial_goals}
                 onUpdate={setGoals}
               />
               <Button type="submit" variant="primary" className="translate-y-5  translate-x-[-15px]">{isLoading ? (
@@ -99,4 +106,4 @@ export  default function FormStep(
    );     
 
 
-  }
+}

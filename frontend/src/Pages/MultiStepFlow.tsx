@@ -54,8 +54,8 @@ export  default function MultiStepFlow() {
          setIsLoading={setIsLoading} 
          setFinishedProcessing={setFinishedProcessing}  
          setFinishedOnboarding={setFinishedOnboarding}
-         investmentAccounts={investmentAccounts}
-         goals={goals}
+         investment_accounts={investmentAccounts}
+         financial_goals={goals}
          setInvestmentAccounts={setInvestmentAccounts}
          setGoals={setGoals}
          handleBack={handleBack}

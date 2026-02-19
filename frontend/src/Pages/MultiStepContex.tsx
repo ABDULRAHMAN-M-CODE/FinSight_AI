@@ -20,9 +20,16 @@ import type { Debt } from "../Types/Debt";
 import { type Goal } from "../Types/Goal";
 import { type InsuranceInfo } from "../Types/InsuranceInfo";
 
+// functions
+import { FetchData } from "../Functions/api/fetchData";
+
 // custome hook : Logic and States 
 function useMultiStepContex(){
-        
+
+        // Problem : Refactor this custom hook, apply separation of concerns.
+
+        const url="http://127.0.0.1:8000/onboarding/questionnaire";
+
         const key="step";
         const [step, setStep]= useState(Number(localStorage.getItem(key))||1);
 
@@ -86,7 +93,7 @@ function useMultiStepContex(){
 
     // Step 6: Construct data and Submit
     // We build the object directly from the individual state variables
-    const finalPayload = {
+    const payload = {
         household_income: householdMembers.map(m => ({
             member_name: m.member_name,
             annual_income: Number(m.annual_income),
@@ -117,15 +124,15 @@ function useMultiStepContex(){
     };
 
 
-    console.table(finalPayload)
+    console.table(payload)
     try {
-        const response = await fetch("http://127.0.0.1:8000/onboarding/questionnaire", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(finalPayload) // Use the local variable, not state
-        });
+
+        
+        const response= await FetchData({payload, url});
+
 
         if (!response.ok) throw new Error("Server Error");
+        
         alert("Success!");
         
         // make interface for the data inside Response

@@ -7,10 +7,11 @@ export type FormStepProps={
   setIsLoading:React.Dispatch<React.SetStateAction<boolean>>;
   setFinishedProcessing:React.Dispatch<React.SetStateAction<boolean>>;
   setFinishedOnboarding:React.Dispatch<React.SetStateAction<boolean>>;
-  investmentAccounts:InvestmentAccount[];
-  goals: Goal[];
+  investment_accounts:InvestmentAccount[];
+   financial_goals: Goal[];
   setInvestmentAccounts:React.Dispatch< React.SetStateAction< InvestmentAccount[] > >;
   setGoals:React.Dispatch< React.SetStateAction< Goal[] > >;
   handleBack: ()=> void;
   handleNext:()=>void;  
+
 }

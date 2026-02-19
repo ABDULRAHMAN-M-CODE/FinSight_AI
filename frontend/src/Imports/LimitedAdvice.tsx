@@ -63,7 +63,7 @@ export default function LimitedAdvice() {
      1. Read the response as string from the  local storage.
      2. parse  the string to object.
      */
-    const saved = localStorage.getItem("AI_RESPONSE");
+    const saved = localStorage.getItem("Demo_Data");
     const AI_DATA: limitedAdvice | null = saved ? JSON.parse(saved) : null;
  
   // 2. Guard Clause: Don't render if data is null (standard practice)

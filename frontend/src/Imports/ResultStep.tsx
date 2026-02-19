@@ -8,7 +8,12 @@ export  default function ResultStep({handleEditRequest } :ResultStepProps ){
         
 return(
     <> 
+
+        {/**main advice content */}
         <LimitedAdvice />
+
+        {/** Edit info, Signup, and Login capabilities */}
+        {/** Task : apply separation of concerns by removing the Button, Button should be Shared, Links should not be shared*/}
         <div className="flex gap-4 justify-center">
 
 
