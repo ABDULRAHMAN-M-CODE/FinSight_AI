@@ -17,7 +17,7 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
   goals, 
   onUpdate 
 }) => {
-  const updateGoal = (id: string, field: keyof Goal, value: Goal[keyof Goal] )=> {
+  const updateGoal = (id: number, field: keyof Goal, value: Goal[keyof Goal] )=> {
     const updatedGoals = goals.map(goal => 
       goal.id === id ? { ...goal, [field]: value } : goal
     );
@@ -26,7 +26,7 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
 
   const addGoal = () => {
     const newGoal: Goal = {
-      id: Date.now().toString(),
+      id: Date.now(),
       name: '',
       type: 'short-term',
       target_amount: 0,
@@ -35,7 +35,7 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
     onUpdate([...goals, newGoal]);
   };
 
-  const removeGoal = (id: string) => {
+  const removeGoal = (id: number) => {
     if (goals.length > 1) {
       onUpdate(goals.filter(goal => goal.id !== id));
     }

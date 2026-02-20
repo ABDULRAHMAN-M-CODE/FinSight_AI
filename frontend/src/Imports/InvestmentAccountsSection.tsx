@@ -18,7 +18,7 @@ export const InvestmentAccountsSection: React.FC<InvestmentAccountsSectionProps>
   accounts, 
   onUpdate 
 }) => {
-  const updateAccount = (id: string, field: keyof InvestmentAccount, value: string | boolean) => {
+  const updateAccount = (id: number, field: keyof InvestmentAccount, value: string | boolean) => {
     const updatedAccounts = accounts.map(acc => 
       acc.id === id ? { ...acc, [field]: value } : acc
     );
@@ -27,7 +27,7 @@ export const InvestmentAccountsSection: React.FC<InvestmentAccountsSectionProps>
 
   const addAccount = () => {
     const newAccount: InvestmentAccount = {
-      id: Date.now().toString(),
+      id: Date.now(),
       name: '',
       type: '',
       current_balance: 0,
@@ -36,7 +36,7 @@ export const InvestmentAccountsSection: React.FC<InvestmentAccountsSectionProps>
     onUpdate([...accounts, newAccount]);
   };
 
-  const removeAccount = (id: string) => {
+  const removeAccount = (id: number) => {
     if (accounts.length > 1) {
       onUpdate(accounts.filter(acc => acc.id !== id));
     }

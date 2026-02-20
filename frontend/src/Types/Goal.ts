@@ -1,5 +1,5 @@
 export interface Goal {
-  id: string;
+  id: number;
   name: string;
   type: "short-term" | "long-term";
   target_amount: number;

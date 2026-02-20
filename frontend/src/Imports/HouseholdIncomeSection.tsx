@@ -33,7 +33,7 @@ export const HouseholdIncomeSection: React.FC<HouseholdIncomeSectionProps> = ({
 
     const addMember = () => {
       const newMeber: HouseholdMember = {
-        id: Date.now().toString(), /** to make all id's unique, give all field a specific value of the number of milliseconds ellapsed since 1970 */
+        id: Date.now(), /** to make all id's unique, give all field a specific value of the number of milliseconds ellapsed since 1970 */
         member_name: '',
         annual_income: 0,
         income_source: ''
@@ -42,7 +42,7 @@ export const HouseholdIncomeSection: React.FC<HouseholdIncomeSectionProps> = ({
     };
 
   // render all memebrs except the unwanted 'removed' member.
-  const removeMember = (id: string) => {
+  const removeMember = (id: number) => {
     if (members.length > 1) {
       onUpdate(members.filter(m => m.id !== id));
     }

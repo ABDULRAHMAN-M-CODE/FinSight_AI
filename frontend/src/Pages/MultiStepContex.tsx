@@ -46,22 +46,22 @@ function useMultiStepContex(){
         { number: 6, label: "Goals" }
         ];
         
-        // problem : when user add additional member, he cannot delete that memeber, but he should be able to do so.
+       // Date.now() to unqiuely identify each id, insure all id's are unique and collisions  happen.
         const [householdMembers, setHouseholdMembers] = useState<HouseholdMember[]>([
-            {id:'', member_name: '', annual_income: 0, income_source: '' }
+            {id:Date.now(), member_name: '', annual_income: 0, income_source: '' }
         ]);
         
         const [monthlyBudget, setMonthlyBudget] = useState(0);
         
         const [investmentAccounts, setInvestmentAccounts] = useState<InvestmentAccount[]>([
-            {  id:'',name: '', type: '', current_balance: 0, is_active: true }
+            {  id:Date.now(),name: '', type: '', current_balance: 0, is_active: true }
         ]);
 
         const [goals, setGoals] = useState<Goal[]>([
-            { id:'', name: '', type: 'short-term', target_amount:0, deadline:"" }
+            { id:Date.now(), name: '', type: 'short-term', target_amount:0, deadline:"" }
         ]);        
         const [debts, setDebts] = useState<Debt[]>([
-            { id:'', type: '', balance: 0, monthly_payment: 0, interest_rate: 0 }
+            { id:Date.now(), type: '', balance: 0, monthly_payment: 0, interest_rate: 0 }
         ]);
         // problem : user is able to provide only one insurence , but he should be able to Provide more than one.
         const [insurance, setInsurance] = useState<InsuranceInfo[]>([{

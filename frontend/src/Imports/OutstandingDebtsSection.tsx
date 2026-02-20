@@ -16,7 +16,7 @@ export const OutstandingDebtsSection: React.FC<OutstandingDebtsSectionProps> = (
   debts, 
   onUpdate 
 }) => {
-  const updateDebt = (id: string, field: keyof Debt, value: string) => {
+  const updateDebt = (id: number, field: keyof Debt, value: string) => {
     const updatedDebts = debts.map(debt => 
       debt.id === id ? { ...debt, [field]: value } : debt
     );
@@ -25,7 +25,7 @@ export const OutstandingDebtsSection: React.FC<OutstandingDebtsSectionProps> = (
 
   const addDebt = () => {
     const newDebt: Debt = {
-      id: Date.now().toString(),
+      id: Date.now(),
       type: '',
       balance: 0,
       monthly_payment:0,
@@ -34,7 +34,7 @@ export const OutstandingDebtsSection: React.FC<OutstandingDebtsSectionProps> = (
     onUpdate([...debts, newDebt]);
   };
 
-  const removeDebt = (id: string) => {
+  const removeDebt = (id: number) => {
     if (debts.length > 1) {
       onUpdate(debts.filter(debt => debt.id !== id));
     }

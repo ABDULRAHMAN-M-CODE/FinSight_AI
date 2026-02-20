@@ -1,5 +1,5 @@
 export interface InvestmentAccount {
-  id: string;
+  id: number;
   name: string;
   type: string;
   current_balance: number ;

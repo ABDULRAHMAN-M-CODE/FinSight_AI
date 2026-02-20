@@ -6,14 +6,14 @@ from datetime import date
 
 # DTO for House hold members
 class HouseholdIncomeMember(BaseModel):
-    id:str  # Note 1  : id is necessary for the frontend to work, as adding/removing  a member requires a logic that uses the id  to distinguish between the members
+    id:Decimal  # Note 1  : id is necessary for the frontend to work, as adding/removing  a member requires a logic that uses the id  to distinguish between the members
     member_name: str
     annual_income: Decimal
     income_source: str
 
 # DTO for investment acccounts : (for both the Demo (Limited) and the full service)
 class InvestmentAccountIn(BaseModel):
-    id:str
+    id:Decimal
     name: str
     type: str
     current_balance: Decimal
@@ -21,7 +21,7 @@ class InvestmentAccountIn(BaseModel):
 
 # DTO for user finance goals :  (for both the Demo (Limited) and the full service)
 class FinancialGoalsIn(BaseModel):
-    id:str
+    id:Decimal
     name : str
     type : Literal["short-term", "long-term"]
     target_amount : Decimal
@@ -29,7 +29,7 @@ class FinancialGoalsIn(BaseModel):
 
 # DTO for debts 
 class DebtIn(BaseModel):
-    id:str
+    id:Decimal
     type: str
     balance: Decimal
     monthly_payment: Decimal
@@ -37,6 +37,7 @@ class DebtIn(BaseModel):
 
 # DTO for insurances 
 class InsuranceIn(BaseModel):
+    #id:Decimal , it may be needed later
     insurance_type: str
     death_benefit: Decimal
     cash_value: Decimal 

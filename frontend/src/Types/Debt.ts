@@ -1,5 +1,5 @@
 export interface Debt {
-  id: string;
+  id: number;
   type: string;
   balance: number ;
   monthly_payment: number;
