@@ -48,7 +48,7 @@ function useMultiStepContex(){
         
         // problem : when user add additional member, he cannot delete that memeber, but he should be able to do so.
         const [householdMembers, setHouseholdMembers] = useState<HouseholdMember[]>([
-            { member_name: '', annual_income: 0, income_source: '' }
+            {id:'', member_name: '', annual_income: 0, income_source: '' }
         ]);
         
         const [monthlyBudget, setMonthlyBudget] = useState(0);
@@ -95,6 +95,7 @@ function useMultiStepContex(){
     // We build the object directly from the individual state variables
     const payload = {
         household_income: householdMembers.map(m => ({
+            id:m.id,
             member_name: m.member_name,
             annual_income: Number(m.annual_income),
             income_source: m.income_source
@@ -125,6 +126,8 @@ function useMultiStepContex(){
 
 
     console.table(payload)
+    
+    // Problem : after making this function work, replace the try catch block with already made function, maybe it's the 'handleDemoSubmit'
     try {
 
         

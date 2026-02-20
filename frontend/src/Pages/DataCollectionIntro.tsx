@@ -132,11 +132,11 @@ export default function DataCollectionIntro() {
 
             {/* CTA Button */}
             <Link
-              to="/Questionarry"
+              to="/MultiStepContex"
               className="flex items-center justify-center gap-2 w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 active:scale-98 transition-all duration-200 shadow-lg shadow-blue-600/25"
               aria-label="Continue to provide financial information"
             >
-              <span>Continue to Questionnaire </span>
+              <span>Continue </span>
               <ArrowRight className="w-5 h-5" aria-hidden="true" />
             </Link>
 

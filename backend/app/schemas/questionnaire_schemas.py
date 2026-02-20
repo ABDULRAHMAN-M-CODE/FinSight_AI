@@ -6,6 +6,7 @@ from datetime import date
 
 # DTO for House hold members
 class HouseholdIncomeMember(BaseModel):
+    id:str  # Note 1  : id is necessary for the frontend to work, as adding/removing  a member requires a logic that uses the id  to distinguish between the members
     member_name: str
     annual_income: Decimal
     income_source: str
@@ -45,7 +46,7 @@ class InsuranceIn(BaseModel):
 # DTO for questionnaire submit. direction(frontend --> backend --> AI).
 class QuestionnaireSubmit(BaseModel):
     household_income: List[HouseholdIncomeMember] =Field(default_factory=list)
-    monthly_budget: Decimal
+    monthly_budget: Decimal=Field(default=Decimal("6545")) # Note 2 :  I added default value, as additional guard to prevent any failure .
     investment_accounts: List[InvestmentAccountIn] = Field(default_factory=list)
     outstanding_debts: List[DebtIn] =Field(default_factory=list)
     life_insurance: List[InsuranceIn] = Field(default_factory=list)
