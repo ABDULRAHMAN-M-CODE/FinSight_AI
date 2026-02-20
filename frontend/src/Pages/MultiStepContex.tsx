@@ -1,6 +1,7 @@
 
 // hooks
 import { useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 // Prebuilt components
 import { ProgressBar } from "../Imports/ProgressBar"
@@ -26,7 +27,11 @@ import { FetchData } from "../Functions/api/fetchData";
 // custome hook : Logic and States 
 function useMultiStepContex(){
 
-        // Problem : Refactor this custom hook, apply separation of concerns.
+        // Problem 1 : Refactor this custom hook, apply separation of concerns.
+
+        const [isLoading, setIsLoading]=useState(false);
+
+        const navigate= useNavigate();
 
         const url="http://127.0.0.1:8000/onboarding/questionnaire";
 
@@ -34,7 +39,7 @@ function useMultiStepContex(){
         const [step, setStep]= useState(Number(localStorage.getItem(key))||1);
 
 
-        // Problem : decide how to use the processing flag to Redirect the user to "SUCCESS,NAVIGATE TO DASHBOARD UI".
+       
        // const [processingFinished, setProcessingFinished]=useState(false); 
         
        const steps = [
@@ -63,7 +68,8 @@ function useMultiStepContex(){
         const [debts, setDebts] = useState<Debt[]>([
             { id:Date.now(), type: '', balance: 0, monthly_payment: 0, interest_rate: 0 }
         ]);
-        // problem : user is able to provide only one insurence , but he should be able to Provide more than one.
+        
+        // Note 1 : currently , id is not needed. 
         const [insurance, setInsurance] = useState<InsuranceInfo[]>([{
             insurance_type: '',
             death_benefit: 0,
@@ -77,86 +83,88 @@ function useMultiStepContex(){
           if (step > 1) {
             setStep(step - 1);
             localStorage.setItem("step",(step-1).toString()); 
-            // problem : when user back , should we Pop Data he entered in the current Step that was before back?  
+           
         }
         };
 
         const handleNext = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
+             e.preventDefault();
 
-    // Steps 1 to 5: Just move to the next step
-    if (step < 6) {
-        setStep(step + 1);
-        localStorage.setItem("step", (step + 1).toString());
-        return;
-    }
+            // Steps 1 to 5: Just move to the next step
+            if (step < 6) {
+                setStep(step + 1);
+                localStorage.setItem("step", (step + 1).toString());
+                return;
+            }
+            
+            // setup
+            setIsLoading(true);
+            const payload = {
+                household_income: householdMembers.map(m => ({
+                    id:m.id,
+                    member_name: m.member_name,
+                    annual_income: Number(m.annual_income),
+                    income_source: m.income_source
+                })),
+                monthly_budget: Number(monthlyBudget),
+                investment_accounts: investmentAccounts.map(a => ({
+                    id: a.id,
+                    name: a.name,
+                    type: a.type,
+                    current_balance: Number(a.current_balance),
+                    is_active: a.is_active
+                })),
+                outstanding_debts: debts, // Map this if needed
+                life_insurance: insurance.map(i => ({
+                    insurance_type: i.insurance_type,
+                    death_benefit: Number(i.death_benefit),
+                    cash_value: Number(i.cash_value),
+                    monthly_premium: Number(i.monthly_premium)
+                })),
+                financial_goals: goals.map(g => ({
+                    id: g.id,
+                    name: g.name,
+                    type: g.type,
+                    target_amount: Number(g.target_amount),
+                    deadline: g.deadline
+                }))
+            };
 
-    // Step 6: Construct data and Submit
-    // We build the object directly from the individual state variables
-    const payload = {
-        household_income: householdMembers.map(m => ({
-            id:m.id,
-            member_name: m.member_name,
-            annual_income: Number(m.annual_income),
-            income_source: m.income_source
-        })),
-        monthly_budget: Number(monthlyBudget),
-        investment_accounts: investmentAccounts.map(a => ({
-            id: a.id,
-            name: a.name,
-            type: a.type,
-            current_balance: Number(a.current_balance),
-            is_active: a.is_active
-        })),
-        outstanding_debts: debts, // Map this if needed
-        life_insurance: insurance.map(i => ({
-            insurance_type: i.insurance_type,
-            death_benefit: Number(i.death_benefit),
-            cash_value: Number(i.cash_value),
-            monthly_premium: Number(i.monthly_premium)
-        })),
-        financial_goals: goals.map(g => ({
-            id: g.id,
-            name: g.name,
-            type: g.type,
-            target_amount: Number(g.target_amount),
-            deadline: g.deadline
-        }))
-    };
 
-
-    console.table(payload)
+            //console.table(payload) // to visulaize the sent data as table on the console.
     
-    // Problem : after making this function work, replace the try catch block with already made function, maybe it's the 'handleDemoSubmit'
-    try {
-
-        
-        const response= await FetchData({payload, url});
+            // Problem 2 : after making this function work, replace the try catch block with already made function, maybe it's the 'handleDemoSubmit'
+            try {
 
 
-        if (!response.ok) throw new Error("Server Error");
-        
-        alert("Success!");
-        
-        // make interface for the data inside Response
-        // process response data 
+                
+                const response= await FetchData({payload, url});
 
 
+                // guarding
+                if (!response.ok) throw new Error("Server Error");
+                
 
 
-        // set finished processing flag 
+                setIsLoading(false);
+                
+                
+                // make interface for the data inside response.json()
+                // process response.json() data 'Like setting it to local storage'  
+                // set finished processing flag 
+                
+                navigate("/PostMultiStepContext");
 
-
-    } catch (e) {
-        console.error(e);
-        alert("Network Error");
-    }
-        };
+            } catch (e) {
+                setIsLoading(false);
+                console.error(e);
+                alert("Network Error");
+            }
+};
     
-    // returns object, thus, destructing at calling site is preferred.
+    // returns object, thus, use destructing at calling site
     return{
         step,
-        
         steps,
         householdMembers,
         setHouseholdMembers,
@@ -172,11 +180,12 @@ function useMultiStepContex(){
         setGoals,
         handleBack,
         handleNext,
+        isLoading
         
     }
 }
 
-// UI
+// UI Component
 export default function MultiStepContex(){
     
     //use the custome hook
@@ -196,7 +205,8 @@ export default function MultiStepContex(){
         goals,
         setGoals,
         handleBack,
-        handleNext
+        handleNext,
+        isLoading
     }= useMultiStepContex();
    
    
@@ -218,7 +228,7 @@ export default function MultiStepContex(){
                             members={householdMembers}
                             onUpdate={setHouseholdMembers}
                             />
-                            <BackAndContinueButtons  handleBack={handleBack}   /> 
+                            <BackAndContinueButtons  handleBack={handleBack}  isLoading={isLoading}   /> 
                         
                     </form>
 
@@ -230,7 +240,7 @@ export default function MultiStepContex(){
                         budget={monthlyBudget}
                         onUpdate={setMonthlyBudget}
                     />
-                     <BackAndContinueButtons  handleBack={handleBack}   /> 
+                     <BackAndContinueButtons  handleBack={handleBack}  isLoading={isLoading}  /> 
 
 
                     </form>
@@ -243,7 +253,7 @@ export default function MultiStepContex(){
                             accounts={investmentAccounts}
                             onUpdate={setInvestmentAccounts}
                         />
-                        <BackAndContinueButtons  handleBack={handleBack}   />                       
+                        <BackAndContinueButtons  handleBack={handleBack} isLoading={isLoading}   />                       
                     </form>
                     
                     // should I put button here ? 
@@ -255,7 +265,7 @@ export default function MultiStepContex(){
                             debts={debts}
                             onUpdate={setDebts}
                         />                   
-                        <BackAndContinueButtons  handleBack={handleBack}   /> 
+                        <BackAndContinueButtons  handleBack={handleBack} isLoading={isLoading}   /> 
                     </form>
         
                 )}
@@ -266,7 +276,7 @@ export default function MultiStepContex(){
                             onUpdate={setInsurance}
                         />        
                                     
-                        <BackAndContinueButtons  handleBack={handleBack}   /> 
+                        <BackAndContinueButtons  handleBack={handleBack} isLoading={isLoading}   /> 
                     </form>
 
                     // should I put button here ? 
@@ -277,7 +287,7 @@ export default function MultiStepContex(){
                             goals={goals}
                             onUpdate={setGoals}
                         />        
-                        <BackAndContinueButtons  handleBack={handleBack}   /> 
+                        <BackAndContinueButtons  handleBack={handleBack} isLoading={isLoading}   /> 
                     </form>
 
                     // should I put button here ? 

@@ -19,6 +19,8 @@ import MultiStepFlow from './Pages/MultiStepFlow';
 import InsuranceAdvice from './Pages/InsuranceAdvice';
 import DebtAnalysis from './Pages/DebtAnalysis';
 import MultiStepContex from './Pages/MultiStepContex';
+import PostMultiStepContext from './Pages/PostMultiStepContext';
+import MainDashboard from './Pages/MainDashboard';
 function App() {    
    // [path="/"] is the  default route to be rendered 
    
@@ -42,7 +44,8 @@ function App() {
       <Route path="/InsuranceAdvice" element={<InsuranceAdvice />}/>
       <Route path="/DebtAnalysis" element={<DebtAnalysis />}/>
       <Route path='/MultiStepContex' element={<MultiStepContex />} />
-      
+      <Route path="/PostMultiStepContext" element={<PostMultiStepContext />}/>
+      <Route path="/MainDashboard" element={<MainDashboard />}/>
     </Routes>
   );
       
