@@ -1,38 +1,40 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
+from sqlalchemy.orm import Session
+
+from app.database import get_db
+from app.models.registration import User
+from app.core.dependencies import get_current_user
 
 from app.schemas.questionnaire_schemas import QuestionnaireSubmit
+from app.schemas.questionnarie_response_schemas import FullAiResponse
 
 # questionnaire router (questionnaire only).
 router = APIRouter(prefix="/onboarding")
 
 @router.post("/questionnaire", status_code=status.HTTP_201_CREATED)
 def submit_questionnaire(
-    data: QuestionnaireSubmit,
+     data: QuestionnaireSubmit,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
     try:
-        pass  # remove once business logic is implemented
+        if not current_user.is_first_login :
+            raise HTTPException(
+            status_code=400,
+            detail="user already filled finance data ",
+        )
+        # just started , i will complete as soon as possible.
+         
+        # 1- Store all submitted user's info "data" in the  appropriate database tables.
 
-       
-       #Note: in the report, we should mention that we followed 'clean code principles' in both the frontend and backend, this will give us advantage.
-       
-       # ###########################################################
-       # THE FLOW IS  BASICALLY 4 STEPS ONLY ( ORDER MATTERS !!!) :
-       # ###########################################################
+
+        # 2- call the LLM and store it's result in varaible.
         
-        #1- 'AHMAD'  should make a only a single function call - the function should be  defined in another file- that does the following only:
-
-        # **** Store all submitted user's info "data" in the  appropriate database tables.*****
-  
-
-        #2- 'ABD'  should make a  single function call - Function is already implmented in another file-  that does the following:
-        # *** call the LLM and store it's result in varaible. if the variable needs parsing, I will do it.*****
-        
-        
-        #3- 'AHMAD'  should make a single function call - the function should be  defined in another file- that does the following only:
-        #*** Store the AI result in the Database***********
+    
+        # 3- Store the AI result in the Database.
 
 
-        #4- 'ABD' returns the advice to the frontend only after ahamd finishes storing it in the database.
+        # 4- Return the advice to the frontend.
 
 
 

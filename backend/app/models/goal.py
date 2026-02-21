@@ -36,7 +36,6 @@ class Goal(Base):
 
     target_amount = Column(DECIMAL(12, 2), nullable=False)
 
-    # backend computed
     current_amount = Column(DECIMAL(12, 2), default=0, nullable=False)
 
     deadline = Column(Date, nullable=True)
