@@ -24,7 +24,9 @@ def submit_demo(data: DemoSubmit):
         desired_output_shape=DemoResponse
         system_prompt=demo_service_system_prompt
         model="gpt-5"
+        
         advice=call_llm(model ,user_context, system_prompt, desired_output_shape, role,  user_prompt)
+        
         return advice
 
     except Exception as e:

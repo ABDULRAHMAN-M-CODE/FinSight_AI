@@ -1,0 +1,166 @@
+
+import { mockDashboardData } from '../mocks/goalsAndInvestementsAdviceMock';
+import { ResponsiveContainer, ComposedChart, Line, Area, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine, Legend, Label } from 'recharts';
+import { Badge } from '../Components/Badge';
+export function FinancialTrajectoryDivergence() {
+  const { financialTrajectoryDivergence, goals } = mockDashboardData;
+  const { currentPath: data, text2 } = financialTrajectoryDivergence;
+  
+  // Calculate total divergence at the end for the badge/kpi
+  const finalPoint = data[data.length - 1];
+  const divergence = finalPoint ? finalPoint.optimizedMedian - finalPoint.currentMedian : 0;
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      // Find the specific payloads
+      const optimized = payload.find((p: any) => p.dataKey === 'optimizedMedian');
+      const current = payload.find((p: any) => p.dataKey === 'currentMedian');
+      
+      const valOpt = optimized ? optimized.value : 0;
+      const valCurr = current ? current.value : 0;
+      const diff = valOpt - valCurr;
+
+      return (
+        <div className="bg-white border border-gray-200 p-3 rounded-lg shadow-sm text-xs">
+          <p className="font-semibold text-gray-900 mb-2">Year {label}</p>
+          <div className="space-y-1 text-gray-600">
+            <p className="flex justify-between gap-4">
+              <span>Optimized:</span>
+              <span className="text-blue-600 font-semibold">${(valOpt / 1000000).toFixed(2)}M</span>
+            </p>
+            <p className="flex justify-between gap-4">
+              <span>Current:</span>
+              <span className="text-gray-900 font-semibold">${(valCurr / 1000000).toFixed(2)}M</span>
+            </p>
+            <div className="border-t border-gray-200 mt-2 pt-2 flex justify-between gap-4">
+              <span>Divergence:</span>
+              <span className="text-green-500 font-bold">+${(diff / 1000).toFixed(0)}k</span>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 h-full flex flex-col">
+      {/* Header */}
+      <div className="mb-6 flex justify-between items-start">
+        <div>
+          <h2 className="text-gray-900 font-semibold mb-1">Financial Trajectory Divergence Map</h2>
+          <p className="text-sm text-gray-600">Projected Wealth Accumulation vs Goals</p>
+        </div>
+        <div className="flex flex-col items-end">
+          <Badge variant="outline" className="text-xs font-normal text-slate-500 mb-1">
+            {goals.length} Goals Aggregate
+          </Badge>
+          <span className="text-xs font-semibold text-emerald-600">
+            +${(divergence / 1000).toFixed(0)}k Projected Gain
+          </span>
+        </div>
+      </div>
+
+      {/* Chart */}
+      <div className="flex-1 w-full min-h-[300px] mb-6 relative">
+        <ResponsiveContainer width="100%" height="100%">
+          <ComposedChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+            <defs>
+              <linearGradient id="colorDivergence" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#e5e7eb" stopOpacity={0.6}/>
+                <stop offset="95%" stopColor="#e5e7eb" stopOpacity={0.1}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+            <XAxis 
+              dataKey="year" 
+              tick={{ fill: '#6b7280', fontSize: 12 }} 
+              tickLine={false}
+              axisLine={{ stroke: '#d1d5db' }}
+            >
+              <Label value="Projection Year" position="bottom" offset={0} fill="#6b7280" fontSize={12} />
+            </XAxis>
+            <YAxis 
+              tick={{ fill: '#6b7280', fontSize: 12 }} 
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(val) => `$${(val / 1000000).toFixed(1)}M`}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend 
+              verticalAlign="top" 
+              height={36} 
+              wrapperStyle={{ fontSize: '12px', color: '#6b7280' }} 
+              iconType="line" 
+            />
+            
+            {/* Downside Area (10th Percentile Band) */}
+            <Area 
+              type="monotone" 
+              dataKey="optimized10th" 
+              stroke="none" 
+              fill="url(#colorDivergence)" 
+              name="Downside Risk Band (Optimized)"
+            />
+
+            {/* Current Strategy Line */}
+            <Line 
+              name="Current Path"
+              type="monotone" 
+              dataKey="currentMedian" 
+              stroke="#64748b" 
+              strokeWidth={2} 
+              dot={false}
+              strokeDasharray="5 5"
+            />
+
+            {/* Optimized Strategy Line */}
+            <Line 
+              name="AI Optimized Path"
+              type="monotone" 
+              dataKey="optimizedMedian" 
+              stroke="#3b82f6" 
+              strokeWidth={3} 
+              dot={false}
+            />
+            
+            {/* Goal Threshold Lines */}
+            {goals.map((goal, /*index*/ ) => (
+              <ReferenceLine 
+                key={goal.id}
+                y={goal.target} 
+                label={{ 
+                  position: 'right', 
+                  value: goal.name, 
+                  fill: '#9ca3af', 
+                  fontSize: 10,
+                  dy: -10 
+                }} 
+                stroke="#d1d5db" 
+                strokeDasharray="2 2" 
+              />
+            ))}
+
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Text Blocks */}
+      <div className="space-y-3 pt-6 border-t border-gray-200 mt-auto">
+        {/* text1 (Static) */}
+        <p className="text-sm text-gray-600 leading-relaxed">
+          This map compares your current financial trajectory against the AI-optimized trajectory across all your stated goals. The shaded area represents the downside risk protection offered by the optimized strategy.
+        </p>
+        
+        {/* text2 (Dynamic) */}
+        <div className="bg-emerald-50 border border-emerald-100 p-3 rounded-md flex gap-3 items-start">
+          <div className="w-1 h-full min-h-[1.25rem] bg-emerald-500 rounded-full flex-shrink-0 mt-1" />
+          <p className="text-sm text-emerald-900 leading-relaxed">
+            <strong className="font-semibold text-emerald-800 uppercase text-xs tracking-wide block mb-1">Trajectory Action</strong> 
+            {text2}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -79,14 +79,86 @@ class DebtsAdvice(BaseModel):
     debts: List[Debt]
     riskMetrics: RiskMetrics
 
-# later to add goalsAdvice.
-#class GoalsAdvice(BaseModel):
-    # add fields later.
+
+class  FinancialGoal(BaseModel):
+    id: int
+    name: str
+    target: int
+    deadline: int 
+    currentAssets: int
+
+
+class Investment(BaseModel):
+
+    id: int
+    name: str
+    currentValue: int
+    riskTier: Literal['Conservative' , 'Balanced' , 'Growth'] 
+
+
+class ProbabilityPoint(BaseModel):
+    contribution:  int
+    riskTier: Literal ['Conservative' , 'Balanced' , 'Growth']
+    probability: int;    
+
+class GoalProbabilityData(BaseModel):
+    
+    goalId: int
+    contributionRiskMatrix: List[ProbabilityPoint]
+    
+    
+class  TrajectoryPoint(BaseModel):
+    year: int
+    currentMedian: float 
+    optimizedMedian:  float
+    current10th: float
+    optimized10th: float
+    
+    
+    
+
+class StrategyDirective(BaseModel):
+    id: int
+    type: Literal['contribution' , 'allocation' , 'liquidity' , 'timeline' , 'consolidation']
+    title: str
+    value: str 
+    description: str
+
+
+class ImpactSummary(BaseModel):
+
+    probabilityImprovement: int; 
+    projectedGain: int; 
+
+class OptimalStrategy (BaseModel):
+    directives: List[StrategyDirective]; 
+    impactSummary: ImpactSummary;  
+
+
+class GoalProbabilitySurface (BaseModel):
+
+    dataPerGoal: List[GoalProbabilityData]
+    text2: str
+
+class FinancialTrajectoryDivergence(BaseModel):
+    currentPath: List[TrajectoryPoint]
+    text2: str
+class GoalsAndInvestementsAdvice(BaseModel):
+    
+
+    goals: List [FinancialGoal]
+    investments: List[Investment]
+    optimalStrategy: OptimalStrategy
+    goalProbabilitySurface: GoalProbabilitySurface
+    financialTrajectoryDivergence: FinancialTrajectoryDivergence
+    
 
 
 # DTO for Questionnarie response. direction(AI --> backend --> frontend).
+# thus, frontend will define interface/type that expects three fields : protectionAdvice, debtsAdvice,  and goalsAndInvestementsAdvice.
 class FullAiResponse(BaseModel):
     protectionAdvice:ProtectionAdvice 
     debtsAdvice     :DebtsAdvice     
-    # Note :  advice for goals  will be added later.
+    goalsAndInvestementsAdvice:GoalsAndInvestementsAdvice
+    
 

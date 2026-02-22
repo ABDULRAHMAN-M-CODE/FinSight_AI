@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 
 type LoginState = "default" | "filled" | "loading" | "error";
 
+// Logic , make it works (functional) , make it readable  , optimize 
 function  useLoginPageLogic(){
   
   
@@ -79,6 +80,8 @@ function  useLoginPageLogic(){
     setResetEmail,
   };
 }
+
+//Rendering
 export  default function LoginPage() {
 
     const { 

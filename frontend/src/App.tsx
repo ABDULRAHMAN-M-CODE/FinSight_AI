@@ -3,7 +3,7 @@ import { Routes,Route} from 'react-router-dom';
 
 // components related
 import IntroStepper from './Pages/IntroStepper';
-import WelcomePage from "./Pages/welcomePage";
+import WelcomePage from "./Pages/WelcomePage";
 import Login from "./Pages/Login";
 import SignUpForm  from "./Pages/Signup";
 import EmailVerification from './Pages/EmailVerification';
@@ -16,11 +16,12 @@ import ForgotPassword from './Pages/ForgotPassword';
 import SetPasswordPage from './Pages/SetPasswordPage';
 import ForgotPassword_SuccessfullReset from './Pages/ForgotPassword_SuccessfullReset';
 import MultiStepFlow from './Pages/MultiStepFlow';
-import InsuranceAdvice from './Pages/InsuranceAdvice';
-import DebtAnalysis from './Pages/DebtAnalysis';
 import MultiStepContex from './Pages/MultiStepContex';
 import PostMultiStepContext from './Pages/PostMultiStepContext';
 import MainDashboard from './Pages/MainDashboard';
+import InsuranceAdvice from './Pages/InsuranceAdvice';
+import DebtAnalysis from './Pages/DebtAnalysis';
+import { GoalsAndInvestementsAdvice } from './Pages/GoalsAndInvestementsAdvice';
 function App() {    
    // [path="/"] is the  default route to be rendered 
    
@@ -46,6 +47,7 @@ function App() {
       <Route path='/MultiStepContex' element={<MultiStepContex />} />
       <Route path="/PostMultiStepContext" element={<PostMultiStepContext />}/>
       <Route path="/MainDashboard" element={<MainDashboard />}/>
+      <Route path="/GoalsAndInvestementsAdvice" element={<GoalsAndInvestementsAdvice />}/>
     </Routes>
   );
       
