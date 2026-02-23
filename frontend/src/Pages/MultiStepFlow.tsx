@@ -43,11 +43,13 @@ export  default function MultiStepFlow() {
       {/* Content Area */}
       <div className="max-w-2xl mx-auto px-4 py-12">
         
+        {/** Onboarding: Introduction step, which is pure UI with no logic */}
         {currentStep === 1 && (
         <IntroStep  handleNext={handleNext}/>
          )}
         
 
+         {/** data Submission to backend */}
         {currentStep === 2 &&(
          <FormStep 
          finishedProcessing={finishedProcessing}
@@ -63,7 +65,7 @@ export  default function MultiStepFlow() {
          isLoading={isLoading}
          />)}
 
-        
+        {/** AI results are shown here */}
         {currentStep === 3 && finishedOnboarding&& (
           <ResultStep currentStep={currentStep} finishedOnboarding={finishedOnboarding}  handleEditRequest={handleEditRequest} /> 
         ) } 

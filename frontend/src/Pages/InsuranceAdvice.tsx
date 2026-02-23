@@ -1,13 +1,17 @@
+//Reusable components
 import { ProtectionGapChart } from '../Imports/ProtectionGapChart';
 import { CoverageRecommendations } from '../Imports/CoverageRecommendations';
+
+
+//types 
 import { type Recommendation } from '../Imports/CoverageRecommendations';
-// Dynamic mock data - easily adjustable to show different scenarios
-    
+import { type InsurenceAdviceContract } from '../Types/InsurenceAdviceContract';
 
 
-export const protectionAdvice = {
+// Replace this static data with Actual AI data
+export const protectionAdvice: InsurenceAdviceContract = {
   
-    //  I think we need to store as JSONB , is that true ? 
+    
     protectionGap: {
 
     currentCoverage: 500000,
@@ -24,9 +28,10 @@ export const protectionAdvice = {
       { month: 20, required: 850000, current: 500000, gap: 350000 },
       { month: 25, required: 650000, current: 500000, gap: 150000 },
     ]
+
     },
     
-    //  I think we need to store as JSONB , is that true ? 
+    
     recommendations:[
       {
         id: 1,
@@ -64,6 +69,8 @@ export const protectionAdvice = {
     ]
 
 };
+
+
 
 export default function InsuranceAdvice() {
   return (

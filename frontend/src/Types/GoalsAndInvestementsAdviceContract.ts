@@ -37,7 +37,7 @@ export type GoalProbabilityData ={
 
 //Must be  Used in  the top level pydantic schema .
 export  type TrajectoryPoint ={
-  year: number;
+  year: number; // date 
   currentMedian: number;
   optimizedMedian: number;
   current10th: number;
@@ -60,8 +60,24 @@ export type ImpactSummary ={
   projectedGain: number; // dollar amount
 }
 
+export type OptimalStrategy={
+  directives:StrategyDirective[];
+  impactSummary: ImpactSummary;
+}
+ export type GoalProbabilitySurface= {
+    dataPerGoal: GoalProbabilityData[];
+    text2: string; // Dynamic advice
+  };
+ 
+ 
+  export type FinancialTrajectoryDivergence= {
+    currentPath: TrajectoryPoint[];
+    text2: string; 
+  };
+
+
 // Top level  Pydantic schema (currently it's a type, turn it to schema).
-export type GoalsAndInvestementsAdvice ={
+export type GoalsAndInvestementsAdviceContract ={
   goals: FinancialGoalResponse[];
   investments: InvestmentResponse[];
   
@@ -74,8 +90,15 @@ export type GoalsAndInvestementsAdvice ={
     dataPerGoal: GoalProbabilityData[];
     text2: string; // Dynamic advice
   };
+
   financialTrajectoryDivergence: {
     currentPath: TrajectoryPoint[];
     text2: string; // Dynamic advice
   };
 }
+
+
+
+
+
+

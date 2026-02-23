@@ -1,9 +1,5 @@
+// type; Contract for data
 import { type limitedAdvice } from "../Types/limitedAdviceData";
-
-
-
-
-
 
 //States and Logic lives here
 function useLimitedAdvice(){

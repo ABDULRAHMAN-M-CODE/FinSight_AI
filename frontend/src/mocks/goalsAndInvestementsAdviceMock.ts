@@ -1,5 +1,5 @@
-import { type GoalsAndInvestementsAdvice } from "../Types/GoalsAndInvestementsAdviceShape";
-export const mockDashboardData:GoalsAndInvestementsAdvice = {
+import { type GoalsAndInvestementsAdviceContract } from "../Types/GoalsAndInvestementsAdviceContract";
+export const mockDashboardData:GoalsAndInvestementsAdviceContract = {
   goals: [
     { id: 1, name: "Retirement", target: 2000000, deadline: 2045, currentAssets: 500000 },
     { id: 2, name: "College Fund", target: 300000, deadline: 2035, currentAssets: 50000 }

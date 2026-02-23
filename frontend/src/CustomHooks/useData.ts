@@ -11,8 +11,12 @@ export function useData(){
         { number: 2, label: "Financial Context" },
         { number: 3, label: "Recommendation" },
       ];
-      const [currentStep, setCurrentStep]= useState( Number( localStorage.getItem("currentStep") ) || 1 )
       
+      // persiste the currentStep against page reload
+      // casting is used because local storage stores that  string of the value
+      const key1="currentStep";
+      const [currentStep, setCurrentStep]= useState( Number( localStorage.getItem(key1) ) || 1 )
+      // useEffect is a solution to the repitive, manual work of updating local storage when state changes
       useEffect(
           
           () => {
@@ -20,8 +24,12 @@ export function useData(){
           },
 
        [currentStep] );
+/////////////////////////////////////////////////////////////////////////////////
       
-       const [finishedOnboarding,setFinishedOnboarding]=useState( Boolean( localStorage.getItem("finishedOnboarding") ) );
+      // persist a flag against page reload
+       const key2="finishedOnboarding"
+       const [finishedOnboarding,setFinishedOnboarding]=useState( Boolean( localStorage.getItem(key2) ) );
+       // useEffect is a solution to the repitive, manual work of updating local storage when state changes
        useEffect(
           
           () => {
@@ -30,8 +38,14 @@ export function useData(){
 
        [finishedOnboarding] );
        
+//////////////////////////////////////////////////////////////////////////////////
+    
+      // persistence of a flag against page reload
       // do not use Boolean class, because Boolean("false")== true , it's confusing , better to not use it.
-      const [finishedProcessing, setFinishedProcessing]= useState( localStorage.getItem("finishedProcessing") ==="true" );
+      // no casting is needed because we do the comparison between strings
+      const key3="finishedProcessing";
+      const [finishedProcessing, setFinishedProcessing]= useState( localStorage.getItem(key3) ==="true" );
+      // useEffect is a solution to the repitive, manual work of updating local storage when state changes
       useEffect(
           
           () => {
@@ -40,18 +54,18 @@ export function useData(){
 
        [finishedProcessing] );      
       
-      
+/////////////////////////////////////////////////////////////////////////////////////
       const [isLoading, setIsLoading]=useState(false);
 
 
 
       const [investmentAccounts, setInvestmentAccounts] = useState<InvestmentAccount[]>([
-        {  id:'',name: '', type: '', current_balance: 0, is_active: true }
+        {  id:Date.now(),name: '', type: '', current_balance: 0, is_active: true }
       ]);
 
       const [goals, setGoals] = useState<Goal[]>([
         
-        { id:'', name: '', type: 'short-term', target_amount:0, deadline:"" }
+        { id:Date.now(), name: '', type: 'short-term', target_amount:0, deadline:"" }
       ]);
       return{
         currentStep,setCurrentStep,

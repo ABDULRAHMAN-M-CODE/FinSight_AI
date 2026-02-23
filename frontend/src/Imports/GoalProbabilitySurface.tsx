@@ -1,15 +1,58 @@
-import { mockDashboardData } from "../mocks/goalsAndInvestementsAdviceMock";
-import { type ProbabilityPoint } from "../Types/GoalsAndInvestementsAdviceShape";
+//import { mockDashboardData } from "../mocks/goalsAndInvestementsAdviceMock";
+import { type GoalProbabilitySurface, type ProbabilityPoint } from "../Types/GoalsAndInvestementsAdviceContract";
 import {  useState } from 'react';
 import cn from "../Components/utils";
 import { Badge } from "../Components/Badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../Components/tabs';
+import { type FullServiceAdviceContract } from "../Types/FullServiceAdviceContract";
 
+import { type FinancialGoalResponse } from "../Types/GoalsAndInvestementsAdviceContract";
+import { type GoalProbabilityData } from "../Types/GoalsAndInvestementsAdviceContract";
 const riskOrder = ['Growth', 'Balanced', 'Conservative'];
 
 export function GoalProbabilitySurface() {
-  const { goals, goalProbabilitySurface } = mockDashboardData;
-  const [selectedGoalId, setSelectedGoalId] = useState<string>(goals[0]?.id.toString());
+  //const { goals, goalProbabilitySurface } = mockDashboardData;
+  
+  // use the following top level default value 
+
+  
+  
+
+    const saved = localStorage.getItem("fullAdvice");
+    const parsedData: FullServiceAdviceContract | null = saved ? JSON.parse(saved) : null;
+    
+    const defaultGoals: FinancialGoalResponse = {
+      id: 0,
+      name: "No Goal detected",
+      target: 0,
+      deadline: new Date().getFullYear(), // Year, Not number
+      currentAssets: 0
+  };
+    const  goals:FinancialGoalResponse[]   =parsedData?.goalsAndInvestementsAdvice.goals??[defaultGoals]    
+  
+     const defaultContributionRiskMatrix:ProbabilityPoint  = {
+        contribution:0,
+        riskTier:'Conservative',
+        probability:0
+     };    
+
+
+    const defaultDataPerGoal:GoalProbabilityData  = {
+      goalId: 0,
+      contributionRiskMatrix: [defaultContributionRiskMatrix]
+  };
+
+    
+    const defaultGoalProbabilitySurface: GoalProbabilitySurface = {
+    dataPerGoal: [defaultDataPerGoal],// fix the default value
+    text2: "No advice"
+  };  
+    const  goalProbabilitySurface:GoalProbabilitySurface=parsedData?.goalsAndInvestementsAdvice.goalProbabilitySurface??defaultGoalProbabilitySurface
+  
+
+
+  ///////////////////
+  const [selectedGoalId, setSelectedGoalId] = useState<string>(goals[0].id.toString());
 
   const getGoalData = (id: number) => {
     return goalProbabilitySurface.dataPerGoal.find(d => d.goalId === id);

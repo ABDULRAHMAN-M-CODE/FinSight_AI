@@ -3,6 +3,7 @@ import { GoalProbabilitySurface } from '../Imports/GoalProbabilitySurface';
 import { OptimalStrategyContainer } from '../Imports/OptimalStrategyContainer';
 import { FinancialTrajectoryDivergence } from '../Imports/FinancialTrajectoryDivergence';
 
+// the mock data iz not uzed here, it iz uzed in the child componentz which iz not ztandard
 export function GoalsAndInvestementsAdvice() {
   return (
     <div className="flex min-h-screen bg-gray-50 font-sans">

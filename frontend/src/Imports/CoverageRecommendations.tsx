@@ -1,17 +1,17 @@
 import { AlertCircle, TrendingUp, DollarSign } from 'lucide-react';
-
-export interface Recommendation {
+export type  Recommendation= {
   id: number;
   policyName: string;
   currentCoverage: number;
   recommendedCoverage: number;
   gap: number;
   action: string;
-  priority: 'High' | 'Medium' | 'Low'; // This Cause Error
-  //priority:string, // This solves the error
+  priority: 'High' | 'Medium' | 'Low'; // This  May Cause Error
+  
   reason: string;
   estimatedCost: string;
 }
+// Logic
 function useCoverageRecommendations({ recommendations }: {recommendations: Recommendation[]}){
   const sortedRecommendations = [...recommendations].sort((a, b) => {
     const priorityOrder = { High: 0, Medium: 1, Low: 2 };
@@ -40,6 +40,7 @@ function useCoverageRecommendations({ recommendations }: {recommendations: Recom
     priorityIconColor
   }
 }
+// Rendering
 export function CoverageRecommendations({ recommendations }: {recommendations: Recommendation[]}) {
 
   const {

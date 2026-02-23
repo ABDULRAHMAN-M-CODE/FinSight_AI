@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 
 from app.schemas.demo_schemas import DemoSubmit
-from app.prompts import demo_service_system_prompt
+from app.system_prompts import demo_service_system_prompt
 from app.schemas.demo_response_schemas import DemoResponse
 from app.reusable_functions.llm_utils import call_llm
 

@@ -16,18 +16,18 @@ import type { InsuranceInfo } from '../Types/InsuranceInfo';
 function useFinancialProfileForm(){
  
   const [householdMembers, setHouseholdMembers] = useState<HouseholdMember[]>([
-    { member_name: '', annual_income: 0, income_source: '' }
+    { id: Date.now() ,member_name: '', annual_income: 0, income_source: '' }
   ]);
   
 // After
   const [monthlyBudget, setMonthlyBudget] = useState<number>(0);
   
   const [investmentAccounts, setInvestmentAccounts] = useState<InvestmentAccount[]>([
-    { id: '1', name: '', type: '', current_balance: 0, is_active: true }
+    { id: Date.now() , name: '', type: '', current_balance: 0, is_active: true }
   ]);
   
   const [debts, setDebts] = useState<Debt[]>([
-    { id: '1', type: '', balance: 0, monthly_payment:0, interest_rate:0 }
+    { id: Date.now() , type: '', balance: 0, monthly_payment:0, interest_rate:0 }
   ]);
   
 const [insurance, setInsurance] = useState<InsuranceInfo[]>([
@@ -35,7 +35,7 @@ const [insurance, setInsurance] = useState<InsuranceInfo[]>([
 ]);
   
   const [goals, setGoals] = useState<Goal[]>([
-    { id: '1', name: '', type: 'short-term', target_amount: 0, deadline: '' }
+    { id: Date.now() , name: '', type: 'short-term', target_amount: 0, deadline: '' }
   ]);
   
 

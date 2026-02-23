@@ -17,11 +17,14 @@ function useEnterEmailToVerify(){
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-   
-   
+
+    // guard against page reload.
     e.preventDefault();
+
     dispatch(setGlobalEmail(email));
+
     navigate("/EmailVerification")
+  
   };
   return{
    email,

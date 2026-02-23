@@ -1,41 +1,13 @@
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { AlertTriangle, TrendingDown, Shield } from 'lucide-react';
 
-interface MonthlyProjection {
-  month: number;
-  totalDebt: number;
-  highInterestDebt: number;
-  debtToIncome: number;
-  interestCost: number;
-}
 
-export interface DebtData {
-  id: number;
-  name: string;
-  balance: number;
-  interestRate: number;
-  riskLevel: 'High' | 'Medium' | 'Low';
-  type: string;
-}
+// Types, data shape contracts, or interfaces
+import {  type DebtAdviceContract } from '../Types/DebtAdviceContract';
 
 
-interface RiskMetrics {
-  debtToIncomeRatio: number;
-  highInterestDebtRatio: number;
-  monthlyDebtBurden: number;
-  estimatedDebtFreeDate: string;
-  totalInterestSavings: number;
-  monthsSaved: number;
-}
-
-//  for the sake of simplifying apperance of the Component signature, we define addtional interface.
-interface DebtRiskVisualizationProps {
-  monthlyProjections: MonthlyProjection[];
-  debts: DebtData[];
-  riskMetrics: RiskMetrics;
-}
-
-function useDebtRiskVisualization({debts, riskMetrics }: DebtRiskVisualizationProps){
+// custome hook
+function useDebtRiskVisualization({debts, riskMetrics }: DebtAdviceContract){
  
  
  
@@ -67,7 +39,8 @@ function useDebtRiskVisualization({debts, riskMetrics }: DebtRiskVisualizationPr
 }
 
 
-export function DebtRiskVisualization({ monthlyProjections, debts, riskMetrics }: DebtRiskVisualizationProps) {
+//Rendering
+export function DebtRiskVisualization({ monthlyProjections, debts, riskMetrics }: DebtAdviceContract) {
    
     const {    
     formatCurrency,

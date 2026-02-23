@@ -6,6 +6,12 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.registration import User, EmailVerificationToken, PasswordResetToken
 
+
+########## New Imports #######################
+from fastapi import Response
+
+############################################
+
 from app.schemas.auth_schemas import (
     UserRegister,
     UserLogin,
@@ -87,9 +93,11 @@ def register(user: UserRegister, background_tasks: BackgroundTasks, db: Session 
     return {"message": "User registered successfully. Please check your email for verify"}
 
 
+    
 @router.post("/verify-email")
 def verify_email(
     data: VerifyEmailCodeRequest,
+    response:Response,    # NEW ADDITION 
     db: Session = Depends(get_db)
 ):
     verification = (
@@ -118,9 +126,43 @@ def verify_email(
 
     db.commit()
 
-    return {"message": "Email verified successfully"}
+    #### New Logic Below, frontend assumes that the user is authinticated after verification, this is a valid design choice, and much simpler  ###############
+
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+
+    access_token = create_access_token(
+        data={
+            "sub": str(user.id),
+            "email": user.email,
+            "first_login": user.is_first_login
+        },
+        expires_delta=access_token_expires
+    )
 
 
+
+    #frontend will store the following cookie so that every future request to the backend will include this cookie/token
+    # the cookie is not returned in the JSON body, that would defeate it's purpose and it is stupid.
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,              # Prevent JS access (protect against XSS "javascript injection" token theft)
+        secure=False,               
+        samesite="lax",             # Helps protect against CSRF, you can read about it , I do not understand it well .
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        path="/"                    # Cookie available to entire app
+    )
+
+    # Normal JSON response (token NOT exposed to frontend JS)
+    # why not to return the cookie ? That would defeat it's first purpose ! it's purpose is security, it must never be expsoed to JavaScript in the forntend
+    return {
+        "message": "Email verified successfully",
+        "first_login": user.is_first_login
+    }
+
+
+
+###############################################################################
 @router.post("/login")
 def login(user: UserLogin, db: Session = Depends(get_db)):
 

@@ -99,7 +99,7 @@ class Investment(BaseModel):
 
 class ProbabilityPoint(BaseModel):
     contribution:  int=0
-    riskTier: Literal ['Conservative' , 'Balanced' , 'Growth']
+    riskTier: Literal ['Conservative' , 'Balanced' , 'Growth']='Conservative'
     probability: int=0    
 
 class GoalProbabilityData(BaseModel):
@@ -139,11 +139,12 @@ class OptimalStrategy (BaseModel):
 class GoalProbabilitySurface (BaseModel):
 
     dataPerGoal: List[GoalProbabilityData]=Field(default_factory=lambda:[GoalProbabilityData()])
-    text2: str="no advice"
+    text2: str="No advice"
+
 
 class FinancialTrajectoryDivergence(BaseModel):
     currentPath: List[TrajectoryPoint]=Field(default_factory=lambda:[TrajectoryPoint()])
-    text2: str="no advice"
+    text2: str="No advice"
 class GoalsAndInvestementsAdvice(BaseModel):
     
 
@@ -156,11 +157,11 @@ class GoalsAndInvestementsAdvice(BaseModel):
 
 
 # DTO for Questionnarie response. direction(AI --> backend --> frontend).
+
 # thus, frontend will define interface/type that expects three fields : protectionAdvice, debtsAdvice,  and goalsAndInvestementsAdvice.
 class FullAiResponse(BaseModel):
-    protectionAdvice:ProtectionAdvice=Field(default_factory=ProtectionAdvice)
-    debtsAdvice:DebtsAdvice=Field(default_factory=DebtsAdvice)    
-    
+    protectionAdvice:ProtectionAdvice=Field(default_factory=ProtectionAdvice) 
+    debtsAdvice:DebtsAdvice=Field(default_factory=DebtsAdvice)   
     goalsAndInvestementsAdvice:GoalsAndInvestementsAdvice=Field(default_factory=GoalsAndInvestementsAdvice)
     
 

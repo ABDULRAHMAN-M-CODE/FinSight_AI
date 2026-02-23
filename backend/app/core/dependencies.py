@@ -9,31 +9,37 @@ from app.database import get_db
 
 bearer_scheme = HTTPBearer()
 
-# to get the user info from the JWT
+        ###############
+########## New Import ############
+        ##############
+from fastapi import Request
+
+# to get the user info from the JWT or cookie 
 def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    request:Request,
+    
+    
     db: Session = Depends(get_db)
 ) -> User:
 
-    token = credentials.credentials
+    
+    token=request.cookies.get("access_token")
 
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-
+    if not token:
+        raise HTTPException(status_code=401, detail="Not Authinticated")
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id = payload.get("sub")
-        if user_id is None:
-            raise credentials_exception
+        if not user_id :
+            
+            raise HTTPException(status_code=401, detail="Not Authinticated")
     except JWTError:
-        raise credentials_exception
-
+        
+        raise HTTPException(status_code=401, detail="Not Authinticated")
+    
     user = db.query(User).filter(User.id == user_id).first()
 
     if not user:
-        raise credentials_exception
-
+        
+        raise HTTPException(status_code=401, detail="Not Authinticated")
     return user

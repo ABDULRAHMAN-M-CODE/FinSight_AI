@@ -1,25 +1,13 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { AlertTriangle } from 'lucide-react';
 
-// For Code Readability, ensure Function signature  has little props count
-interface ProtectionGapData {
-  
-  currentCoverage: number;
-  requiredCoverage: number;
-  gap: number;
-  annualIncome: number;
-  yearsToRetirement: number;
-  incomeReplacementRate: number;
-  monthlyData: Array<{
-    month: number;
-    required: number;
-    current: number;
-    gap: number;
-  }>;
 
-}
-interface ProtectionGapChartProps {
-  data: ProtectionGapData;
+// types
+import { type  ProtectionGap } from '../Types/InsurenceAdviceContract';
+// For Code Readability, ensure Function signature  has little props count
+
+type  ProtectionGapChartProps ={
+  data: ProtectionGap
 }
 
 //Logic

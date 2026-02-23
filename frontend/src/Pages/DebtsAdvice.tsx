@@ -1,9 +1,15 @@
-import { DebtRiskVisualization } from '../Imports/DebtRiskVisualization';
-import { type DebtData } from '../Imports/DebtRiskVisualization';
+// types and interfaces : Contracts/ Schemas for data format/shape 
+
+import { DebtRiskVisualization } from '../Imports/DebtRiskVisualization';// mock data contract 
+
+// premade components
+import { type DebtData } from '../Types/DebtAdviceContract';
 
 
-// Dynamic mock data - easily adjustable to show different debt scenarios
-// the mock data is supposed to be AI response , now , I want to Store all this Response in single, standalone Table in the Database, What should the table be "Depending on standards"
+
+
+
+// replace with actual advice that is stored in the local storage  
 export const debtsAdvice = {
   
   monthlyProjections: [
@@ -76,7 +82,7 @@ export const debtsAdvice = {
 };
 
 
-export default function DebtAnalysis() {
+export default function DebtsAdvice() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -88,7 +94,7 @@ export default function DebtAnalysis() {
           </p>
         </div>
 
-        {/* Debt Risk Stress Visualization */}
+        {/* Main Rendered component */}
         <section>
           <DebtRiskVisualization 
             monthlyProjections={debtsAdvice.monthlyProjections}

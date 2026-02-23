@@ -1,7 +1,34 @@
-import { Link } from 'react-router';
+
 import { Shield, Lock, Eye, FileText, ArrowRight, Sparkles } from 'lucide-react';
 
+import { useNavigate } from 'react-router';
+
+// Logic component  : Custom hook
+function useDataCollectionIntro(){
+       const navigate= useNavigate();
+  
+  const handleContinue=()=>{
+
+   // Reset MultStep Context state. (force the local storage to forget it )
+   localStorage.removeItem("step")
+   
+   // Redirect the user to the MultiStepContext
+    navigate("/MultiStepContex")
+    
+  }
+  return{
+    handleContinue
+  }
+}
+
+
+// UI component
 export default function DataCollectionIntro() {
+  
+  // Custom hook usage .
+  const {handleContinue}=useDataCollectionIntro()
+  
+  // Rendering
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 flex items-center justify-center p-4">
       <div className="w-full max-w-3xl">
@@ -130,15 +157,15 @@ export default function DataCollectionIntro() {
               </div>
             </div>
 
-            {/* CTA Button */}
-            <Link
-              to="/MultiStepContex"
+            {/* Redirect the user to the MultiStepContext */}
+            <button
+              onClick={handleContinue}
               className="flex items-center justify-center gap-2 w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 active:scale-98 transition-all duration-200 shadow-lg shadow-blue-600/25"
               aria-label="Continue to provide financial information"
             >
               <span>Continue </span>
               <ArrowRight className="w-5 h-5" aria-hidden="true" />
-            </Link>
+            </button>
 
             
           </div>

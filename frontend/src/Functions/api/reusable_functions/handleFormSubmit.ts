@@ -20,7 +20,7 @@ export const  handleFormSubmit= async ({setIsLoading,payload, url} : handleFormS
         setIsLoading(false);        
         
         console.log(error);
-        alert("catch block  in the FormStep.tsx was executed, inspect the logged error in the  browser's console.")
+        alert("network error")
         // set error masseges here.
       }
 

@@ -6,11 +6,11 @@ import { type Goal } from '../Types/Goal';
 function useSubFinancialProfileForm(){
 
   const [investmentAccounts, setInvestmentAccounts] = useState<InvestmentAccount[]>([
-    { id: '1', name: '', type: '', current_balance: 0, is_active: true }
+    { id: Date.now() , name: '', type: '', current_balance: 0, is_active: true }
   ]);
 
   const [goals, setGoals] = useState<Goal[]>([
-    { id: '1', name: '', type: 'short-term', target_amount:0, deadline: '' }
+    { id: Date.now() , name: '', type: 'short-term', target_amount:0, deadline: '' }
   ]);
 
   return{

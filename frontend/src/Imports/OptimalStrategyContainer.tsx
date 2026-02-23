@@ -1,7 +1,8 @@
-import { mockDashboardData } from '../mocks/goalsAndInvestementsAdviceMock';
+//import { mockDashboardData } from '../mocks/goalsAndInvestementsAdviceMock';
 import { TrendingUp, ArrowUpRight } from 'lucide-react';
-
-
+import { type FullServiceAdviceContract } from '../Types/FullServiceAdviceContract';
+import { type OptimalStrategy } from '../Types/GoalsAndInvestementsAdviceContract';
+import { type ImpactSummary } from '../Types/GoalsAndInvestementsAdviceContract';
 const typeIcons = {
   contribution: '💰',
   allocation: '📊',
@@ -9,10 +10,24 @@ const typeIcons = {
   timeline: '⏰',
   consolidation: '🔗'
 };
-
+export function createImpactSummary(): ImpactSummary {
+  return {
+    probabilityImprovement: 0,
+    projectedGain: 0,
+  };
+}
 export function OptimalStrategyContainer() {
-  const { optimalStrategy } = mockDashboardData;
+  //const { optimalStrategy } = mockDashboardData;
+  const defaultOptimalStrategy: OptimalStrategy = {
+  directives: [],
+  impactSummary: createImpactSummary(),
+};
 
+  const saved = localStorage.getItem("fullAdvice");
+  const parsedData: FullServiceAdviceContract | null = saved ? JSON.parse(saved) : null;
+  
+
+  const optimalStrategy=parsedData?.goalsAndInvestementsAdvice.optimalStrategy??defaultOptimalStrategy
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
       {/* Header */}

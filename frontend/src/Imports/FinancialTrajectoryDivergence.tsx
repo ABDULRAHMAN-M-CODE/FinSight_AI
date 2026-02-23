@@ -1,9 +1,44 @@
 
-import { mockDashboardData } from '../mocks/goalsAndInvestementsAdviceMock';
+//import { mockDashboardData } from '../mocks/goalsAndInvestementsAdviceMock';
 import { ResponsiveContainer, ComposedChart, Line, Area, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine, Legend, Label } from 'recharts';
 import { Badge } from '../Components/Badge';
+import {  type FinancialTrajectoryDivergence } from '../Types/GoalsAndInvestementsAdviceContract';
+import { type FullServiceAdviceContract } from '../Types/FullServiceAdviceContract';
+import { type TrajectoryPoint } from '../Types/GoalsAndInvestementsAdviceContract';
+import { type FinancialGoalResponse } from '../Types/GoalsAndInvestementsAdviceContract';
+
+
+
+// Logic and rendering together .
 export function FinancialTrajectoryDivergence() {
-  const { financialTrajectoryDivergence, goals } = mockDashboardData;
+  //const { financialTrajectoryDivergence, goals } = mockDashboardData;
+  const saved = localStorage.getItem("fullAdvice");
+  const parsedData: FullServiceAdviceContract | null = saved ? JSON.parse(saved) : null;
+      
+ 
+  const defaultCurrentPath: TrajectoryPoint  = {
+        year: new Date().getFullYear(), // date 
+        currentMedian: 0.0,
+        optimizedMedian: 0.0,
+        current10th: 0.0,
+        optimized10th: 0.0
+    };
+  const defaultFinancialTrajectoryDivergence: FinancialTrajectoryDivergence = {
+      currentPath: [defaultCurrentPath],
+      text2: "No advice"
+    };
+   const financialTrajectoryDivergence :FinancialTrajectoryDivergence   =parsedData?.goalsAndInvestementsAdvice.financialTrajectoryDivergence??defaultFinancialTrajectoryDivergence // default value here
+
+   
+   const defaultGoals: FinancialGoalResponse = {
+        id: 0,
+        name: "No Goal detected",
+        target: 0,
+        deadline: new Date().getFullYear(), // Year, Not number
+        currentAssets: 0
+    };
+      const  goals:FinancialGoalResponse[]   =parsedData?.goalsAndInvestementsAdvice.goals??[defaultGoals]
+
   const { currentPath: data, text2 } = financialTrajectoryDivergence;
   
   // Calculate total divergence at the end for the badge/kpi
@@ -20,6 +55,8 @@ export function FinancialTrajectoryDivergence() {
       const valCurr = current ? current.value : 0;
       const diff = valOpt - valCurr;
 
+      
+      
       return (
         <div className="bg-white border border-gray-200 p-3 rounded-lg shadow-sm text-xs">
           <p className="font-semibold text-gray-900 mb-2">Year {label}</p>
@@ -43,6 +80,8 @@ export function FinancialTrajectoryDivergence() {
     return null;
   };
 
+
+  // Rendering
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 h-full flex flex-col">
       {/* Header */}

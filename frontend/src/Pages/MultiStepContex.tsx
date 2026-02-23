@@ -20,15 +20,16 @@ import { type InvestmentAccount } from "../Types/InvestmentAccount";
 import type { Debt } from "../Types/Debt";
 import { type Goal } from "../Types/Goal";
 import { type InsuranceInfo } from "../Types/InsuranceInfo";
+import { type FullServiceAdviceContract } from "../Types/FullServiceAdviceContract";
 
 // functions
 import { FetchData } from "../Functions/api/fetchData";
-
+import { extractAndSaveDataToLocalStorage } from "../Functions/api/reusable_functions/extractAndSaveDataToLocalStorage ";
 // custome hook : Logic and States 
 function useMultiStepContex(){
 
         // Problem 1 : Refactor this custom hook, apply separation of concerns.
-
+        
         const [isLoading, setIsLoading]=useState(false);
 
         const navigate= useNavigate();
@@ -36,7 +37,12 @@ function useMultiStepContex(){
         const url="http://127.0.0.1:8000/onboarding/questionnaire";
 
         const key="step";
-        const [step, setStep]= useState(Number(localStorage.getItem(key))||1);
+        // remember that the demo uses 'currentStep' instead of 'step', so there is no conflict.
+        const [step, setStep]= useState( Number( localStorage.getItem(key)) || 1 );
+        
+        // when the user reloads the page, error states must not persisted, they must be reset to prevent  stuck in error state.
+        const [isThereError,setIsThereError]=useState(false);
+        const [errorMsg,setErrorMsg]=useState("");
 
 
        
@@ -137,28 +143,40 @@ function useMultiStepContex(){
             try {
 
 
-                
+                // send a request
                 const response= await FetchData({payload, url});
 
 
-                // guarding
-                if (!response.ok) throw new Error("Server Error");
+                // Show the error (if any) returned by the backend
+                if (!response.ok) {
+                    setIsLoading(false)
+                    setIsThereError(true);
+                    
+                    const errorData= await response.json();
+                    console.log(errorData)
+                    setErrorMsg(errorData.detail)
+                    
+                    return
+                }
                 
-
-
                 setIsLoading(false);
+                setIsThereError(false);
+                setErrorMsg("");
                 
+                // persiste the data and redirect user to other UI
+                const localStorageKey="fullAdvice"
+                extractAndSaveDataToLocalStorage<FullServiceAdviceContract>({response,localStorageKey});
                 
-                // make interface for the data inside response.json()
-                // process response.json() data 'Like setting it to local storage'  
-                // set finished processing flag 
                 
                 navigate("/PostMultiStepContext");
 
             } catch (e) {
                 setIsLoading(false);
+                setIsThereError(true);
+                setErrorMsg("Network Error, inspect the console for more details.");//  Update/Remove it once development finishes
+                
                 console.error(e);
-                alert("Network Error");
+                alert("Network Error");// Update/Remove it once development finishes
             }
 };
     
@@ -180,8 +198,9 @@ function useMultiStepContex(){
         setGoals,
         handleBack,
         handleNext,
-        isLoading
-        
+        isLoading,
+        isThereError,
+        errorMsg
     }
 }
 
@@ -190,6 +209,7 @@ export default function MultiStepContex(){
     
     //use the custome hook
     const {
+
         step,
         steps,
         householdMembers,
@@ -206,7 +226,9 @@ export default function MultiStepContex(){
         setGoals,
         handleBack,
         handleNext,
-        isLoading
+        isLoading,
+        isThereError,
+        errorMsg
     }= useMultiStepContex();
    
    
@@ -281,17 +303,28 @@ export default function MultiStepContex(){
 
                     // should I put button here ? 
                 )}
+          
+                {/** Data Submission to backend happens here */}
                 {step==6 && (
-                    <form onSubmit={handleNext}>
-                        <FinancialGoalsSection
-                            goals={goals}
-                            onUpdate={setGoals}
-                        />        
-                        <BackAndContinueButtons  handleBack={handleBack} isLoading={isLoading}   /> 
-                    </form>
+             
+                    <>
+                        {/** conditionally rendered error when step=6 && there is error */}
+                        {isThereError &&(
+                            <div className="border border-red-300 bg-red-50 rounded-lg p-4 text-red-800">
+                               {errorMsg}
+                            </div>                            
+                        )}
 
-                    // should I put button here ? 
-        )}              
+                        {/** Goals Section that user must fill  */}
+                        <form onSubmit={handleNext}>
+                            <FinancialGoalsSection
+                                goals={goals}
+                                onUpdate={setGoals}
+                            />        
+                            <BackAndContinueButtons  handleBack={handleBack} isLoading={isLoading}   /> 
+                        </form>
+                    </>
+                )}              
         </div>
      </div>
 )

@@ -20,7 +20,7 @@ import MultiStepContex from './Pages/MultiStepContex';
 import PostMultiStepContext from './Pages/PostMultiStepContext';
 import MainDashboard from './Pages/MainDashboard';
 import InsuranceAdvice from './Pages/InsuranceAdvice';
-import DebtAnalysis from './Pages/DebtAnalysis';
+import DebtsAdvice from './Pages/DebtsAdvice';
 import { GoalsAndInvestementsAdvice } from './Pages/GoalsAndInvestementsAdvice';
 function App() {    
    // [path="/"] is the  default route to be rendered 
@@ -43,7 +43,7 @@ function App() {
       <Route path="/ForgotPassword_SuccessfullReset" element={<ForgotPassword_SuccessfullReset />}/>
       <Route path="/MultiStepFlow" element={<MultiStepFlow />}/>
       <Route path="/InsuranceAdvice" element={<InsuranceAdvice />}/>
-      <Route path="/DebtAnalysis" element={<DebtAnalysis />}/>
+      <Route path="/DebtAnalysis" element={<DebtsAdvice />}/>
       <Route path='/MultiStepContex' element={<MultiStepContex />} />
       <Route path="/PostMultiStepContext" element={<PostMultiStepContext />}/>
       <Route path="/MainDashboard" element={<MainDashboard />}/>

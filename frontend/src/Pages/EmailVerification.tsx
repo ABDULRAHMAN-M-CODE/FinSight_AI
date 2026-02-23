@@ -24,36 +24,41 @@ function useEmailVerification({email}:{email:string}) {
   const navigate=useNavigate();
   
   const handleVerificationSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    // setup
     e.preventDefault();
     setError("");
     setIsLoading(true);
-    if (!verificationCode.trim()) {                     // if user clicked button without providing verification code.
+   
+    // if user clicked button without providing verification code.
+    if (!verificationCode.trim()) {                     
       setError("Please enter the verification code");
       setIsLoading(false);
       return;
       
     }
-                                                        // if user provided verification code and clicked the button
+                                                      
+    // request backend.
   try {
       const response = await fetch("http://127.0.0.1:8000/auth/verify-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-           
-          code: verificationCode.trim() 
-        }),
+        credentials:"include", /// frontend expects container for JWT : coookie verify-route 
+        body: JSON.stringify({   code: verificationCode.trim()}),
       });
 
+      //Guard against failure
       if (!response.ok) {
-    
+        // Note 1: I think I do not need to store JWT inside this if-statement block, is that true ?
         const data = await response.json();
         setError(data.detail || "Verification failed");
         return;
       }
-       
-      // success , verification succeeded, I can redirect user to other UI 
-      // should navigate to the Signup Success.
+      
+       localStorage.removeItem("fullAdvice")//for fresh user, there should be no advice yet. ensure there is no cached advice before calling the LLM
+
       navigate("/PostSignup");
+    
+    // Guard against  failed connection.
     } catch {
       setError("Network error. Please try again.");
     } finally {
@@ -105,6 +110,7 @@ function useEmailVerification({email}:{email:string}) {
 
 //Rendering Lives here 
 export default function EmailVerification() {
+
     // Redux Related : Read state from the store
     const email= useSelector((state:RootState)=>state.auth.email);
     
