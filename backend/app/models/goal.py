@@ -36,7 +36,7 @@ class Goal(Base):
 
     target_amount = Column(DECIMAL(12, 2), nullable=False)
 
-    current_amount = Column(DECIMAL(12, 2), default=0, nullable=False)
+    current_amount = Column(DECIMAL(12, 2), default=0, nullable=True)
 
     deadline = Column(Date, nullable=True)
 
