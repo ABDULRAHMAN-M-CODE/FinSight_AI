@@ -39,9 +39,14 @@ class User(Base):
         cascade="all, delete-orphan"
     )
     protection_advices = relationship(
-    "ProtectionAdvices",
-    back_populates="user",
-    cascade="all, delete-orphan"
+        "ProtectionAdvices",
+        back_populates="user",
+        cascade="all, delete-orphan"
+    )
+    goals_and_investments_advices = relationship(
+        "GoalsAndInvestmentsAdvices",
+        back_populates="user",
+        cascade="all, delete-orphan"
     )
     investment_accounts = relationship(
         "InvestmentAccount",

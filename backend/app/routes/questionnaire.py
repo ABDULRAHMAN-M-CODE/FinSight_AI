@@ -2,30 +2,38 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models.registration import User
 from app.core.dependencies import get_current_user
 from app.schemas.questionnaire_schemas import QuestionnaireSubmit
-
 
 #  neccessary imports to talk to the AI
 from app.schemas.questionnarie_response_schemas import FullAiResponse
 from app.system_prompts import full_service_system_prompt
 from app.user_prompts import full_service_user_prompt
-from app.reusable_functions.llm_utils import call_llm
+from app.core.utils.llm_utils import call_llm
+
+# import needed models 
+from app.models.registration import User
+from app.models.user_financial_data import UserFinancialData
+from app.models.goal import  Goal
+from app.models.investment_account import InvestmentAccount 
+from app.models.protection_advices import ProtectionAdvices 
+from app.models.debts_advices import DebtsAdvices
+from app.models.goals_and_investements_advices import GoalsAndInvestmentsAdvices
 
 
 # questionnaire router (questionnaire only).
 router = APIRouter(prefix="/onboarding")
 
+
 @router.post("/questionnaire", status_code=status.HTTP_201_CREATED)
 def submit_questionnaire(
      data: QuestionnaireSubmit,
-     current_user: User = Depends(get_current_user), #  Note : This must be designed to read the HTTPOnly cookie that includes the JWT, React Expect cookie that contain JWT, not raw JWT
+     current_user: User = Depends(get_current_user), 
      db: Session = Depends(get_db),
 ):
     try:
         print("recived data successfully")
-        #pass
+
         if not current_user.is_first_login :
             print("if block was executed")
             raise HTTPException(
@@ -33,31 +41,80 @@ def submit_questionnaire(
             detail="user already filled finance data ",
         )
 
-
-        
-
-        # just started , i will complete as soon as possible.
-
-         
         # 1- Store all submitted user's info "data" in the  appropriate database tables.
 
-#############################################################
+            # Store User Financial Data
+        total_income = sum(member.annual_income for member in data.household_income)
+        user_financial_data = UserFinancialData(
+            user_id=current_user.id,
+            household_income=total_income,
+            income_sources=[member.model_dump() for member in data.household_income],
+            monthly_budget=data.monthly_budget,
+            investment_accounts=[acc.model_dump() for acc in data.investment_accounts],
+            outstanding_debts=[debt.model_dump() for debt in data.outstanding_debts],
+            life_insurance=[ins.model_dump() for ins in data.life_insurance],
+        )
+        db.add(user_financial_data)
+
+            # Store Investment Accounts
+        for acc in data.investment_accounts:
+            investment = InvestmentAccount(
+                user_id=current_user.id,
+                account_name=acc.name,
+                account_type=acc.type,
+                current_value=acc.current_balance,
+                is_active=acc.is_active,
+            )
+            db.add(investment)
+
+            # Store Goals
+        for goal in data.financial_goals:
+            new_goal = Goal(
+                user_id=current_user.id,
+                goal_name=goal.name,
+                goal_type=goal.type,
+                target_amount=goal.target_amount,
+                current_amount=goal.current_amount,
+                deadline=goal.deadline,
+            )
+            db.add(new_goal)
+
+        db.flush()  # Stage all inserts
+
         # 2- call the LLM and store it's result in varaible.
+
         model="gpt-5"
-        user_context = data.model_dump_json()#LLM is native in dealing with strings
+        user_context = data.model_dump_json() #LLM is native in dealing with strings
         system_prompt=full_service_system_prompt
         response_format=FullAiResponse
         role="user"
         prompt = full_service_user_prompt
         
         advice=call_llm(model ,user_context, system_prompt,response_format, role,  prompt)    
-#############################################################################################    
+    
         # 3- Store the AI result in the Database.
 
-################################################################################################
-        # 4- Return the advice to the frontend.
-        return advice # if this is commented out, the part that recives  data in the frontend must also be commented out for testing purposes.
+         # Store AI advice
+        db.add(ProtectionAdvices(
+            user_id=current_user.id,
+            protection_advice=advice.protectionAdvice.model_dump()
+        ))
+        db.add(DebtsAdvices(
+            user_id=current_user.id,
+            debts_advice=advice.debtsAdvice.model_dump()
+        ))
+        db.add(GoalsAndInvestmentsAdvices(
+            user_id=current_user.id,
+            advice=advice.goalsAndInvestementsAdvice.model_dump()
+        ))
 
+        # 4- Mark first login as completed
+
+        current_user.is_first_login = False
+        db.commit()
+
+        # 5- Return the advice to the frontend.
+        return advice 
 
     except Exception as e:
                
