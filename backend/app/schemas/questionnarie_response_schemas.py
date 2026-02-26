@@ -6,41 +6,40 @@ from datetime import date
 
 # default data makes the AI think that the field is not required , they are now reomved
 class MonthlyData(BaseModel):
-    month: int#=0
-    required: float#=0.0
-    current: float#=0.0
-    gap: float#=0.0
+    month: int
+    required: float
+    current: float
+    gap: float
 
 
 class ProtectionGap(BaseModel):
-    currentCoverage: float#=0.0
-    requiredCoverage: float#=0.0
-    gap: float#=0.0
-    annualIncome: float#=0.0
-    yearsToRetirement: int#=25
-    incomeReplacementRate: float#=0.7
-    monthlyData: List[MonthlyData]#=Field(default_factory=lambda:[MonthlyData()])# List is mutable, need a default factory to prevent instance sharing between objects.
-    #default_factory always expects callable, that callable must return expression/value, lambda satisfies this without the need for 'return' keyword
+    currentCoverage: float
+    requiredCoverage: float
+    gap: float
+    annualIncome: float
+    yearsToRetirement: int
+    incomeReplacementRate: float
+    monthlyData: List[MonthlyData]
 
 # Recommendations Section
 
 class Recommendation(BaseModel):
-    id: int#=0
-    policyName: str#="No action required"
-    currentCoverage: float#=0.0
-    recommendedCoverage: float#=0.0
-    gap: float#=0.0
-    action: str#="No Adjustements needed"
-    priority: Literal["High", "Medium", "Low"]#="Low"
-    reason: str#="No protection gap detected"
-    estimatedCost: str#="0"
+    id: int
+    policyName: str
+    currentCoverage: float
+    recommendedCoverage: float
+    gap: float
+    action: str
+    priority: Literal["High", "Medium", "Low"]
+    reason: str
+    estimatedCost: str
 
 
 # Full Partial Response
 
 class ProtectionAdvice(BaseModel):
-    protectionGap: ProtectionGap#=Field(default_factory=ProtectionGap)# default is single object
-    recommendations: List[Recommendation]#=Field(default_factory=lambda:[Recommendation()]) # default is List that contains a single object
+    protectionGap: ProtectionGap
+    recommendations: List[Recommendation]
 
 
 # Monthly Projections
@@ -84,30 +83,30 @@ class DebtsAdvice(BaseModel):
 
 
 class  FinancialGoal(BaseModel):
-    id: int#=0
-    name: str#="No Goal detected"
-    target: int#=0
-    deadline: int#=date.today().year  #default is the current year if missing in the AI response.
+    id: int
+    name: str
+    target: int
+    deadline: int
     currentAssets: int#=0
 
 
 class Investment(BaseModel):
 
-    id: int#=0
-    name: str#="No Investement detected"
-    currentValue: int#=0
-    riskTier: Literal['Conservative' , 'Balanced' , 'Growth']#="Conservative" 
+    id: int
+    name: str
+    currentValue: int
+    riskTier: Literal['Conservative' , 'Balanced' , 'Growth']
 
 
 class ProbabilityPoint(BaseModel):
     contribution:  int#=0
-    riskTier: Literal ['Conservative' , 'Balanced' , 'Growth']#='Conservative'
+    riskTier: Literal ['Conservative' , 'Balanced' , 'Growth']
     probability: int#=0    
 
 class GoalProbabilityData(BaseModel):
     
     goalId: int
-    contributionRiskMatrix: List[ProbabilityPoint]#=Field(default_factory=lambda:[ProbabilityPoint()])
+    contributionRiskMatrix: List[ProbabilityPoint]
     
     
 class  TrajectoryPoint(BaseModel):
@@ -135,7 +134,7 @@ class ImpactSummary(BaseModel):
 
 class OptimalStrategy (BaseModel):
     directives: List[StrategyDirective]
-    impactSummary: ImpactSummary  # passing ImpactSummary() would be wrong, we  should pass a callable , not an object
+    impactSummary: ImpactSummary 
 
 
 class GoalProbabilitySurface (BaseModel):
@@ -160,7 +159,7 @@ class GoalsAndInvestementsAdvice(BaseModel):
 
 # DTO for Questionnarie response. direction(AI --> backend --> frontend).
 
-# thus, frontend will define interface/type that expects three fields : protectionAdvice, debtsAdvice,  and goalsAndInvestementsAdvice.
+
 class FullAiResponse(BaseModel):
     protectionAdvice:ProtectionAdvice
     debtsAdvice:DebtsAdvice  

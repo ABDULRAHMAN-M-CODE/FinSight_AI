@@ -1,13 +1,10 @@
 //types
 import { type FormStepProps } from "../Types/FormStepProps";
 
-
-
 // custom hook(s)
 import useFormStep from "../CustomHooks/useFormStep";
 
 // custome or  standard functions
-
 import { handleDemoSubmit } from "../Functions/api/reusable_functions/handleDemoSubmit";
 
 //reusable components

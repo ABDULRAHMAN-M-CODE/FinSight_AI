@@ -42,6 +42,7 @@ const  getOptimalStrategy=():OptimalStrategy=>{
   // Two possible sources of data; local storage or fallback "default" data.
   const defaultOptimalStrategy:OptimalStrategy=getDefaultValues();
   const parsedData:FullServiceAdviceContract|null=getParsedData();
+  
   console.table("parsed data is :  ")
   console.table(parsedData);
   const optimalStrategy=parsedData?.goalsAndInvestementsAdvice.optimalStrategy??defaultOptimalStrategy;

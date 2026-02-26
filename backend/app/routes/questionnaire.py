@@ -88,7 +88,7 @@ def submit_questionnaire(
         db.flush()  # Stage all inserts
 
         # 2- call the LLM and store it's result in varaible.
-        model="gpt-5"
+        model="gpt-5-nano"
         user_context = data.model_dump_json()#LLM is native in dealing with strings
         system_prompt=full_service_system_prompt
         response_format=FullAiResponse
@@ -99,9 +99,30 @@ def submit_questionnaire(
     
         # 3- Store the AI result in the Database.
 
+        # Store AI advice
+        db.add(ProtectionAdvices(
+            user_id=current_user.id,
+            protection_advice=json_safe(advice.protectionAdvice.model_dump())
+        ))
+        db.add(DebtsAdvices(
+            user_id=current_user.id,
+            debts_advice=json_safe(advice.debtsAdvice.model_dump())
+        ))
+        db.add(GoalsAndInvestmentsAdvices(
+            user_id=current_user.id,
+            advice=json_safe(advice.goalsAndInvestementsAdvice.model_dump())
+        ))
+
+        # 4- Mark first login as completed
+        current_user.is_first_login = False
+        db.commit()
+
+        # 5- Return the advice to the frontend.
+        return advice 
 ################################################################################################
-        # 4- Return the advice to the frontend.
-        return advice # if this is commented out, the part that recives  data in the frontend must also be commented out for testing purposes.
+        
+
+
 
 
     except Exception as e:
