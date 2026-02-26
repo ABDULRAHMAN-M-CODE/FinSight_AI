@@ -3,6 +3,9 @@ import { TrendingUp, ArrowUpRight } from 'lucide-react';
 import { type FullServiceAdviceContract } from '../Types/FullServiceAdviceContract';
 import { type OptimalStrategy } from '../Types/GoalsAndInvestementsAdviceContract';
 import { type ImpactSummary } from '../Types/GoalsAndInvestementsAdviceContract';
+import { type StrategyDirective } from '../Types/GoalsAndInvestementsAdviceContract';
+
+import { getParsedData } from '../Functions/api/reusable_functions/getParsedData';
 const typeIcons = {
   contribution: '💰',
   allocation: '📊',
@@ -10,24 +13,49 @@ const typeIcons = {
   timeline: '⏰',
   consolidation: '🔗'
 };
-export function createImpactSummary(): ImpactSummary {
-  return {
-    probabilityImprovement: 0,
-    projectedGain: 0,
-  };
-}
-export function OptimalStrategyContainer() {
-  //const { optimalStrategy } = mockDashboardData;
-  const defaultOptimalStrategy: OptimalStrategy = {
-  directives: [],
-  impactSummary: createImpactSummary(),
-};
 
-  const saved = localStorage.getItem("fullAdvice");
-  const parsedData: FullServiceAdviceContract | null = saved ? JSON.parse(saved) : null;
+const getDefaultValues=():OptimalStrategy=>{
+
+  const  defaultimpactSummary:ImpactSummary={
+    probabilityImprovement:0,
+    projectedGain:0
+  }
+  const defaultDirectives:StrategyDirective={
+      id: 0,
+      type: 'liquidity',
+      title: "default",
+      value: "default",
+      description: "default"
+  }
   
+  const defaultOptimalStrategy: OptimalStrategy = {
+  directives: [defaultDirectives],
+  impactSummary: defaultimpactSummary
+  
+};
+ return defaultOptimalStrategy
+}
 
-  const optimalStrategy=parsedData?.goalsAndInvestementsAdvice.optimalStrategy??defaultOptimalStrategy
+// 
+const  getOptimalStrategy=():OptimalStrategy=>{
+ 
+  // Two possible sources of data; local storage or fallback "default" data.
+  const defaultOptimalStrategy:OptimalStrategy=getDefaultValues();
+  const parsedData:FullServiceAdviceContract|null=getParsedData();
+  console.table("parsed data is :  ")
+  console.table(parsedData);
+  const optimalStrategy=parsedData?.goalsAndInvestementsAdvice.optimalStrategy??defaultOptimalStrategy;
+  console.log("optimized strategy is  :")
+  console.table(optimalStrategy)
+  return  optimalStrategy;
+
+}
+
+//Rendering 
+export function OptimalStrategyContainer() {
+
+  const optimalStrategy=getOptimalStrategy();
+  
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
       {/* Header */}

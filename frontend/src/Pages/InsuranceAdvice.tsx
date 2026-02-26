@@ -1,3 +1,4 @@
+
 //Reusable components
 import { ProtectionGapChart } from '../Imports/ProtectionGapChart';
 import { CoverageRecommendations } from '../Imports/CoverageRecommendations';
@@ -5,74 +6,73 @@ import { CoverageRecommendations } from '../Imports/CoverageRecommendations';
 
 //types 
 import { type Recommendation } from '../Imports/CoverageRecommendations';
-import { type InsurenceAdviceContract } from '../Types/InsurenceAdviceContract';
+import { type InsurenceAdviceContract, type MonthlyData } from '../Types/InsurenceAdviceContract';
+import { type ProtectionGap } from '../Types/InsurenceAdviceContract';
 
 
-// Replace this static data with Actual AI data
-export const protectionAdvice: InsurenceAdviceContract = {
+// functions
+import { getParsedData } from '../Functions/api/reusable_functions/getParsedData';
+
+
+
+// default values specification
+ const  getInsurenceAdviceDefaultValues= ():InsurenceAdviceContract=> {
+  const monthlyDataDefaults:MonthlyData={
+    month: 0,
+    required: 0.0,
+    current: 0,
+    gap: 0
+  }
+  const protectionGapDefaults:ProtectionGap={
+   currentCoverage:0.0,
+   requiredCoverage: 0.0,
+   gap:0.0,
+   annualIncome:0.0,
+   yearsToRetirement:25,
+   incomeReplacementRate: 0.7,
+   monthlyData: [monthlyDataDefaults]    
+  }
+
+  const recommendationsDefault:Recommendation={
+    id: 0,
+    policyName: "No action required",
+    currentCoverage: 0.0,
+    recommendedCoverage: 0.0,
+    gap: 0.0,
+    action: "No Adjustements needed",
+    priority:  "Low",
+    reason:"No protection gap detected",
+    estimatedCost: "0"
+  }
+
+
+    const  protectionAdviceDefaults: InsurenceAdviceContract={
+      protectionGap:protectionGapDefaults,
+      recommendations: [recommendationsDefault]
+    }
+    return protectionAdviceDefaults; // return {protectionAdviceDefaults} would be wrong, because the function is not expected to return object inside object
+    
+}
+
+// Get data from local storage and pass it to the UI
+const  getProtectionAdvice=():InsurenceAdviceContract=>{
   
+    //  advice has two possible sources : default data or stored data in the local storage.
+    const parsedData=getParsedData();
+    const protectionAdviceDefaults:InsurenceAdviceContract= getInsurenceAdviceDefaultValues();
     
-    protectionGap: {
-
-    currentCoverage: 500000,
-    requiredCoverage: 1200000,
-    gap: 700000,
-    annualIncome: 150000,
-    yearsToRetirement: 25,
-    incomeReplacementRate: 0.75,
-    monthlyData: [
-      { month: 0, required: 1200000, current: 500000, gap: 700000 },
-      { month: 5, required: 1150000, current: 500000, gap: 650000 },
-      { month: 10, required: 1100000, current: 500000, gap: 600000 },
-      { month: 15, required: 1000000, current: 500000, gap: 500000 },
-      { month: 20, required: 850000, current: 500000, gap: 350000 },
-      { month: 25, required: 650000, current: 500000, gap: 150000 },
-    ]
-
-    },
+    const protectionAdvice:InsurenceAdviceContract= parsedData?.protectionAdvice??protectionAdviceDefaults;
     
+    return protectionAdvice;
     
-    recommendations:[
-      {
-        id: 1,
-        policyName: 'Term Life Insurance',
-        currentCoverage: 500000,
-        recommendedCoverage: 1200000,
-        gap: 700000,
-        action: 'Increase coverage by $700,000 to protect household income for 10+ years',
-        priority: 'High',
-        reason: 'Current coverage only replaces 3.3 years of income vs recommended 8 years',
-        estimatedCost: '+$85/month'
-      },
-      {
-        id: 2,
-        policyName: 'Disability Insurance',
-        currentCoverage: 0,
-        recommendedCoverage: 112500,
-        gap: 112500,
-        action: 'Establish disability coverage at 75% income replacement',
-        priority: 'High',
-        reason: 'No income protection if unable to work - high risk exposure',
-        estimatedCost: '$120/month'
-      },
-      {
-        id: 3,
-        policyName: 'Critical Illness Coverage',
-        currentCoverage: 50000,
-        recommendedCoverage: 150000,
-        gap: 100000,
-        action: 'Increase coverage to align with annual income',
-        priority: 'Medium',
-        reason: 'Current coverage insufficient for medical expenses and income loss',
-        estimatedCost: '+$45/month'
-      }
-    ]
-
-};
+  }
 
 
-
+  // Rendering
 export default function InsuranceAdvice() {
+  
+  const protectionAdvice:InsurenceAdviceContract=getProtectionAdvice();
+  
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -91,7 +91,7 @@ export default function InsuranceAdvice() {
 
         {/* Section 2: Actionable Coverage Recommendations */}
         <section>
-          <CoverageRecommendations recommendations={protectionAdvice.recommendations  as Recommendation[]} />
+          <CoverageRecommendations recommendations={protectionAdvice.recommendations} />
         </section>
       </div>
     </div>

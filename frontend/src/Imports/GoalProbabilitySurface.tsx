@@ -8,19 +8,13 @@ import { type FullServiceAdviceContract } from "../Types/FullServiceAdviceContra
 
 import { type FinancialGoalResponse } from "../Types/GoalsAndInvestementsAdviceContract";
 import { type GoalProbabilityData } from "../Types/GoalsAndInvestementsAdviceContract";
+
+import { getParsedData } from "../Functions/api/reusable_functions/getParsedData";
 const riskOrder = ['Growth', 'Balanced', 'Conservative'];
 
-export function GoalProbabilitySurface() {
-  //const { goals, goalProbabilitySurface } = mockDashboardData;
-  
-  // use the following top level default value 
 
-  
-  
-
-    const saved = localStorage.getItem("fullAdvice");
-    const parsedData: FullServiceAdviceContract | null = saved ? JSON.parse(saved) : null;
-    
+// default data to prevent potential UI break.
+const getDefaultData=()=>{
     const defaultGoals: FinancialGoalResponse = {
       id: 0,
       name: "No Goal detected",
@@ -28,8 +22,6 @@ export function GoalProbabilitySurface() {
       deadline: new Date().getFullYear(), // Year, Not number
       currentAssets: 0
   };
-    const  goals:FinancialGoalResponse[]   =parsedData?.goalsAndInvestementsAdvice.goals??[defaultGoals]    
-  
      const defaultContributionRiskMatrix:ProbabilityPoint  = {
         contribution:0,
         riskTier:'Conservative',
@@ -47,6 +39,18 @@ export function GoalProbabilitySurface() {
     dataPerGoal: [defaultDataPerGoal],// fix the default value
     text2: "No advice"
   };  
+  return {defaultGoalProbabilitySurface,defaultGoals}
+}
+
+// Logic and data : Custom hook
+function useGoalProbabilitySurface (){
+
+
+    // Two possible sources of data; local storage or the default data.
+    const {defaultGoalProbabilitySurface,defaultGoals}=getDefaultData();
+    const parsedData:FullServiceAdviceContract|null=getParsedData();
+
+    const  goals:FinancialGoalResponse[]=parsedData?.goalsAndInvestementsAdvice.goals??[defaultGoals]    
     const  goalProbabilitySurface:GoalProbabilitySurface=parsedData?.goalsAndInvestementsAdvice.goalProbabilitySurface??defaultGoalProbabilitySurface
   
 
@@ -75,8 +79,30 @@ export function GoalProbabilitySurface() {
     if (!data) return [];
     return Array.from(new Set(data.map(d => d.contribution))).sort((a, b) => a - b);
   };
+  return{
+    selectedGoalId,
+    setSelectedGoalId,
+    getColor,
+    getContributions,
+    getProbability,
+    getGoalData,
+    goals,
+    goalProbabilitySurface
+  }
+}
 
-  return (
+// rendering 
+export function GoalProbabilitySurface() {
+
+const {    selectedGoalId,
+    setSelectedGoalId,
+    getColor,
+    getContributions,
+    getProbability,
+    getGoalData, 
+    goals,goalProbabilitySurface}=useGoalProbabilitySurface();
+  
+    return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 h-full flex flex-col">
       {/* Header */}
       <div className="mb-6 flex justify-between items-start">

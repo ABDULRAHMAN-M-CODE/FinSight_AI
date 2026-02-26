@@ -110,3 +110,5 @@ export const mockDashboardData:GoalsAndInvestementsAdviceContract = {
     text2: "Adopt the optimized strategy across all goals to reduce downside risk by 15% and capture $650k projected wealth gains."
   }
 };
+
+

@@ -43,7 +43,7 @@ function App() {
       <Route path="/ForgotPassword_SuccessfullReset" element={<ForgotPassword_SuccessfullReset />}/>
       <Route path="/MultiStepFlow" element={<MultiStepFlow />}/>
       <Route path="/InsuranceAdvice" element={<InsuranceAdvice />}/>
-      <Route path="/DebtAnalysis" element={<DebtsAdvice />}/>
+      <Route path="/DebtsAdvice" element={<DebtsAdvice />}/>
       <Route path='/MultiStepContex' element={<MultiStepContex />} />
       <Route path="/PostMultiStepContext" element={<PostMultiStepContext />}/>
       <Route path="/MainDashboard" element={<MainDashboard />}/>

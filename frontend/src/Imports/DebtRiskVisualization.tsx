@@ -6,7 +6,7 @@ import { AlertTriangle, TrendingDown, Shield } from 'lucide-react';
 import {  type DebtAdviceContract } from '../Types/DebtAdviceContract';
 
 
-// custome hook
+// the name of this function is misleading, as it's not really a custome hook, does not contain useStates
 function useDebtRiskVisualization({debts, riskMetrics }: DebtAdviceContract){
  
  

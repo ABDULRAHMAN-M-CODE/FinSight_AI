@@ -3,6 +3,7 @@ import { type DebtAdviceContract } from "./DebtAdviceContract";
 import { type GoalsAndInvestementsAdviceContract } from "../Types/GoalsAndInvestementsAdviceContract";
 
 
+
 export type FullServiceAdviceContract={
   protectionAdvice:InsurenceAdviceContract;
   debtsAdvice:DebtAdviceContract;

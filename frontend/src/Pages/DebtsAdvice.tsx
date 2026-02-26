@@ -2,15 +2,21 @@
 
 import { DebtRiskVisualization } from '../Imports/DebtRiskVisualization';// mock data contract 
 
-// premade components
+// 
+import { type MonthlyProjection } from '../Types/DebtAdviceContract';
 import { type DebtData } from '../Types/DebtAdviceContract';
+import { type RiskMetrics } from '../Types/DebtAdviceContract';
+
+// top level type
+import { type DebtAdviceContract } from '../Types/DebtAdviceContract';
 
 
-
+// functions
+import { getParsedData } from '../Functions/api/reusable_functions/getParsedData';
 
 
 // replace with actual advice that is stored in the local storage  
-export const debtsAdvice = {
+/*export const debtsAdvice = {
   
   monthlyProjections: [
     { month: 0, totalDebt: 86200, highInterestDebt: 20700, debtToIncome: 0.52, interestCost: 950 },
@@ -79,10 +85,59 @@ export const debtsAdvice = {
     monthsSaved: 14
   },
 
-};
+};*/
 
+const getDebtsAdviceDefaultValues=():DebtAdviceContract=>{
+
+
+
+  const monthlyProjectionDefault: MonthlyProjection={
+    month: 1,
+    totalDebt: 1,
+    highInterestDebt: 1,
+    debtToIncome: 1,
+    interestCost: 1,
+  }
+  const debtDataDefault:DebtData={
+    id: 1,
+    name: "no balance",
+    balance: 1,
+    interestRate: 1,
+    riskLevel: "Low" ,
+    type: "no type"
+  }
+  const RiskMetrics:RiskMetrics={
+    debtToIncomeRatio: 1,
+    highInterestDebtRatio: 1,
+    monthlyDebtBurden: 1,
+    estimatedDebtFreeDate: "No estimatedDebtFreeDate",
+    totalInterestSavings: 1,
+    monthsSaved: 1,
+  }
+  const debtsAdviceDefaults:DebtAdviceContract={
+    monthlyProjections: [monthlyProjectionDefault],
+    debts: [debtDataDefault],
+    riskMetrics: RiskMetrics
+  }
+
+  return debtsAdviceDefaults;
+}
+
+// Get data from local storage and pass it to the UI
+const  getDebtsAdvice=():DebtAdviceContract=>{
+  
+    //  advice has two possible sources : default data or stored data in the local storage.
+    const debtsAdviceDefaults:DebtAdviceContract= getDebtsAdviceDefaultValues();
+    const parsedData=getParsedData();
+    const debtsAdvice:DebtAdviceContract= parsedData?.debtsAdvice??debtsAdviceDefaults;
+
+    
+    return debtsAdvice;
+    
+  }
 
 export default function DebtsAdvice() {
+  const debtsAdvice=getDebtsAdvice();
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -98,7 +153,7 @@ export default function DebtsAdvice() {
         <section>
           <DebtRiskVisualization 
             monthlyProjections={debtsAdvice.monthlyProjections}
-            debts={debtsAdvice.debts as DebtData[]}
+            debts={debtsAdvice.debts }
             riskMetrics={debtsAdvice.riskMetrics}
           />
         </section>

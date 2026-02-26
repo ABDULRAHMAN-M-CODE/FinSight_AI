@@ -7,16 +7,11 @@ import { type FullServiceAdviceContract } from '../Types/FullServiceAdviceContra
 import { type TrajectoryPoint } from '../Types/GoalsAndInvestementsAdviceContract';
 import { type FinancialGoalResponse } from '../Types/GoalsAndInvestementsAdviceContract';
 
+import { getParsedData } from '../Functions/api/reusable_functions/getParsedData';
 
 
-// Logic and rendering together .
-export function FinancialTrajectoryDivergence() {
-  //const { financialTrajectoryDivergence, goals } = mockDashboardData;
-  const saved = localStorage.getItem("fullAdvice");
-  const parsedData: FullServiceAdviceContract | null = saved ? JSON.parse(saved) : null;
-      
- 
-  const defaultCurrentPath: TrajectoryPoint  = {
+const getDefaultData=()=>{
+    const defaultCurrentPath: TrajectoryPoint  = {
         year: new Date().getFullYear(), // date 
         currentMedian: 0.0,
         optimizedMedian: 0.0,
@@ -27,9 +22,7 @@ export function FinancialTrajectoryDivergence() {
       currentPath: [defaultCurrentPath],
       text2: "No advice"
     };
-   const financialTrajectoryDivergence :FinancialTrajectoryDivergence   =parsedData?.goalsAndInvestementsAdvice.financialTrajectoryDivergence??defaultFinancialTrajectoryDivergence // default value here
 
-   
    const defaultGoals: FinancialGoalResponse = {
         id: 0,
         name: "No Goal detected",
@@ -37,48 +30,60 @@ export function FinancialTrajectoryDivergence() {
         deadline: new Date().getFullYear(), // Year, Not number
         currentAssets: 0
     };
-      const  goals:FinancialGoalResponse[]   =parsedData?.goalsAndInvestementsAdvice.goals??[defaultGoals]
+    return {defaultGoals,defaultFinancialTrajectoryDivergence}
+}
 
-  const { currentPath: data, text2 } = financialTrajectoryDivergence;
+// Logic and rendering together .
+export function FinancialTrajectoryDivergence() {
   
-  // Calculate total divergence at the end for the badge/kpi
-  const finalPoint = data[data.length - 1];
-  const divergence = finalPoint ? finalPoint.optimizedMedian - finalPoint.currentMedian : 0;
+    // Two possible sources of data ; the local storage or the default values.
+    const {defaultGoals, defaultFinancialTrajectoryDivergence}=getDefaultData();
+    const parsedData: FullServiceAdviceContract | null = getParsedData();// checks data existence and correctness (run time validation)
+      
+ 
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      // Find the specific payloads
-      const optimized = payload.find((p: any) => p.dataKey === 'optimizedMedian');
-      const current = payload.find((p: any) => p.dataKey === 'currentMedian');
-      
-      const valOpt = optimized ? optimized.value : 0;
-      const valCurr = current ? current.value : 0;
-      const diff = valOpt - valCurr;
+    const financialTrajectoryDivergence :FinancialTrajectoryDivergence   =parsedData?.goalsAndInvestementsAdvice.financialTrajectoryDivergence??defaultFinancialTrajectoryDivergence // default value here
+    const  goals:FinancialGoalResponse[]   =parsedData?.goalsAndInvestementsAdvice.goals??[defaultGoals]
 
-      
-      
-      return (
-        <div className="bg-white border border-gray-200 p-3 rounded-lg shadow-sm text-xs">
-          <p className="font-semibold text-gray-900 mb-2">Year {label}</p>
-          <div className="space-y-1 text-gray-600">
-            <p className="flex justify-between gap-4">
-              <span>Optimized:</span>
-              <span className="text-blue-600 font-semibold">${(valOpt / 1000000).toFixed(2)}M</span>
-            </p>
-            <p className="flex justify-between gap-4">
-              <span>Current:</span>
-              <span className="text-gray-900 font-semibold">${(valCurr / 1000000).toFixed(2)}M</span>
-            </p>
-            <div className="border-t border-gray-200 mt-2 pt-2 flex justify-between gap-4">
-              <span>Divergence:</span>
-              <span className="text-green-500 font-bold">+${(diff / 1000).toFixed(0)}k</span>
+    const { currentPath: data, text2 } = financialTrajectoryDivergence;  
+    // Calculate total divergence at the end for the badge/kpi
+    const finalPoint = data[data.length - 1];
+    const divergence = finalPoint ? finalPoint.optimizedMedian - finalPoint.currentMedian : 0;
+
+    const CustomTooltip = ({ active, payload, label }: any) => {
+      if (active && payload && payload.length) {
+        // Find the specific payloads
+        const optimized = payload.find((p: any) => p.dataKey === 'optimizedMedian');
+        const current = payload.find((p: any) => p.dataKey === 'currentMedian');
+        
+        const valOpt = optimized ? optimized.value : 0;
+        const valCurr = current ? current.value : 0;
+        const diff = valOpt - valCurr;
+
+        
+        
+        return (
+          <div className="bg-white border border-gray-200 p-3 rounded-lg shadow-sm text-xs">
+            <p className="font-semibold text-gray-900 mb-2">Year {label}</p>
+            <div className="space-y-1 text-gray-600">
+              <p className="flex justify-between gap-4">
+                <span>Optimized:</span>
+                <span className="text-blue-600 font-semibold">${(valOpt / 1000000).toFixed(2)}M</span>
+              </p>
+              <p className="flex justify-between gap-4">
+                <span>Current:</span>
+                <span className="text-gray-900 font-semibold">${(valCurr / 1000000).toFixed(2)}M</span>
+              </p>
+              <div className="border-t border-gray-200 mt-2 pt-2 flex justify-between gap-4">
+                <span>Divergence:</span>
+                <span className="text-green-500 font-bold">+${(diff / 1000).toFixed(0)}k</span>
+              </div>
             </div>
           </div>
-        </div>
-      );
-    }
-    return null;
-  };
+        );
+      }
+      return null;
+    };
 
 
   // Rendering

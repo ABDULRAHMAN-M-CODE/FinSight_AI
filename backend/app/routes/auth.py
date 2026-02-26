@@ -149,7 +149,8 @@ def verify_email(
         httponly=True,              # Prevent JS access (protect against XSS "javascript injection" token theft)
         secure=False,               
         samesite="lax",             # Helps protect against CSRF, you can read about it , I do not understand it well .
-        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        # Long age for testing purposes.
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60000000000000000000000000000000000, # age is long for testing purposes
         path="/"                    # Cookie available to entire app
     )
 

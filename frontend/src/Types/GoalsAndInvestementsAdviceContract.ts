@@ -2,6 +2,8 @@
 // Note 2'export type ' is just a typescript syntax, replace it with Pydantic class.
 // Note 3 : all the following is new and must be implmented
 
+import z from "zod";
+
 
 //Must be  Used in  the top level pydantic schema .
 export type FinancialGoalResponse= {
@@ -96,6 +98,87 @@ export type GoalsAndInvestementsAdviceContract ={
     text2: string; // Dynamic advice
   };
 }
+
+
+
+const FinancialGoalResponseSchema=z.object({
+  id: z.number(),
+  name: z.string(),
+  target: z.number(),
+  deadline: z.number(), // Year
+  currentAssets: z.number()
+})
+
+const InvestementResponseSchema=z.object({
+  id: z.number(),
+  name: z.string(),
+  currentValue: z.number(),
+  riskTier: z.union([
+  z.literal('Conservative'),
+    z.literal('Balanced'), 
+    z.literal( 'Growth')
+
+  ])
+})
+
+const StrategyDirectiveSchema=z.object({
+  id: z.number(),
+  type: z.union([
+    z.literal('contribution'),
+    z.literal( 'allocation') , 
+    z.literal('liquidity' ), 
+    z.literal('timeline') , 
+    z.literal('consolidation')
+  ]),
+  title: z.string(),
+  value: z.string(), // e.g., "$500", "12%", "1 year"
+  description: z.string()
+})
+const ImpactSummarySchema=z.object({
+    probabilityImprovement: z.number(), // percentage points
+  projectedGain: z.number() // dollar amount
+})
+
+const ProbabilityPointSchema=z.object({
+    contribution: z.number(),
+  riskTier: z.union([
+  z.literal('Conservative'), 
+   z.literal('Balanced') ,
+   z.literal( 'Growth')
+  ]),
+  probability: z.number()
+})
+const GoalProbabilityDataSchema=z.object({
+  goalId: z.number(),
+  contributionRiskMatrix: z.array(ProbabilityPointSchema)
+})
+
+const TrajectoryPointSchema=z.object({
+  year: z.number(), // date 
+  currentMedian: z.number(),
+  optimizedMedian: z.number(),
+  current10th: z.number(),
+  optimized10th: z.number()
+})
+export const GoalsAndInvestementsAdviceSchema=z.object({
+  goals: z.array(FinancialGoalResponseSchema),
+  investments: z.array(InvestementResponseSchema),
+  
+  optimalStrategy: z.object({
+    directives: z.array(StrategyDirectiveSchema),
+    impactSummary: ImpactSummarySchema
+  }),
+  
+  goalProbabilitySurface: z.object({
+    dataPerGoal: z.array(GoalProbabilityDataSchema),
+    text2: z.string() 
+  }),
+
+  financialTrajectoryDivergence:z.object( {
+    currentPath: z.array(TrajectoryPointSchema),
+    text2: z.string() 
+  })
+})
 
 
 

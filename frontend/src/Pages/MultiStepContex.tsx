@@ -25,10 +25,12 @@ import { type FullServiceAdviceContract } from "../Types/FullServiceAdviceContra
 // functions
 import { FetchData } from "../Functions/api/fetchData";
 import { extractAndSaveDataToLocalStorage } from "../Functions/api/reusable_functions/extractAndSaveDataToLocalStorage ";
+
 // custome hook : Logic and States 
 function useMultiStepContex(){
 
         // Problem 1 : Refactor this custom hook, apply separation of concerns.
+        
         
         const [isLoading, setIsLoading]=useState(false);
 
@@ -142,7 +144,9 @@ function useMultiStepContex(){
             // Problem 2 : after making this function work, replace the try catch block with already made function, maybe it's the 'handleDemoSubmit'
             try {
 
-
+                console.log("user's info which used as context for the LLM is : ")
+                console.log(payload)
+                
                 // send a request
                 const response= await FetchData({payload, url});
 
@@ -164,8 +168,13 @@ function useMultiStepContex(){
                 setErrorMsg("");
                 
                 // persiste the data and redirect user to other UI
+                
+                
+                console.log("recived data from backend")
+                
+                
                 const localStorageKey="fullAdvice"
-                extractAndSaveDataToLocalStorage<FullServiceAdviceContract>({response,localStorageKey});
+                await extractAndSaveDataToLocalStorage<FullServiceAdviceContract>({response,localStorageKey});
                 
                 
                 navigate("/PostMultiStepContext");

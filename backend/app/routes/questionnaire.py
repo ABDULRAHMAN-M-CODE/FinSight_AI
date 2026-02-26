@@ -43,7 +43,7 @@ def submit_questionnaire(
 
 #############################################################
         # 2- call the LLM and store it's result in varaible.
-        model="gpt-5"
+        model="gpt-5-nano"
         user_context = data.model_dump_json()#LLM is native in dealing with strings
         system_prompt=full_service_system_prompt
         response_format=FullAiResponse
@@ -56,6 +56,7 @@ def submit_questionnaire(
 
 ################################################################################################
         # 4- Return the advice to the frontend.
+        print(advice)
         return advice # if this is commented out, the part that recives  data in the frontend must also be commented out for testing purposes.
 
 
