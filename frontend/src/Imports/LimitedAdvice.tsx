@@ -1,6 +1,8 @@
 // type; Contract for data
 import { type limitedAdvice } from "../Types/limitedAdviceData";
-
+import { resolveData } from "../Functions/api/resolveData";
+import { LimitedAdviceSchema } from "../Schemas/limitedAdviceSchemas";
+import { LimitedAdviceDefaults } from "../Types/limitedAdviceData";
 //States and Logic lives here
 function useLimitedAdvice(){
   
@@ -45,6 +47,7 @@ const formatCurrency = (amount: number) => {
 }
 
 
+
 //Rendering Lives here
 export default function LimitedAdvice() {
    // use the custome hook.  
@@ -59,21 +62,18 @@ export default function LimitedAdvice() {
      1. Read the response as string from the  local storage.
      2. parse  the string to object.
      */
-    const saved = localStorage.getItem("Demo_Data");
-    const AI_DATA: limitedAdvice | null = saved ? JSON.parse(saved) : null;
- 
-  // 2. Guard Clause: Don't render if data is null (standard practice)
-  if (!AI_DATA) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-50">
-        <p className="text-slate-500 animate-pulse">Analyzing financial data...</p>
-      </div>
-    );
-  }
-  const taxableAccounts = AI_DATA.tax_efficiency_optimizer.filter(acc => acc.tax_category === "Taxable");
-  const taxDeferredAccounts = AI_DATA.tax_efficiency_optimizer.filter(acc => acc.tax_category === "Tax-Deferred");
-  const taxFreeAccounts = AI_DATA.tax_efficiency_optimizer.filter(acc => acc.tax_category === "Tax-Free");
-return (
+
+      const  resolvedData:limitedAdvice=resolveData<limitedAdvice, typeof LimitedAdviceSchema> ( 
+        "Demo_Data", 
+        LimitedAdviceSchema ,
+        LimitedAdviceDefaults,
+        (data)=>data // extractor function: ( data ) is the parsedData json object, but =>data is the extractedData internally as defined in the implmentation 
+      );   
+  const taxableAccounts = resolvedData.tax_efficiency_optimizer.filter(acc => acc.tax_category === "Taxable");
+  const taxDeferredAccounts = resolvedData.tax_efficiency_optimizer.filter(acc => acc.tax_category === "Tax-Deferred");
+  const taxFreeAccounts = resolvedData.tax_efficiency_optimizer.filter(acc => acc.tax_category === "Tax-Free");
+  
+  return (
     <div className="min-h-screen bg-slate-50">
       
 
@@ -88,14 +88,14 @@ return (
           </div>
 
           <div className="p-5 space-y-3">
-            {AI_DATA.strategic_time_horizon_map?.map((goal, index) => {
+            {resolvedData.strategic_time_horizon_map?.map((goal, index) => {
               const riskColors = getRiskColor(goal.riskLevel);
               const borderColor = getGoalRiskColor(goal.riskLevel);
               
               return (
                 <div key={index} className="relative">
                   {/* Timeline indicator on left */}
-                  {index < AI_DATA.strategic_time_horizon_map.length - 1 && (
+                  {index < resolvedData.strategic_time_horizon_map.length - 1 && (
                     <div className="absolute left-[7px] top-[16px] w-0.5 h-[185px] bg-slate-300" />
                   )}
                   <div className={`absolute left-0 top-[12px] w-4 h-4 rounded-lg ${goal.riskLevel === 'low' ? 'bg-green-500' : 'bg-red-500'} border-2 border-white`} />
@@ -140,7 +140,7 @@ return (
           </div>
 
 
-          {/* Taxable Accounts Section */}
+          {/* conditionally rendered Taxable Accounts Section */}
            {taxableAccounts.length>0 &&(
           <div className="p-5">
             <div className="flex items-center gap-2 mb-3">
@@ -149,7 +149,7 @@ return (
             </div>
 
             <div className="space-y-3">
-              {AI_DATA.tax_efficiency_optimizer?.filter(acc => acc.tax_category === "Taxable").map((account, index) => {
+              {resolvedData.tax_efficiency_optimizer?.filter(acc => acc.tax_category === "Taxable").map((account, index) => {
                 const effColors = getEfficiencyColor(account.efficiency);
                 const adviceColor = account.efficiency >= 70 ? "border-amber-500" : "border-red-500";
                 
@@ -175,7 +175,7 @@ return (
                       <div className="flex flex-wrap gap-1.5">
                         
                         {account.linked_goals.length>0 && ((account.linked_goals||[]).map((goalName, idx) => {
-                          const linkedGoal = AI_DATA.strategic_time_horizon_map.find(g => g.name === goalName);
+                          const linkedGoal = resolvedData.strategic_time_horizon_map.find(g => g.name === goalName);
                           const goalColor = linkedGoal?.riskLevel === "low" ? "bg-green-50 border-green-200 text-green-600" : "bg-red-50 border-red-200 text-red-600";
                           
                           return (
@@ -206,7 +206,7 @@ return (
            )}
 
 
-          {/* Tax-Deferred Accounts Section */}
+          {/* conditionally rendered Tax-Deferred Accounts Section */}
           { taxDeferredAccounts.length > 0 && (
 
           <div className="px-5 pb-5">
@@ -216,7 +216,7 @@ return (
             </div>
 
             <div className="space-y-3">
-              {AI_DATA.tax_efficiency_optimizer.filter(acc => acc.tax_category === "Tax-Deferred").map((account, index) => {
+              {resolvedData.tax_efficiency_optimizer.filter(acc => acc.tax_category === "Tax-Deferred").map((account, index) => {
                 const effColors = getEfficiencyColor(account.efficiency);
                 
                 return (
@@ -266,7 +266,7 @@ return (
           )}
 
 
-          {/* Tax-Free Accounts Section */}
+          {/* conditionally render Tax-Free Accounts Section */}
           {taxFreeAccounts.length>0 &&(
          <div className="px-5 pb-5">
             <div className="flex items-center gap-2 mb-3">
@@ -275,9 +275,9 @@ return (
             </div>
 
             <div className="space-y-3">
-              {AI_DATA.tax_efficiency_optimizer.filter(acc => acc.tax_category === "Tax-Free").map((account, index) => {
+              {resolvedData.tax_efficiency_optimizer.filter(acc => acc.tax_category === "Tax-Free").map((account, index) => {
                 const effColors = getEfficiencyColor(account.efficiency);
-                
+                /** map accounts to UI components */
                 return (
                   <div key={index} className="bg-slate-50 rounded-lg border border-green-200 p-4">
                     <div className="flex items-start justify-between mb-3">
@@ -295,6 +295,7 @@ return (
                     <div className="mb-3">
                       <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2">Funding Goals</p>
                       <div className="flex flex-wrap gap-1.5">
+                        {/** conditionally rendered Funding Goals */}
                         {account.linked_goals.map((name, index) => (
                           <div key={index} className="px-3 py-1.5 rounded-md border bg-green-50 border-green-200 text-green-600 flex items-center gap-1.5">
                             <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 10 10">

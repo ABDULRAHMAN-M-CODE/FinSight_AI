@@ -24,6 +24,7 @@ export  default function FormStep({finishedProcessing, setIsLoading,setFinishedP
     localStorageKey
    }=useFormStep({investment_accounts,financial_goals });
     
+   console.log(payload)
 
    {/* Step 2 in Demo: context collection : */} 
    return(

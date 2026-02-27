@@ -22,6 +22,7 @@ import { riskOrder } from "../utils/constants";
 import { type FinancialGoalResponse } from "../Types/GoalsAndInvestementsAdviceContract";
 import { type TYPE1 } from "../Types/TYPE1";
 import { type GoalProbabilitySurface, type ProbabilityPoint } from "../Types/GoalsAndInvestementsAdviceContract";
+import { FullAdviceSchema } from '../Functions/api/reusable_functions/getFullAdviceSchema';
 
 
 // Custome hook
@@ -65,8 +66,8 @@ function useGoalProbabilitySurface({goals,goalProbabilitySurface}:TYPE1){
 export function GoalProbabilitySurface() {
 
 
-    const  goals:FinancialGoalResponse[]=resolveData<FinancialGoalResponse[]>([defaultGoals],(data)=>data?.goalsAndInvestementsAdvice.goals);
-    const   goalProbabilitySurface:GoalProbabilitySurface=resolveData<GoalProbabilitySurface>(defaultGoalProbabilitySurface,(data)=>data?.goalsAndInvestementsAdvice.goalProbabilitySurface);
+    const  goals:FinancialGoalResponse[]=resolveData<FinancialGoalResponse[], typeof FullAdviceSchema >("fullAdvice", FullAdviceSchema, [defaultGoals],(data)=>data?.goalsAndInvestementsAdvice.goals);
+    const   goalProbabilitySurface:GoalProbabilitySurface=resolveData<GoalProbabilitySurface, typeof FullAdviceSchema>("fullAdvice",FullAdviceSchema,defaultGoalProbabilitySurface,(data)=>data?.goalsAndInvestementsAdvice.goalProbabilitySurface);
 
     const{
     selectedGoalId,setSelectedGoalId,

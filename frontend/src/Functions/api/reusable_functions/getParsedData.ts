@@ -1,18 +1,17 @@
-import { type FullServiceAdviceContract } from "../../../Types/FullServiceAdviceContract";
-import { getFullAdviceSchema } from "./getFullAdviceSchema";
+import type z from "zod";
 
-export const getParsedData=():FullServiceAdviceContract|null=>{
-    const fullAdviceSchema= getFullAdviceSchema();// run time validation
+// Context: This function was hard to make, because I'm a novice, I wrote two codes that do the same Logic ;getting data from local storage and feed it to the UI, in the past I wrote individual codes to get data from different local storage locations, now single function -in theory- can handle this 
+export const getParsedData=< ZT extends z.ZodType>(localStorageKey:string,schema:ZT):z.infer<ZT>|null=>{
+       
+    const saved: string|null = localStorage.getItem(localStorageKey); 
+    let parsedData:z.infer<ZT> | null = null;
     
-    // saved is a string to be parsed later
-    const saved: string|null = localStorage.getItem("fullAdvice"); // what must be the type of the save constant ?
-    let parsedData: FullServiceAdviceContract | null = null;
+    // if this 'if-statement' block is not executed, default data will feed the UI to prevent UI failure.
     
-    // if this block is not executed, default data will feed the UI to prevent UI failure.
-    if (saved){ // checks the existence of the data
+    if (saved){ // checks the 'existence' of the data
       try{
-        const raw=JSON.parse(saved);
-        const result=fullAdviceSchema.safeParse(raw); // run time validation, checks the correctness of the  existing data
+        const raw=JSON.parse(saved); // returns unknown object
+        const result=schema.safeParse(raw); // run time validation on the unknown data, checks the 'correctness' of the  existing data
         if(result.success){
           console.log("nice!. run time validation succeed!")
           parsedData=result.data;
@@ -26,5 +25,6 @@ export const getParsedData=():FullServiceAdviceContract|null=>{
       }
       
     }
+
     return parsedData
 }

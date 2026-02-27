@@ -12,7 +12,7 @@ export const  handleFormSubmit= async ({setIsLoading,payload, url} : handleFormS
 
       try{
        
-
+      console.log("data sent to backend is : ",payload)
        const response=await FetchData({payload,url}) // what is the type returned by 
        return response;
 

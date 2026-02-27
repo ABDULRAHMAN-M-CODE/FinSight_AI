@@ -20,11 +20,12 @@ import { resolveData } from '../Functions/api/resolveData';
 
 
 import { protectionAdviceDefaults } from '../utils/constants';
+import { FullAdviceSchema } from '../Functions/api/reusable_functions/getFullAdviceSchema';
   // Rendering
 export default function InsuranceAdvice() {
   
   //const protectionAdvice:InsurenceAdviceContract=getProtectionAdvice();
-   const  protectionAdvice:InsurenceAdviceContract=resolveData<InsurenceAdviceContract>(protectionAdviceDefaults,(data)=>data?.protectionAdvice);
+   const  protectionAdvice:InsurenceAdviceContract=resolveData<InsurenceAdviceContract , typeof FullAdviceSchema>("fullAdvice",FullAdviceSchema,protectionAdviceDefaults,(data)=>data?.protectionAdvice);
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

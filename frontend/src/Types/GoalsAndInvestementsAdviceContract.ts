@@ -101,7 +101,7 @@ export type GoalsAndInvestementsAdviceContract ={
 
 
 
-const FinancialGoalResponseSchema=z.object({
+export const FinancialGoalResponseSchema=z.object({
   id: z.number(),
   name: z.string(),
   target: z.number(),
