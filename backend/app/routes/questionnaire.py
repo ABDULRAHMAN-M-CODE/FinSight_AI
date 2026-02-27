@@ -33,13 +33,14 @@ router = APIRouter(prefix="/onboarding")
 @router.post("/questionnaire", status_code=status.HTTP_201_CREATED)
 def submit_questionnaire(
      data: QuestionnaireSubmit,
-     current_user: User = Depends(get_current_user), 
-     db: Session = Depends(get_db),
+     current_user: User = Depends(get_current_user), # commented out for testing purposes,if this was pushed to github I'm sorry.
+     db: Session = Depends(get_db),# commented out for testing purposes,if this was pushed to github I'm sorry.
 ):
     try:
         print("recived data successfully")
 
         # check if user already filled finance data
+        # commented out for testing purposes,if this was pushed to github I'm sorry.
         if not current_user.is_first_login :
             print("if block was executed")
             raise HTTPException(
@@ -85,7 +86,7 @@ def submit_questionnaire(
             )
             db.add(new_goal)
 
-        db.flush()  # Stage all inserts
+        db.flush()  # Stage all inserts"""
 
         # 2- call the LLM and store it's result in varaible.
         model="gpt-5-nano"
@@ -100,6 +101,7 @@ def submit_questionnaire(
         # 3- Store the AI result in the Database.
 
         # Store AI advice
+        # commented out for testing purposes,if this was pushed to github I'm sorry.
         db.add(ProtectionAdvices(
             user_id=current_user.id,
             protection_advice=json_safe(advice.protectionAdvice.model_dump())
@@ -126,7 +128,7 @@ def submit_questionnaire(
 
 
     except Exception as e:
-        db.rollback()
+        #db.rollback()
         print("ERROR:", str(e))
         raise HTTPException(
             status_code=500,

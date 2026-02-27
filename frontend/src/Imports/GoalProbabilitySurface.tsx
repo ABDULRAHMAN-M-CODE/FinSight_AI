@@ -1,61 +1,33 @@
 //import { mockDashboardData } from "../mocks/goalsAndInvestementsAdviceMock";
-import { type GoalProbabilitySurface, type ProbabilityPoint } from "../Types/GoalsAndInvestementsAdviceContract";
+
+
+// Reusable components.
 import {  useState } from 'react';
 import cn from "../Components/utils";
 import { Badge } from "../Components/Badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../Components/tabs';
-import { type FullServiceAdviceContract } from "../Types/FullServiceAdviceContract";
 
+
+
+
+//Functions.
+import { resolveData } from "../Functions/api/resolveData";
+
+//constants.
+import { defaultGoals } from "../utils/constants";
+import { defaultGoalProbabilitySurface } from "../utils/constants";
+import { riskOrder } from "../utils/constants";
+
+// Types .
 import { type FinancialGoalResponse } from "../Types/GoalsAndInvestementsAdviceContract";
-import { type GoalProbabilityData } from "../Types/GoalsAndInvestementsAdviceContract";
-
-import { getParsedData } from "../Functions/api/reusable_functions/getParsedData";
-const riskOrder = ['Growth', 'Balanced', 'Conservative'];
+import { type TYPE1 } from "../Types/TYPE1";
+import { type GoalProbabilitySurface, type ProbabilityPoint } from "../Types/GoalsAndInvestementsAdviceContract";
 
 
-// default data to prevent potential UI break.
-const getDefaultData=()=>{
-    const defaultGoals: FinancialGoalResponse = {
-      id: 0,
-      name: "No Goal detected",
-      target: 0,
-      deadline: new Date().getFullYear(), // Year, Not number
-      currentAssets: 0
-  };
-     const defaultContributionRiskMatrix:ProbabilityPoint  = {
-        contribution:0,
-        riskTier:'Conservative',
-        probability:0
-     };    
-
-
-    const defaultDataPerGoal:GoalProbabilityData  = {
-      goalId: 0,
-      contributionRiskMatrix: [defaultContributionRiskMatrix]
-  };
-
-    
-    const defaultGoalProbabilitySurface: GoalProbabilitySurface = {
-    dataPerGoal: [defaultDataPerGoal],// fix the default value
-    text2: "No advice"
-  };  
-  return {defaultGoalProbabilitySurface,defaultGoals}
-}
-
-// Logic and data : Custom hook
-function useGoalProbabilitySurface (){
-
-
-    // Two possible sources of data; local storage or the default data.
-    const {defaultGoalProbabilitySurface,defaultGoals}=getDefaultData();
-    const parsedData:FullServiceAdviceContract|null=getParsedData();
-
-    const  goals:FinancialGoalResponse[]=parsedData?.goalsAndInvestementsAdvice.goals??[defaultGoals]    
-    const  goalProbabilitySurface:GoalProbabilitySurface=parsedData?.goalsAndInvestementsAdvice.goalProbabilitySurface??defaultGoalProbabilitySurface
+// Custome hook
+function useGoalProbabilitySurface({goals,goalProbabilitySurface}:TYPE1){
   
-
-
-  ///////////////////
+  
   const [selectedGoalId, setSelectedGoalId] = useState<string>(goals[0].id.toString());
 
   const getGoalData = (id: number) => {
@@ -80,28 +52,29 @@ function useGoalProbabilitySurface (){
     return Array.from(new Set(data.map(d => d.contribution))).sort((a, b) => a - b);
   };
   return{
-    selectedGoalId,
-    setSelectedGoalId,
-    getColor,
+    selectedGoalId,setSelectedGoalId,
     getContributions,
+    getColor,
     getProbability,
     getGoalData,
-    goals,
-    goalProbabilitySurface
   }
 }
 
-// rendering 
+
+// Rendering 
 export function GoalProbabilitySurface() {
 
-const {    selectedGoalId,
-    setSelectedGoalId,
-    getColor,
+
+    const  goals:FinancialGoalResponse[]=resolveData<FinancialGoalResponse[]>([defaultGoals],(data)=>data?.goalsAndInvestementsAdvice.goals);
+    const   goalProbabilitySurface:GoalProbabilitySurface=resolveData<GoalProbabilitySurface>(defaultGoalProbabilitySurface,(data)=>data?.goalsAndInvestementsAdvice.goalProbabilitySurface);
+
+    const{
+    selectedGoalId,setSelectedGoalId,
     getContributions,
+    getColor,
     getProbability,
-    getGoalData, 
-    goals,goalProbabilitySurface}=useGoalProbabilitySurface();
-  
+    getGoalData,
+  }=useGoalProbabilitySurface({goals,goalProbabilitySurface});
     return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 h-full flex flex-col">
       {/* Header */}
