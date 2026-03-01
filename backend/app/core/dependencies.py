@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status,Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
@@ -8,11 +8,6 @@ from app.models.registration.user import User
 from app.database import get_db
 
 bearer_scheme = HTTPBearer()
-
-        ###############
-########## New Import ############
-        ##############
-from fastapi import Request
 
 # to get the user info from the JWT or cookie 
 def get_current_user(

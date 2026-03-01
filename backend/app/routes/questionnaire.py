@@ -121,12 +121,7 @@ def submit_questionnaire(
 
         # 5- Return the advice to the frontend.
         return advice 
-################################################################################################
         
-
-
-
-
     except Exception as e:
         #db.rollback()
         print("ERROR:", str(e))
