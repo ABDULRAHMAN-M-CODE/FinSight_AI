@@ -16,6 +16,7 @@ from app.routes.auth import router as auth_router
 from app.routes.user_settings import router as user_settings_router
 from app.routes.questionnaire import router as questionnaire_router 
 from app.routes.demo import router as demo_router
+from app.routes.dashboard import router as dashboard_router
 # -------------------------------------------------------
 
 # Create the tables in the database
@@ -40,7 +41,7 @@ app.include_router(auth_router)
 app.include_router(user_settings_router)
 app.include_router(questionnaire_router)
 app.include_router(demo_router)
-
+app.include_router(dashboard_router)
 # main endpoint
 @app.get("/")
 def home():

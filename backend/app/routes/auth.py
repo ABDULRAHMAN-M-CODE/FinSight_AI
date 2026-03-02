@@ -1,17 +1,15 @@
-from datetime import datetime, timedelta
-
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks,Response
 from sqlalchemy.orm import Session
 
+# DB session dependency
 from app.database import get_db
+
+# import needed models
 from app.models.registration import User, EmailVerificationToken, PasswordResetToken
 
+from datetime import datetime, timedelta
 
-########## New Imports #######################
-from fastapi import Response
-
-############################################
-
+# import needed schemas for this router
 from app.schemas.auth_schemas import (
     UserRegister,
     UserLogin,
@@ -20,6 +18,7 @@ from app.schemas.auth_schemas import (
     ResetPasswordRequest,
 )
 
+# import needed utils
 from app.core.security.security import (
     hash_password,
     verify_password,
@@ -29,10 +28,10 @@ from app.core.security.security import (
     generate_email_code,
     verify_token,
 )
-
 from app.core.security.jwt import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 from app.core.utils.email_utils import send_email
 from app.core.utils.PWV_utils import validate_password
+
 
 # Auth router (register, verify email, login, reset password).
 router = APIRouter(prefix="/auth")
@@ -97,7 +96,7 @@ def register(user: UserRegister, background_tasks: BackgroundTasks, db: Session 
 @router.post("/verify-email")
 def verify_email(
     data: VerifyEmailCodeRequest,
-    response:Response,    # NEW ADDITION 
+    response:Response,   
     db: Session = Depends(get_db)
 ):
     verification = (
@@ -126,8 +125,7 @@ def verify_email(
 
     db.commit()
 
-    #### New Logic Below, frontend assumes that the user is authinticated after verification, this is a valid design choice, and much simpler  ###############
-
+    # New Logic Below, frontend assumes that the user is authinticated after verification, this is a valid design choice, and much simpler  
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
     access_token = create_access_token(
@@ -139,10 +137,7 @@ def verify_email(
         expires_delta=access_token_expires
     )
 
-
-
-    #frontend will store the following cookie so that every future request to the backend will include this cookie/token
-    # the cookie is not returned in the JSON body, that would defeate it's purpose and it is stupid.
+    # frontend will store the following cookie so that every future request to the backend will include this cookie/token
     response.set_cookie(
         key="access_token",
         value=access_token,
@@ -154,34 +149,28 @@ def verify_email(
         path="/"                    # Cookie available to entire app
     )
 
-    # Normal JSON response (token NOT exposed to frontend JS)
-    # why not to return the cookie ? That would defeat it's first purpose ! it's purpose is security, it must never be expsoed to JavaScript in the forntend
     return {
         "message": "Email verified successfully",
         "first_login": user.is_first_login
     }
 
 
-
-###############################################################################
 @router.post("/login")
-def login(user: UserLogin, db: Session = Depends(get_db)):
+def login(user: UserLogin, response: Response, db: Session = Depends(get_db)):
 
     db_user = db.query(User).filter(User.email == user.email).first()
-    # if user is not even registered in db or if he prvoided wrong password, raise Exception
+
     if not db_user or not verify_password(user.password, db_user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid Email or password")
-    # if email is registered but not verified, Tell the user to do some action
+
     if not db_user.is_email_verified:
         raise HTTPException(
             status_code=403,
-            detail="This email address is registered but not verified.\nPlease verify your email to continue.\n"
+            detail="Email not verified"
         )
 
-    #if this code is reached, Login Successful.
-
-    # code for JWT for authorization
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+
     access_token = create_access_token(
         data={
             "sub": str(db_user.id),
@@ -190,14 +179,21 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         },
         expires_delta=access_token_expires
     )
+    # set the cookie
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=False,
+        samesite="lax",
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        path="/"
+    )
 
     return {
         "message": "Login successful",
-        "access_token": access_token,
-        "token_type": "bearer",
         "first_login": db_user.is_first_login
     }
-
 
 @router.post("/forgot-password")
 def forgot_password(

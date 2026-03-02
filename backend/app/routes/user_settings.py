@@ -1,18 +1,27 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+# DB session dependency
 from app.database import get_db
+
+# import needed models for this router
 from app.models.registration import User
+
+# Authentication dependency 
 from app.core.dependencies import get_current_user
 
+# import needed schemas for this router
 from app.schemas.user_settings_schemas import (
     ChangePasswordRequest,
     ChangeNameRequest,
     ChangePhoneNumberRequest,
 )
 
+# import needed utils
 from app.core.security.security import hash_password, verify_password
 from app.core.utils.PWV_utils import validate_password
+
+
 
 # User settings router (change name, change password, change phone number).
 router = APIRouter(prefix="/UserSettings")

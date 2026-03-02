@@ -1,23 +1,25 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.orm import Session
-from decimal import Decimal
-from datetime import date, datetime
-from uuid import UUID
 
+# DB session dependency
 from app.database import get_db
+
+# Authentication dependency 
 from app.core.dependencies import get_current_user
+
+#  import the necessary schemas
 from app.schemas.questionnaire_schemas import QuestionnaireSubmit
 
-#  neccessary imports to talk to the AI
+#  necessary imports to talk to the AI
 from app.schemas.questionnarie_response_schemas import FullAiResponse
 from app.system_prompts import full_service_system_prompt
 from app.user_prompts import full_service_user_prompt
 from app.core.utils.llm_utils import call_llm
 
-# import your json_safe from utils
+# import  json_safe from utils
 from app.core.utils.json_safe_utils import json_safe
-import json
-# import needed models 
+
+# import the needed models 
 from app.models.registration import User
 from app.models.user_financial_data import UserFinancialData
 from app.models.goal import Goal
@@ -25,6 +27,7 @@ from app.models.investment_account import InvestmentAccount
 from app.models.protection_advices import ProtectionAdvices
 from app.models.debts_advices import DebtsAdvices
 from app.models.goals_and_investements_advices import GoalsAndInvestmentsAdvices
+
 
 # questionnaire router (questionnaire only).
 router = APIRouter(prefix="/onboarding")
