@@ -68,5 +68,5 @@ Important rules:
 - The textualAdvice should remain constructive and respectful in all cases.
 -Don't give Outro at all, once you finish recommending, don't give any other recommendations.
 -keep the recommendations and the suggested plan as brief as possible, don't overwhelm the user with long talk.
- 
+ -Don't give outro at all .
 """

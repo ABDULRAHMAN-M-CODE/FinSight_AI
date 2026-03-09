@@ -12,7 +12,7 @@ from app.schemas.questionnaire_schemas import QuestionnaireSubmit
 
 #  necessary imports to talk to the AI
 from app.schemas.questionnarie_response_schemas import FullAiResponse
-from app.system_prompts import full_service_system_prompt
+#from app.system_prompts import full_service_system_prompt
 from app.user_prompts import full_service_user_prompt
 from app.core.utils.llm_utils import call_llm
 
@@ -94,7 +94,7 @@ def submit_questionnaire(
             db.add(new_goal)
         # Stage all inserts
         db.flush() """ 
-
+            
         #1- Perform all the required computations and data modeling
         # first, we model the Successive value formula which is : b(k)=(b(k-1)*(1+interestRate))-p, the inputs to this equation is exlicitly  provided by user info
         # all the results of this equation or function call  must be passed to the full_service_user_prompt (or define that prompt in the same file containing  the function implmentation)
