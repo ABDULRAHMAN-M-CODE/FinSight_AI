@@ -1,4 +1,6 @@
-
+#get enviroment variables.,must always be in the top of the test file
+from dotenv import load_dotenv
+load_dotenv() 
 
 from app.core.finance.successive_value_modeling import (
     calculate_debts_payoff_trajectory_data,

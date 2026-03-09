@@ -1,3 +1,7 @@
+#get enviroment variables.,must always be in the top of the test file
+from dotenv import load_dotenv
+load_dotenv() 
+
 from app.schemas.questionnaire_schemas import QuestionnaireSubmit
 from app.core.finance.successive_value_modeling import (
     full_debts_ui_data_orchestrator,

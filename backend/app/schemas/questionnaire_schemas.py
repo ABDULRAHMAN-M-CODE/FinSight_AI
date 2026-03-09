@@ -74,7 +74,7 @@ class QuestionnaireSubmit(BaseModel):
         BaseModel (_type_): _description_ (will be written later)
     """
     
-    monthly_budget: Decimal
+    monthly_budget: Decimal #WHY DECIMAL and not float ? do u store decimal or foat in the database ? json . dumps() does not work with Decimal at all
     household_income: List[HouseholdIncomeMember] 
     investment_accounts: List[InvestmentAccountIn] 
     outstanding_debts: List[DebtIn] 

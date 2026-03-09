@@ -34,7 +34,9 @@ def call_llm(model:str ,user_context:str, system_prompt:str, response_format: Ty
     :type prompt: str
 
     :return: Actual Structured data that is returned by the LLM
-    :rtype: T; An instance of the desired outcome (instance of the specified pydantic class/ schema)  
+    :rtype: T; An instance of the desired outcome (instance of the specified pydantic class/ schema)
+    # Note : no need to define the  data shape (pydantic schema) to be sent to the LLM; reason is : user_context is always validated, thus computed data is always in the right shape (because the calculations will never happen unless the client provides data that follows the agreed upon  data contract), thus LLM always recives data in the exact shape we want
+    # Note : what is not guaranteed is the  quality  of the data that is sent to the LLM , current implmentation does not support  this   
     """
     agent = create_agent(
         model=model,

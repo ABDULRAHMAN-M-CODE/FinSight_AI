@@ -2,7 +2,11 @@
 
 
 # Pydantic models
-# Syntax source : "https://docs.pydantic.dev/latest/api/config/#pydantic.config.ConfigDict.extra
+# some Syntax source : "https://docs.pydantic.dev/latest/api/config/#pydantic.config.ConfigDict.extra , and AI 
+# mypy and pytest where used for testing , there is zero syntax erros , outcomes of  the code was verified , there is no logical erros at all 
+# what is the level o the designer of the following codes ? the design was by human , the syntax refrence is primarly  AI , google,and some documentation
+# note :AI never designed the code , the aecheticture was made by human, most of the syntax was learned druing development 
+
 from pydantic import BaseModel, ConfigDict
 from typing import Union, Literal
 from app .core.utils.llm_utils import call_llm
@@ -10,7 +14,11 @@ from app.system_prompts import generate_debts_related_advice_only
 import datetime
 from app.schemas.questionnaire_schemas import QuestionnaireSubmit,DebtIn
 from decimal import Decimal
+from typing import TypedDict
+import json
 
+
+############***Classes that are used for run time validation on the system boundary***###########################
 
 class  DebtTrajectoryPoint(BaseModel):
         monthLabel: str
@@ -26,18 +34,8 @@ class DebtsKeysConfigSchema(BaseModel):
 class TextualDebtAdvice(BaseModel):
         type: Literal["urgent" , "positive" , "neutral"]# equivelemt to z.enum(["urgent" , "positive" , "neutral"]) in frontend
         textualAdvice: str
-    
-class SuccessiveValueFormulaComputedData(BaseModel):
-    startingTotalBalance:float 
-    trajectory:list[DebtTrajectoryPoint]
-    monthsToTotalPayoff:int                         
-    estimatedPayoffDate:str   
-class UserDataAndSuccessiveValueFormulaResultsAsContext(BaseModel):
-    user_context: dict
-    precomputed_data: dict
 
-
-# Top level schema for the expected  data that will populate the  Debts UI
+# Top level schema
 class FullDebtsUiData(BaseModel):
     # those four fields will be provided as additional context to the AI and will be also returned to the frontend .
     startingTotalBalance:float 
@@ -50,13 +48,32 @@ class FullDebtsUiData(BaseModel):
     advice:TextualDebtAdvice                        
      
 
+###########**** calasses that defines data shape and  types only; no run time  validation****  ########################
+
+# Used for assembling a strctured object to be serialized into formmated JSON string
+class UserDataAndSuccessiveValueFormulaResultsAsContext(TypedDict):
+    user_context: dict
+    precomputed_data: dict
+
+class SuccessiveValueFormulaComputedData(BaseModel):
+    startingTotalBalance:float 
+    trajectory:list[DebtTrajectoryPoint]
+    monthsToTotalPayoff:int                         
+    estimatedPayoffDate:str
 
 
+#######################################
+from decimal import Decimal
 
-def get_debts_keys(data: QuestionnaireSubmit) -> list[DebtsKeysConfigSchema]:
+#this function will be passed as parameter to the json.dumps()
+
+# this function return a list of pydantic mdoels instead of TypeDict ; justification is that tthe result of this function should be returned to the frontend, thus, this is a operation related to the boundary f the system, thus it must be validated
+def get_debts_keys(
+          user_validated_data: QuestionnaireSubmit
+          ) -> list[DebtsKeysConfigSchema]:
     
         colors: list[str] = ["#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899", "#14b8a6"]
-        user_debts:list[DebtIn]=data.outstanding_debts
+        user_debts:list[DebtIn]=user_validated_data.outstanding_debts
 
         keys = []
     # Assuming 'outstanding_debts' is a list of debt objects in QuestionnaireSubmit
@@ -78,7 +95,12 @@ def get_debts_keys(data: QuestionnaireSubmit) -> list[DebtsKeysConfigSchema]:
 
 
 
-def calculate_debts_payoff_trajectory_data( balances: list[float],  interest_rates: list[float],  fixed_montlhy_payments: list[float]) -> list[DebtTrajectoryPoint]:
+# this function return  list of pydantic models instead of TypeDict ; justification is that tthe result of this function should be returned to the frontend, thus, this is a operation related to the boundary f the system, thus it must be validated
+def calculate_debts_payoff_trajectory_data( 
+          balances: list[float],  
+          interest_rates: list[float],  
+          fixed_montlhy_payments: list[float]
+          ) -> list[DebtTrajectoryPoint]:
     
     """summary of the function behavior
 
@@ -146,7 +168,13 @@ def calculate_debts_payoff_trajectory_data( balances: list[float],  interest_rat
 
 
 
-def full_debts_ui_data_orchestrator(   balances: list[float], interest_rates: list[float], fixed_montlhy_payments: list[float],data:QuestionnaireSubmit)->FullDebtsUiData:
+def full_debts_ui_data_orchestrator(
+          balances: list[float], 
+          interest_rates: list[float], 
+          fixed_montlhy_payments: list[float],
+          user_validated_data:QuestionnaireSubmit
+          )->FullDebtsUiData:
+       
        """_summary_ (later)
 
         Args:
@@ -164,52 +192,49 @@ def full_debts_ui_data_orchestrator(   balances: list[float], interest_rates: li
        startingTotalBalance:float=sum(balances)
        
        trajectory:list[DebtTrajectoryPoint]=calculate_debts_payoff_trajectory_data(balances,interest_rates,fixed_montlhy_payments)
+       
        monthsToTotalPayoff:int= len(trajectory)
        
        last_point:DebtTrajectoryPoint=trajectory[-1]
        estimatedPayoffDate:str = last_point.model_dump()["monthLabel"]  
 
        
-       debts_keys_config_schema:list[DebtsKeysConfigSchema]= get_debts_keys(data) # problem
+       debts_keys_config_schema:list[DebtsKeysConfigSchema]= get_debts_keys(user_validated_data) 
     
 
 
        
-       # genrate a textual recommendation (for the now , the advice governs the debts only)
-       from dotenv import load_dotenv
-       load_dotenv() # loads the .env file
+       # Genrate a textual recommendation (for the now , the advice governs the debts only)
        model="gpt-5-nano"
        system_prompt:str=generate_debts_related_advice_only # defines fixed instructions
        role="user"
-       
        # in contrast to the system_prompt , the following user prompt is dynamic ; it's not meant to be static.
+       #first question we are concerend abou : question we are concerend about for now: why not to inject the user_ context in the prompt it self like `${user_context}`
        prompt = "I will give you an information about my goals, investements, life insurence, household income,  my debts, and a precomputed values that describes the pay-off timeline of my debts." \
        " please give me advice, I understand nothing about finance,I'm a novice in the finance world." \
        " you ardive must tell  what I should exactly do so that I understand with least minimal mental effort." \
-       " you should mention some technical terms, but the overall advice must be very udnerstandable to me! "
-       
-  
-       
-
-       precomputed_data = SuccessiveValueFormulaComputedData(
+       " you should mention some technical terms, but the overall advice must be very udnerstandable to me! " 
+       precomputed_data = SuccessiveValueFormulaComputedData.model_construct(
             startingTotalBalance=startingTotalBalance,
             trajectory=trajectory,  
             monthsToTotalPayoff=monthsToTotalPayoff,
             estimatedPayoffDate=estimatedPayoffDate
         )
        
-       user_context=UserDataAndSuccessiveValueFormulaResultsAsContext.model_construct(
-            user_context=data.model_dump(),
-            precomputed_data=precomputed_data.model_dump()
+       import typing
+       user_context=UserDataAndSuccessiveValueFormulaResultsAsContext(
+            user_context=user_validated_data.model_dump(), 
+            precomputed_data=precomputed_data.model_dump() # mypy ignores type mismatch at rune time ; no casting happens at run time because TypeDict=dict
        )
+       
+       parsed_user_context:str=json.dumps(user_context, default=str)
+       response_format=TextualDebtAdvice
 
-       parsed_user_context:str=user_context.model_dump_json()
-      
-       response_format=TextualDebtAdvice 
+      # call_llm(model:str ,user_context:str, system_prompt:str, response_format: Type[T], role:str, prompt:str   )->T
        advice:TextualDebtAdvice=call_llm(model ,parsed_user_context, system_prompt,response_format, role,  prompt)   
        
-       
-
+    
+       #results will be validated at run time
        return   FullDebtsUiData(
                         trajectory=trajectory,
                         monthsToTotalPayoff=monthsToTotalPayoff,

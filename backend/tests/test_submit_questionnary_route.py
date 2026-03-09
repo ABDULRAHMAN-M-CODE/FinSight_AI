@@ -1,6 +1,7 @@
-# some modules needs the env file 
+
+#get enviroment variables.,must always be in the top of the test file
 from dotenv import load_dotenv
-load_dotenv() # loads the .env file
+load_dotenv() 
 # for inputs shape
 from app.schemas.questionnaire_schemas import QuestionnaireSubmit
 
