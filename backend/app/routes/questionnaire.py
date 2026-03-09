@@ -27,7 +27,11 @@ from app.models.investment_account import InvestmentAccount
 from app.models.protection_advices import ProtectionAdvices
 from app.models.debts_advices import DebtsAdvices
 from app.models.goals_and_investements_advices import GoalsAndInvestmentsAdvices
-
+from app.core.finance.successive_value_modeling import (
+    full_debts_ui_data_orchestrator,
+    FullDebtsUiData,   
+)
+from app.schemas.questionnaire_schemas import DebtIn
 
 # questionnaire router (questionnaire only).
 router = APIRouter(prefix="/onboarding")
@@ -36,24 +40,24 @@ router = APIRouter(prefix="/onboarding")
 @router.post("/questionnaire", status_code=status.HTTP_201_CREATED)
 def submit_questionnaire(
      data: QuestionnaireSubmit,
-     current_user: User = Depends(get_current_user), 
-     db: Session = Depends(get_db),
-):
+     #current_user: User = Depends(get_current_user), 
+     #db: Session = Depends(get_db),
+)->FullDebtsUiData:
     try:
         print("recived data successfully")
 
         # check if user already filled finance data
         
-        if not current_user.is_first_login :
+        """if not current_user.is_first_login :
             print("if block was executed")
             raise HTTPException(
                 status_code=400,
                 detail="user already filled finance data ",
-            )
+            )"""
 
         # 1- Store all submitted user's info "data" in the  appropriate database tables.
 
-        # Store User Financial Data
+        """# Store User Financial Data
         total_income = sum(member.annual_income for member in data.household_income)
         user_financial_data = UserFinancialData(
             user_id=current_user.id,
@@ -88,24 +92,29 @@ def submit_questionnaire(
                 deadline=goal.deadline,
             )
             db.add(new_goal)
+        # Stage all inserts
+        db.flush() """ 
 
-        db.flush()  # Stage all inserts
+        #1- Perform all the required computations and data modeling
+        # first, we model the Successive value formula which is : b(k)=(b(k-1)*(1+interestRate))-p, the inputs to this equation is exlicitly  provided by user info
+        # all the results of this equation or function call  must be passed to the full_service_user_prompt (or define that prompt in the same file containing  the function implmentation)
+        ##### call the function here #####
+#############################################################
 
-        # 2- call the LLM and store it's result in varaible.
-        model="gpt-5-nano"
-        user_context = data.model_dump_json()#LLM is native in dealing with strings
-        system_prompt=full_service_system_prompt
-        response_format=FullAiResponse
-        role="user"
-        prompt = full_service_user_prompt
+      
         
-        advice=call_llm(model ,user_context, system_prompt,response_format, role,  prompt)    
-    
-        # 3- Store the AI result in the Database.
+        debts:list[DebtIn]=data.outstanding_debts
+        balances = [d.balance for d in debts]
+        interest_rates = [d.interest_rate for d in debts]
+        fixed_monthly_payments = [d.monthly_payment for d in debts]
+        debts_ui_data=full_debts_ui_data_orchestrator( balances ,interest_rates, fixed_monthly_payments,data)
 
-        # Store AI advice
         
-        db.add(ProtectionAdvices(
+        
+        """
+            
+            # 3- Store the AI result in the Database.
+            db.add(ProtectionAdvices(
             user_id=current_user.id,
             protection_advice=json_safe(advice.protectionAdvice.model_dump())
         ))
@@ -120,10 +129,10 @@ def submit_questionnaire(
 
         # 4- Mark first login as completed
         current_user.is_first_login = False
-        db.commit()
+        db.commit()"""
 
         # 5- Return the advice to the frontend.
-        return advice 
+        return debts_ui_data
         
     except Exception as e:
         #db.rollback()

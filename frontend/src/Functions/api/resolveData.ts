@@ -7,7 +7,7 @@ import { getParsedData } from "./reusable_functions/getParsedData";
  * @param   ZT                     zod object schema definition for the whole stored object in the local storage, (e.g. typeof FullAdviceSchema, typeof LimitedAdviceSchema, etc.)
  * @param localStorageKey          String that specifies  which exact data to retrive from the local storage, (e.g. "fullAdvice", "limitedAdvice", etc.)
  * @param schema                   Zod Schema that specifies the expected shape of the stored data, used internally for run-time validation, (e.g. "FullAdviceSchema", "LimitedAdviceSchema")
- * @param defaultParsedData        Specifies fallback if data does not exist in local storage or if run time validation fails 
+ * @param defaultData        Specifies fallback if data does not exist in local storage or if run time validation fails 
  * @param extractor                extracts specific data of type "T|null|undefined" from the overall stored data (the parsed object);Specifies exact sub-data or fields to be extracted from the overall data
  * @returns                        Either a stored, meaningful data or a fallback,default data. 
  */

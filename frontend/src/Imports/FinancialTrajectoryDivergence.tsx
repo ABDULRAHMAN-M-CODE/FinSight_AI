@@ -99,7 +99,7 @@ export function FinancialTrajectoryDivergence() {
 
       {/* Chart */}
       <div className="flex-1 w-full min-h-[300px] mb-6 relative">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={300}>
           <ComposedChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
             <defs>
               <linearGradient id="colorDivergence" x1="0" y1="0" x2="0" y2="1">

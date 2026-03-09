@@ -7,6 +7,7 @@ export  const FetchData = async ( {payload, url}: FetchDataProps)=>{
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials:"include",
+        
         body: JSON.stringify(payload),
       });
 

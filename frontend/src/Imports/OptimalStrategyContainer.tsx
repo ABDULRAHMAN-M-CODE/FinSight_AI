@@ -14,12 +14,14 @@ const typeIcons = {
 
 import { defaultOptimalStrategy } from '../utils/constants';
 import { resolveData } from '../Functions/api/resolveData';
+import { FullAdviceSchema } from '../Functions/api/reusable_functions/getFullAdviceSchema';
 
 
 export function OptimalStrategyContainer() {
 
 
-  const  optimalStrategy:OptimalStrategy=resolveData<OptimalStrategy>(defaultOptimalStrategy,(data)=>data?.goalsAndInvestementsAdvice.optimalStrategy);
+  const  optimalStrategy:OptimalStrategy=resolveData<OptimalStrategy, typeof FullAdviceSchema>("fullAdvice",FullAdviceSchema,defaultOptimalStrategy,(data)=>data?.goalsAndInvestementsAdvice.optimalStrategy);
+  
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
       {/* Header */}

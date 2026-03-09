@@ -80,7 +80,7 @@ export function ProtectionGapChart({ data }: ProtectionGapChartProps) {
 
         {/* Chart */}
         <div className="h-80">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height={300}>
             <AreaChart
               data={data.monthlyData}
               margin={{ top: 10, right: 30, left: 0, bottom: 0 }}

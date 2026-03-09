@@ -1,1 +1,2 @@
 full_service_user_prompt = "Analyze the following financial context and provide complete, actionable, and implementable advice.Perform all calculations using your internal logic and fallback assumptions."
+

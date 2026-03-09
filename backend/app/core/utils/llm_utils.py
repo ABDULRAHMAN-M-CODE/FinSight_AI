@@ -54,8 +54,9 @@ def call_llm(model:str ,user_context:str, system_prompt:str, response_format: Ty
         ]
     })
 
-    # ToolStrategy always returns "structured_response"
-    return response ["structured_response"] 
-
+    # ToolStrategy always returns "structured_response" , see documentation !
+    typed_response:T=response ["structured_response"]
+    return  typed_response
+    
     
 

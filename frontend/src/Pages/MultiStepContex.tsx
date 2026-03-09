@@ -20,8 +20,11 @@ import { type InvestmentAccount } from "../Types/InvestmentAccount";
 import type { Debt } from "../Types/Debt";
 import { type Goal } from "../Types/Goal";
 import { type InsuranceInfo } from "../Types/InsuranceInfo";
-import { type FullServiceAdviceContract } from "../Types/FullServiceAdviceContract";
 
+//Needed later
+//import { type FullServiceAdviceContract } from "../Types/FullServiceAdviceContract";
+
+import { type DebtsAdviceUiDataShape } from "../Components/MultiDebtPayoffTrajectory";
 // functions
 import { FetchData } from "../Functions/api/fetchData";
 import { extractAndSaveDataToLocalStorage } from "../Functions/api/reusable_functions/extractAndSaveDataToLocalStorage ";
@@ -144,7 +147,7 @@ function useMultiStepContex(){
             // Problem 2 : after making this function work, replace the try catch block with already made function, maybe it's the 'handleDemoSubmit'
             try {
 
-                console.log("user's info which used as context for the LLM is : ")
+                console.log("user's info which used as context for the LLM  and to be stored in the database is  :\n ")
                 console.log(payload)
                 
                 // send a request
@@ -173,9 +176,13 @@ function useMultiStepContex(){
                 console.log("recived data from backend")
                 
                 
-                const localStorageKey="fullAdvice"
-                await extractAndSaveDataToLocalStorage<FullServiceAdviceContract>({response,localStorageKey});
+                //Change later
+                //const localStorageKey="fullAdvice"
+                //await extractAndSaveDataToLocalStorage<FullServiceAdviceContract>({response,localStorageKey});
+
                 
+                const localStorageKey="debtsUiData"
+                await extractAndSaveDataToLocalStorage<DebtsAdviceUiDataShape>({response,localStorageKey});                
                 
                 navigate("/PostMultiStepContext");
 

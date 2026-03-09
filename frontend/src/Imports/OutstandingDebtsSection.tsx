@@ -15,8 +15,7 @@ interface OutstandingDebtsSectionProps {
 export const OutstandingDebtsSection: React.FC<OutstandingDebtsSectionProps> = ({ 
   debts, 
   onUpdate 
-}) => {
-  const updateDebt = (id: number, field: keyof Debt, value: string) => {
+}) => { const updateDebt = (id: number, field: keyof Debt, value: string|number) => {
     const updatedDebts = debts.map(debt => 
       debt.id === id ? { ...debt, [field]: value } : debt
     );
@@ -69,12 +68,14 @@ export const OutstandingDebtsSection: React.FC<OutstandingDebtsSectionProps> = (
             )}
             <div className="space-y-2">
               <Label htmlFor={`debt-type-${debt.id}`}>Debt Type</Label>
+              
+              {/**  problem : make this select element instead of input */}
               <Input
                 id={`debt-type-${debt.id}`}
                 pattern="[A-Za-z\s]+"
                 placeholder="e.g., Mortgage, Student Loan, Credit Card"
                 value={debt.type}
-                onChange={(e) => updateDebt(debt.id, 'type', e.target.value)}
+                onChange={(e) => updateDebt(debt.id, 'type',e.target.value)}
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -85,7 +86,7 @@ export const OutstandingDebtsSection: React.FC<OutstandingDebtsSectionProps> = (
                   type='number'
                   placeholder="$350,000"
                   value={debt.balance}
-                  onChange={(e) => updateDebt(debt.id, 'balance', e.target.value)}
+                  onChange={(e) => updateDebt(debt.id, 'balance', Number(e.target.value)) }
                 />
               </div>
               <div className="space-y-2">
@@ -94,8 +95,9 @@ export const OutstandingDebtsSection: React.FC<OutstandingDebtsSectionProps> = (
                   id={`debt-payment-${debt.id}`}
                   type='number'
                   placeholder="$2,100"
+                  min={(debt.balance*(debt.interest_rate))+1} /** it's a rule that governs the value of the monthly_payment  to ensure the debt is paidoff eventually */
                   value={debt.monthly_payment}
-                  onChange={(e) => updateDebt(debt.id, 'monthly_payment', e.target.value)}
+                  onChange={(e) => updateDebt(debt.id, 'monthly_payment', Number(e.target.value))}
                 />
               </div>
               <div className="space-y-2">
@@ -103,9 +105,12 @@ export const OutstandingDebtsSection: React.FC<OutstandingDebtsSectionProps> = (
                 <Input
                   id={`debt-rate-${debt.id}`}
                   type='number'
-                  placeholder="3.5%"
+                  min={0}
+                  max={1}
+                  step={0.001}
+                  placeholder="0.001, 0.002,etc..."
                   value={debt.interest_rate}
-                  onChange={(e) => updateDebt(debt.id, 'interest_rate', e.target.value)}
+                  onChange={(e) => updateDebt(debt.id, 'interest_rate', Number(e.target.value))}
                 />
               </div>
             </div>

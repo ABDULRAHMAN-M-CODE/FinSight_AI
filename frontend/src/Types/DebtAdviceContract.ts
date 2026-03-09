@@ -18,14 +18,19 @@ export type DebtData= {
 
 export type  RiskMetrics ={
   debtToIncomeRatio: number;
-  highInterestDebtRatio: number;
-  monthlyDebtBurden: number;
+  highInterestDebtRatio: number;  
+  
+  monthlyDebtBurden: number;// not used  in my component yet
+  
   estimatedDebtFreeDate: string;
-  totalInterestSavings: number;
+  
+  totalInterestSavings: number;// not used in my component yet
+  
   monthsSaved: number;
+  
 }
 
-// final contract
+// Top level  expected shape for the debt-related advice data that comes from the backend
 export type  DebtAdviceContract= {
   monthlyProjections: MonthlyProjection[];
   debts: DebtData[];

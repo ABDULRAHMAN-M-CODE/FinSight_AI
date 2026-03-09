@@ -1,13 +1,20 @@
+
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { AlertTriangle, TrendingDown, Shield } from 'lucide-react';
 
 
 // Types, data shape contracts, or interfaces
 import {  type DebtAdviceContract } from '../Types/DebtAdviceContract';
-
-
+import { type DebtData } from '../Types/DebtAdviceContract';
+import { type RiskMetrics } from '../Types/DebtAdviceContract';
 // the name of this function is misleading, as it's not really a custome hook, does not contain useStates
-function useDebtRiskVisualization({debts, riskMetrics }: DebtAdviceContract){
+type CUSTOMETYPE={
+  debts:DebtData[];
+  riskMetrics:RiskMetrics
+}
+
+// Logic 
+function useDebtRiskVisualization({debts, riskMetrics}: CUSTOMETYPE){
  
  
  
@@ -40,6 +47,7 @@ function useDebtRiskVisualization({debts, riskMetrics }: DebtAdviceContract){
 
 
 //Rendering
+// only question to Gemini : are the DTI equation and the Succesive Value formula are enough to feed data to the following UI component ? 
 export function DebtRiskVisualization({ monthlyProjections, debts, riskMetrics }: DebtAdviceContract) {
    
     const {    
@@ -50,16 +58,17 @@ export function DebtRiskVisualization({ monthlyProjections, debts, riskMetrics }
     dtiStatus,
     dtiColor,
     currentDTI,
-    highInterestDebts}=useDebtRiskVisualization({ monthlyProjections, debts, riskMetrics });
+    highInterestDebts}=useDebtRiskVisualization({debts, riskMetrics });
 
-
+      
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
       <div className="mb-6">
-        <h2 className="text-gray-900 mb-4">Debt Risk Stress Analysis</h2>
+        {/**<h2 className="text-gray-900 mb-4">Debt Risk Stress Analysis</h2> */}
+        
         
         {/* Risk Concentration Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 border-4 border-solid border-red-500">
           <div className={`bg-${dtiColor}-50 border border-${dtiColor}-200 rounded-lg p-4`}>
             <div className="flex items-start justify-between">
               <div>
@@ -98,13 +107,24 @@ export function DebtRiskVisualization({ monthlyProjections, debts, riskMetrics }
               <TrendingDown className="text-blue-500" size={24} />
             </div>
           </div>
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm text-emerald-600 mb-1">Monthly Debt Burden</p>
+                <p className="text-2xl font-semibold text-emerald-900">
+                  ${riskMetrics.monthlyDebtBurden.toLocaleString()}
+                </p>
+              </div>
+              <TrendingDown className="text-emerald-500" size={24} />
+            </div>
+          </div>
         </div>
 
         {/* Debt Burden Trajectory Chart */}
         <div className="mb-6">
           <h3 className="font-semibold text-gray-900 mb-3">Debt Burden Reduction Trajectory</h3>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-80 w-full">
+            <ResponsiveContainer width="100%" height={300}>
               <AreaChart
                 data={monthlyProjections}
                 margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -171,8 +191,8 @@ export function DebtRiskVisualization({ monthlyProjections, debts, riskMetrics }
         {/* DTI Ratio Over Time */}
         <div className="mb-6">
           <h3 className="font-semibold text-gray-900 mb-3">Debt-to-Income Ratio Stress Test</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height={300}>
               <LineChart
                 data={monthlyProjections}
                 margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
@@ -266,38 +286,32 @@ export function DebtRiskVisualization({ monthlyProjections, debts, riskMetrics }
               <Shield className="text-green-500" size={18} />
               Risk Mitigation Timeline
             </h4>
+            
             <div className="space-y-3">
               <div className="flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5" />
+                <div className="w-2 h-2 rounded-full bg-green-500 mt-1.5" />
                 <div className="flex-1">
-                  <p className="text-sm text-gray-900"><strong>Month 18:</strong> High-interest debt reduced by 80%</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5" />
-                <div className="flex-1">
-                  <p className="text-sm text-gray-900"><strong>Month 24:</strong> All high-interest debt eliminated</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-2">
-                <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5" />
-                <div className="flex-1">
-                  <p className="text-sm text-gray-900"><strong>Month 36:</strong> DTI ratio drops below 20% (healthy range)</p>
+                  <p className="text-sm text-gray-900">
+                    <strong>Debt Free Date:</strong> {riskMetrics.estimatedDebtFreeDate}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    You are saving {riskMetrics.monthsSaved} months with this plan.
+                  </p>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
         {/* Recommendations Derived from Graph */}
         <div className="space-y-3">
-          <h4 className="font-semibold text-gray-900">Risk-Based Recommendations</h4>
+          <h4 className="font-semibold text-gray-900">Recommendations</h4>
           
           {currentDTI > 0.43 && (
             <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-sm text-red-900">
-                <strong>Critical Risk:</strong> Your DTI ratio of {formatPercent(currentDTI)} exceeds the critical threshold. 
-                Prioritize high-interest debt reduction immediately to avoid financial stress and potential default risk.
+                AI advice  
               </p>
             </div>
           )}
@@ -305,18 +319,14 @@ export function DebtRiskVisualization({ monthlyProjections, debts, riskMetrics }
           {riskMetrics.highInterestDebtRatio > 0.3 && (
             <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
               <p className="text-sm text-amber-900">
-                <strong>High-Interest Concentration:</strong> {formatPercent(riskMetrics.highInterestDebtRatio)} of your debt 
-                carries high interest rates (≥15%). This creates structural weakness—eliminate these debts first to reduce 
-                monthly interest costs by ${(monthlyProjections[0]?.interestCost * 0.65).toFixed(0)}/month.
+                AI advice
               </p>
             </div>
           )}
 
           <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <p className="text-sm text-blue-900">
-              <strong>Trajectory Analysis:</strong> Following the optimized payoff sequence reduces your DTI from {formatPercent(currentDTI)} to 
-              {formatPercent(monthlyProjections[monthlyProjections.length - 1]?.debtToIncome)} within {monthlyProjections[monthlyProjections.length - 1]?.month} months, 
-              eliminating high-interest debt exposure entirely by month 24.
+                AI advice
             </p>
           </div>
         </div>

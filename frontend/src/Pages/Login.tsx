@@ -6,7 +6,7 @@
 import { useState } from "react";
 import svgPaths from "../Imports/svg-i38a9njwbx";
 import { Loader2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 type LoginState = "default" | "filled" | "loading" | "error";
@@ -35,36 +35,42 @@ function  useLoginPageLogic(){
     const response = await fetch("http://127.0.0.1:8000/auth/login", { 
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials:"include",
       body: JSON.stringify({
+          
         email: email.trim().toLowerCase(),
         password: password
       }),
     });
+    const data = await response.json();
 
-
-    if (!response.ok) { // if the if statment is executed → unsuccessful login
-      const data = await response.json();
+    if (!response.ok) { 
+      
         setLoginState("error");// can't set error massege  if  not in the error state.
         setErrorMessage( data.detail );
         return;
     }
-        // succesfull Login
-        //store access token, clear Login and Redirect user to the Dashboard
-        const data = await response.json();
-        localStorage.setItem("access_token", data.access_token);// who will use this ? answer is : 
+
+
+        // 
+        //********** GET ALL THE RELEVANT USER'S INFO AND SET THEM IN LOCAL STORAGE. ********************************
+           // Data retrivel for specific user, I  may need another logic here
+           // My Logic will be : Define a function in another file and import it , that function will handle retriving the data and storing it in the local storage, thus, before the MainLayout renders,  that means other UI's or functions  or compoments can access the shared local storage ,the data will be ready, the Question is :  Which design pattern is this based on the philosophy of softawre design ? 
+            //localStorage.setItem("data",data)
+          //**********************  
+
+          // Clear some stuff before Navigation.
         setLoginState("default");
-        navigate("/dashboard"); 
-      
-      
-    }catch{ // if Can't connect to the backend
-      setErrorMessage( "Network error. Try again." );
+
+
+        navigate("/MainLayout");      
+    }catch(error){ 
+      console.log(error) // for debugging
+      setLoginState("error")
+      setErrorMessage( "Network error , please try again later." );
     }
 
   };
-
-
-
-
 
   return {
   

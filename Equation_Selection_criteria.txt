@@ -1,0 +1,25 @@
+
+
+
+
+
+
+
+
+2-in VSCODE ; ensure equations provides all the desired numbers .
+
+- ensure the UI component consumes all the data (nothing is static)
+
+
+4-  in Google; Get a reference  of the equation .
+
+5- is it Complex or Simple equation ? 
+
+
+5- in Google&& chatGpt ; ensure equation is logical.
+
+
+6- in chatGPT;****first-principles explanation***** && ***problem ,output, input, mechanism explanation****
+
+ 
+ 

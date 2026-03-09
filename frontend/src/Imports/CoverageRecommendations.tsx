@@ -11,6 +11,7 @@ export type  Recommendation= {
   reason: string;
   estimatedCost: string;
 }
+
 // Logic
 function useCoverageRecommendations({ recommendations }: {recommendations: Recommendation[]}){
   const sortedRecommendations = [...recommendations].sort((a, b) => {

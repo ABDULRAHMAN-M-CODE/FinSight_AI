@@ -1,0 +1,110 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/140.0.7339.249 Electron/38.7.0 Safari/537.36" version="29.0.3">
+  <diagram name="Page-1" id="JzCDK74CXw3QVxYliztU">
+    <mxGraphModel dx="6180" dy="3580" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-1" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="340" y="220" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="KCHz7h-SxDL_h4PmOfOz-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="435" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-2" value="Service Idea" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="340" y="110" width="190" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="KCHz7h-SxDL_h4PmOfOz-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="434.53846153846143" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-8" value="Equation" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="340" y="360" width="190" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="KCHz7h-SxDL_h4PmOfOz-10">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="670" y="650" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-10" value="Design UI" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="340" y="650" width="190" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" target="KCHz7h-SxDL_h4PmOfOz-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1190" y="72" as="targetPoint" />
+            <mxPoint x="435" y="1402" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="435" y="1470" />
+              <mxPoint x="1230" y="1470" />
+              <mxPoint x="1230" y="72" />
+              <mxPoint x="435" y="72" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-11" value="Coding phase (both backend and frontend)" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="340" y="1230" width="190" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-13" value="&lt;font style=&quot;color: rgb(255, 51, 51);&quot;&gt;Note : the Chart should be Dumb : all the numbers are calculated in the backend, the chart that models the&amp;nbsp; equation&amp;nbsp; is just consuming data, it does not produce data at all , as a result , many calculations will be performed in the backend; I will do these calculations because I understand the chart&amp;nbsp;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="690" y="620" width="330" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-14" value="&lt;font style=&quot;font-size: 50px; color: rgb(91, 63, 71);&quot;&gt;Example&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-2140" y="-300" width="470" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="KCHz7h-SxDL_h4PmOfOz-15">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320.00000000000045" y="210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-15" value="&lt;font style=&quot;color: rgb(255, 0, 0); font-size: 50px;&quot;&gt;Search for Idea of financial Advice&amp;nbsp; or service to give to the user based on his inputs only&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-960" width="890" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="KCHz7h-SxDL_h4PmOfOz-18">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-18" value="&lt;font style=&quot;color: rgb(255, 0, 0); font-size: 50px;&quot;&gt;represent the Equation as a chart or UI that contains chart and other elements : represent the Equation outcome as a chart , add simple text that explains the chart, then provide AI recommendation strategy or Advice&amp;nbsp;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-1139" y="615" width="1240" height="366" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-20" value="Data Contract between frontend and backend" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="340" y="940" width="190" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-23" value="&lt;font style=&quot;color: rgb(255, 0, 255);&quot;&gt;&lt;span style=&quot;font-size: 50px;&quot;&gt;Methodology for each equation&lt;/span&gt;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="101" y="-330" width="600" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-24" value="&lt;font style=&quot;color: rgb(255, 51, 51);&quot;&gt;Once we Find&amp;nbsp; &amp;nbsp;the equation that implments that Idea, we immiaditly go to the following Step ! , we do not want to forget our understanding about the equation , and we want make progress !&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="670" y="410" width="310" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="KCHz7h-SxDL_h4PmOfOz-29" target="KCHz7h-SxDL_h4PmOfOz-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-29" value="&lt;font style=&quot;color: rgb(255, 0, 0); font-size: 50px;&quot;&gt;Search for the financial equation that implments t or models his Idea&amp;nbsp;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-900" y="320" width="850" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-32" value="&lt;font color=&quot;#ff0000&quot;&gt;&lt;span style=&quot;font-size: 50px;&quot;&gt;Run time validation : Pydantic, Zod, and TypeScript interfaces as usual.&lt;/span&gt;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-1070" y="989" width="1240" height="366" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-33" value="&lt;font color=&quot;#ff0000&quot;&gt;&lt;span style=&quot;font-size: 50px;&quot;&gt;CODING IS ALWAYS THE LAST PART (SHOULD BE EASY)&lt;/span&gt;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-1110" y="1370" width="1240" height="366" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-34" value="&lt;font style=&quot;color: rgb(0, 0, 255); font-size: 100px;&quot;&gt;CODING IS NEVER THE FIRST PART&amp;nbsp; (مثل ما اتفقنا )&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-1094" y="-860" width="1240" height="466" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-36" value="&lt;font style=&quot;font-size: 50px; color: rgb(91, 63, 71);&quot;&gt;First : Explain what I did today&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-2160" y="-730" width="470" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-37" value="&lt;font style=&quot;font-size: 50px;&quot;&gt;Tell him the IDea&lt;/font&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="-2000" y="-10" width="240" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-38" value="&lt;div&gt;&lt;span style=&quot;font-size: 50px;&quot;&gt;Show him the equation&lt;/span&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="-2000" y="360" width="240" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="KCHz7h-SxDL_h4PmOfOz-39" value="&lt;font style=&quot;color: rgb(0, 0, 255); font-size: 100px;&quot;&gt;OPEN TO TO DO APP TO TELL HIM OTHER STUFF&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="810" y="-650" width="1240" height="466" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
