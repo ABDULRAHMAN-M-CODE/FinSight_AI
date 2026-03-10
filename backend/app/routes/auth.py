@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks,Response
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks,Request,Response
 from sqlalchemy.orm import Session
 
 # DB session dependency
@@ -32,13 +32,16 @@ from app.core.security.jwt import create_access_token, ACCESS_TOKEN_EXPIRE_MINUT
 from app.core.utils.email_utils import send_email
 from app.core.utils.PWV_utils import validate_password
 
+# import limiter -------------------------------------------------------
+from app.core.security.limiter import limiter
 
 # Auth router (register, verify email, login, reset password).
 router = APIRouter(prefix="/auth")
 
 
 @router.post("/register")
-def register(user: UserRegister, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+@limiter.limit("3/minute")  # limit registration attempts
+def register(user: UserRegister, background_tasks: BackgroundTasks, request: Request, db: Session = Depends(get_db)):
 
     # check if the two passwords are the same
     if user.password != user.confirm_password:
@@ -156,7 +159,8 @@ def verify_email(
 
 
 @router.post("/login")
-def login(user: UserLogin, response: Response, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")  # limit login attempts per IP
+def login(user: UserLogin, response: Response,request: Request, db: Session = Depends(get_db)):
 
     db_user = db.query(User).filter(User.email == user.email).first()
 
@@ -196,9 +200,11 @@ def login(user: UserLogin, response: Response, db: Session = Depends(get_db)):
     }
 
 @router.post("/forgot-password")
+@limiter.limit("3/minute")  # limit registration attempts
 def forgot_password(
     data: ForgotPasswordRequest,
     background_tasks: BackgroundTasks,
+    request: Request,
     db: Session = Depends(get_db)
 ):
     user = db.query(User).filter(User.email == data.email).first()

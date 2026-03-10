@@ -16,12 +16,19 @@ from app.routes.demo import router as demo_router
 from app.routes.dashboard import router as dashboard_router
 # -------------------------------------------------------
 
+# import limiter -------------------------------------------------------
+from app.core.security.limiter import init_limiter
+# -------------------------------------------------------
+
 # Create the tables in the database
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="FinSight_AI")
 
-# Create middlerware to allow access for frontend
+# Initialize SlowAPI limiter
+init_limiter(app)
+
+# Create middleware to allow access for frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -39,6 +46,7 @@ app.include_router(user_settings_router)
 app.include_router(questionnaire_router)
 app.include_router(demo_router)
 app.include_router(dashboard_router)
+
 # main endpoint
 @app.get("/")
 def home():

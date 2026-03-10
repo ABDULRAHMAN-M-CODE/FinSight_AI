@@ -95,7 +95,6 @@ zstandard==0.25.0
 python-jose==3.5.0
 passlib==1.7.4
 langchain-openai==1.1.9
-
-#### New requirements added  at  (3/8/2026) ######
 mypy==1.19.1
 pytest==9.0.2
+slowapi==0.1.9
