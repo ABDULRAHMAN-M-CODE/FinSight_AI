@@ -7,10 +7,11 @@ from app.database import get_db
 # Authentication dependency 
 from app.core.dependencies import get_current_user
 
-# the response schema for dashboard
+# import needed models and schemas for dashboard
 from app.schemas.dashboard_schemas import DashboardSummaryResponse
-
-# SQLAlchemy User model
+from app.models.debts_metrics import DebtMetrics
+from app.models.debts_advices import DebtsAdvices
+from app.core.finance.successive_value_modeling import FullDebtsUiData
 from app.models.registration import User
 
 
@@ -42,9 +43,41 @@ def get_main_dashboard(
             detail="User did not fill finance data"
         )
 
+    # get stored metrics
+    metrics_record = (
+        db.query(DebtMetrics)
+        .filter(DebtMetrics.user_id == current_user.id)
+        .order_by(DebtMetrics.created_at.desc())
+        .first()
+    )
+
+    if not metrics_record:
+        raise HTTPException(
+            status_code=404,
+            detail="Debt metrics not found"
+        )
+
+    # get stored advice
+    advice_record = (
+        db.query(DebtsAdvices)
+        .filter(DebtsAdvices.user_id == current_user.id)
+        .order_by(DebtsAdvices.created_at.desc())
+        .first()
+    )
+
+    if not advice_record:
+        raise HTTPException(
+            status_code=404,
+            detail="Debt advice not found"
+        )
+
+    # combine metrics with advice to reconstruct FullDebtsUiData
+    full_data_dict = metrics_record.metrics.copy()
+    full_data_dict["advice"] = advice_record.debts_advice
+
+    full_debts_ui_data = FullDebtsUiData(**full_data_dict)
+
     # Build and return dashboard summary response
     return DashboardSummaryResponse(
-        protection_advices=current_user.protection_advices,
-        debts_advices=current_user.debts_advices,
-        goals_and_investments_advices=current_user.goals_and_investments_advices,
+        fullDebtsUiData=full_debts_ui_data
     )

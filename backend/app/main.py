@@ -8,10 +8,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
 
-# import database models (table models) -------------------------------------------------
-# UNUSED IMPORTS ???? WHY ????
-from app.models.registration import user, email_verification_token, password_reset_token
-from app.models import goal, investment_account, user_financial_data, debts_advices, protection_advices, goals_and_investements_advices
 # import routers -------------------------------------------------------
 from app.routes.auth import router as auth_router
 from app.routes.user_settings import router as user_settings_router

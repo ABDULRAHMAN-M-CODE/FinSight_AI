@@ -38,6 +38,11 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan"
     )
+    debt_metrics = relationship(
+    "DebtMetrics",
+    back_populates="user",
+    cascade="all, delete"
+    )
     protection_advices = relationship(
         "ProtectionAdvices",
         back_populates="user",

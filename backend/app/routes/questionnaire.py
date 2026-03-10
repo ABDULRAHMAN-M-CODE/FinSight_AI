@@ -27,6 +27,7 @@ from app.models.investment_account import InvestmentAccount
 from app.models.protection_advices import ProtectionAdvices
 from app.models.debts_advices import DebtsAdvices
 from app.models.goals_and_investements_advices import GoalsAndInvestmentsAdvices
+from app.models.debts_metrics import DebtMetrics
 from app.core.finance.successive_value_modeling import (
     full_debts_ui_data_orchestrator,
     FullDebtsUiData,   
@@ -40,24 +41,24 @@ router = APIRouter(prefix="/onboarding")
 @router.post("/questionnaire", status_code=status.HTTP_201_CREATED)
 def submit_questionnaire(
      data: QuestionnaireSubmit,
-     #current_user: User = Depends(get_current_user), 
-     #db: Session = Depends(get_db),
+     current_user: User = Depends(get_current_user), 
+     db: Session = Depends(get_db),
 )->FullDebtsUiData:
     try:
         print("recived data successfully")
 
         # check if user already filled finance data
         
-        """if not current_user.is_first_login :
+        if not current_user.is_first_login :
             print("if block was executed")
             raise HTTPException(
                 status_code=400,
                 detail="user already filled finance data ",
-            )"""
+            )
 
         # 1- Store all submitted user's info "data" in the  appropriate database tables.
 
-        """# Store User Financial Data
+        # Store User Financial Data
         total_income = sum(member.annual_income for member in data.household_income)
         user_financial_data = UserFinancialData(
             user_id=current_user.id,
@@ -92,17 +93,13 @@ def submit_questionnaire(
                 deadline=goal.deadline,
             )
             db.add(new_goal)
-        # Stage all inserts
-        db.flush() """ 
+  
+        db.flush() 
             
-        #1- Perform all the required computations and data modeling
+        # 2- Perform all the required computations and data modeling
         # first, we model the Successive value formula which is : b(k)=(b(k-1)*(1+interestRate))-p, the inputs to this equation is exlicitly  provided by user info
         # all the results of this equation or function call  must be passed to the full_service_user_prompt (or define that prompt in the same file containing  the function implmentation)
-        ##### call the function here #####
-#############################################################
 
-      
-        
         debts:list[DebtIn]=data.outstanding_debts
         balances = [d.balance for d in debts]
         interest_rates = [d.interest_rate for d in debts]
@@ -110,32 +107,27 @@ def submit_questionnaire(
         debts_ui_data=full_debts_ui_data_orchestrator( balances ,interest_rates, fixed_monthly_payments,data)
 
         
-        
-        """
-            
-            # 3- Store the AI result in the Database.
-            db.add(ProtectionAdvices(
-            user_id=current_user.id,
-            protection_advice=json_safe(advice.protectionAdvice.model_dump())
-        ))
+        # 3- Store the AI results in the Database.
         db.add(DebtsAdvices(
             user_id=current_user.id,
-            debts_advice=json_safe(advice.debtsAdvice.model_dump())
+            debts_advice=json_safe(debts_ui_data.advice.model_dump())
         ))
-        db.add(GoalsAndInvestmentsAdvices(
-            user_id=current_user.id,
-            advice=json_safe(advice.goalsAndInvestementsAdvice.model_dump())
+        db.add(
+            DebtMetrics(
+                user_id=current_user.id,
+                metrics=json_safe(
+                    debts_ui_data.model_dump(exclude={"advice"}))
         ))
-
+        
         # 4- Mark first login as completed
         current_user.is_first_login = False
-        db.commit()"""
+        db.commit()
 
         # 5- Return the advice to the frontend.
         return debts_ui_data
         
     except Exception as e:
-        #db.rollback()
+        db.rollback()
         print("ERROR:", str(e))
         raise HTTPException(
             status_code=500,
