@@ -1,11 +1,11 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/140.0.7339.249 Electron/38.7.0 Safari/537.36" version="29.0.3">
   <diagram name="Page-1" id="69WF2wo0w0bIwVJTFwkI">
-    <mxGraphModel dx="13340" dy="9907" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="0" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="23020" dy="16520" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="0" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="Kz5jj_GifknlN1pNBJkx-5" value="&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 255); font-size: 50px;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;span style=&quot;color: rgb(0, 0, 255); font-size: 50px;&quot;&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 255); font-size: 50px;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 255); font-size: 50px;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;1-Resource &quot; Research paper and investopedia website .&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 255); font-size: 50px;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 255); font-size: 50px;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 255); font-size: 50px;&quot;&gt;2-Implmentation&amp;nbsp; is definitely&amp;nbsp; not be hard ; python has libraries .&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 255); font-size: 50px;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 255); font-size: 50px;&quot;&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 255); font-size: 50px;&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/div&gt;" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.text.stickyNote2;fontColor=#666666;mainText=;fontSize=17;whiteSpace=wrap;fillColor=#ffffcc;strokeColor=#F62E00;" parent="1" vertex="1">
-          <mxGeometry x="-5770" y="-3970" width="4490" height="1580" as="geometry" />
+          <mxGeometry x="-5690" y="-4210" width="4490" height="1580" as="geometry" />
         </mxCell>
         <mxCell id="Kz5jj_GifknlN1pNBJkx-6" value="&lt;font style=&quot;color: rgb(255, 0, 0); font-size: 100px;&quot;&gt;Investements Advice UI&amp;nbsp; (general concepts and existing algorithims) , no AI is envolved , because it&#39;s not coidential&amp;nbsp; and not trained to generate an real allocation advice, there exist financial frameworks for this purpose such as MPT, other advice like goal advice and protection advice need other frameworks&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="-5900" y="-6550" width="4790" height="950" as="geometry" />
@@ -23,7 +23,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="O5dXnigAVppLvb0me8Yg-9" value="" style="swimlane;startSize=0;" parent="1" vertex="1">
-          <mxGeometry x="-5990" y="44" width="5620" height="4436" as="geometry" />
+          <mxGeometry x="-5991" y="46" width="5620" height="4436" as="geometry" />
         </mxCell>
         <mxCell id="O5dXnigAVppLvb0me8Yg-6" value="" style="group" parent="O5dXnigAVppLvb0me8Yg-9" vertex="1" connectable="0">
           <mxGeometry x="780" y="340" width="3070" height="3000" as="geometry" />
@@ -84,7 +84,7 @@
         <mxCell id="O5dXnigAVppLvb0me8Yg-29" value="&lt;font color=&quot;#ff0000&quot;&gt;&lt;span style=&quot;font-size: 50px;&quot;&gt;Rebalancing can happen due to three Reasons : 1- The value of investement increase or decrease , 2-glide path ; when the deadline of goal is near the end, adjust (rebalance) the portfolio to be less risky , 3- when the user change his informations like risk tolerance and goals (subjective ) , then risk profile will be changed, that means rebalancing is a must&amp;nbsp;&lt;/span&gt;&lt;/font&gt;" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" parent="O5dXnigAVppLvb0me8Yg-9" vertex="1">
           <mxGeometry x="580" y="3340" width="1430" height="536.082474226804" as="geometry" />
         </mxCell>
-        <mxCell id="bUQu0eB6h1fkHFRYngay-1" value="&lt;font color=&quot;#ff0000&quot;&gt;&lt;span style=&quot;font-size: 50px;&quot;&gt;Show recommendations on the UI (No autmoatic buying or selling, We can&#39;t do that, our app can&#39;t be trading app )&lt;/span&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="O5dXnigAVppLvb0me8Yg-9">
+        <mxCell id="bUQu0eB6h1fkHFRYngay-1" value="&lt;font color=&quot;#ff0000&quot;&gt;&lt;span style=&quot;font-size: 50px;&quot;&gt;Show recommendations on the UI (No autmoatic buying or selling, We can&#39;t do that, our app can&#39;t be trading app )&lt;/span&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="O5dXnigAVppLvb0me8Yg-9" vertex="1">
           <mxGeometry x="2540" y="3896" width="789" height="362.8865979381443" as="geometry" />
         </mxCell>
         <mxCell id="O5dXnigAVppLvb0me8Yg-10" value="" style="shape=singleArrow;direction=south;whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -92,7 +92,7 @@
         </mxCell>
         <mxCell id="O5dXnigAVppLvb0me8Yg-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="Kz5jj_GifknlN1pNBJkx-5" edge="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="-3824.0000000000036" y="-2199" as="targetPoint" />
+            <mxPoint x="-3884.0000000000036" y="-2489" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="O5dXnigAVppLvb0me8Yg-12" value="" style="shape=singleArrow;direction=south;whiteSpace=wrap;html=1;arrowWidth=0.5199156644051535;arrowSize=0.35918183979235196;" parent="1" vertex="1">
