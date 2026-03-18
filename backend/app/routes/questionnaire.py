@@ -25,9 +25,9 @@ from app.models.user_financial_data import UserFinancialData
 from app.models.goal import Goal
 from app.models.investment_account import InvestmentAccount
 from app.models.protection_advices import ProtectionAdvices
-from app.models.debts_advices import DebtsAdvices
+from app.models.debt_models.debts_advices import DebtsAdvices
 from app.models.goals_and_investements_advices import GoalsAndInvestmentsAdvices
-from app.models.debts_metrics import DebtMetrics
+from app.models.debt_models.debts_metrics import DebtMetrics
 from app.core.finance.successive_value_modeling import (
     full_debts_ui_data_orchestrator,
     FullDebtsUiData,   
