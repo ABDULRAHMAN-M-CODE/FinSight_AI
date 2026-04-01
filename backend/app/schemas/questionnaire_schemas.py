@@ -16,13 +16,7 @@ class HouseholdIncomeMember(BaseModel):
     annual_income: Decimal
     income_source: str
 
-# DTO for investment acccounts : (for both the Demo (Limited) and the full service)
-class InvestmentAccountIn(BaseModel):
-    id:Decimal
-    name: str
-    type: str
-    current_balance: Decimal
-    is_active : bool
+
 
 # DTO for user finance goals :  (for both the Demo (Limited) and the full service)
 class FinancialGoalsIn(BaseModel):
@@ -66,6 +60,25 @@ class InsuranceIn(BaseModel):
 
 
 # DTO for questionnaire submit. direction(frontend --> backend --> AI).
+    """
+       subjective_answers_values_and_weights: {
+        questions_weights: number[];
+        answers_values: number[];
+    };
+    """
+class SubjectiveAnswersValuesAndWeights(BaseModel):
+    
+    questions_weights:list[int]
+    answers_values:list[int]
+
+# DTO for investment acccounts : (for both the Demo (Limited) and the full service)
+class InvestmentAccountIn(BaseModel):
+    id:Decimal
+    name: str
+    type: str
+    current_balance: Decimal
+    is_active : bool
+
 class QuestionnaireSubmit(BaseModel):
     """Contract for the data that is expected as a user info
         Note1 : we may need to add default values for the fields ; to ensure that the  info always exist
@@ -76,8 +89,10 @@ class QuestionnaireSubmit(BaseModel):
     
     monthly_budget: Decimal #WHY DECIMAL and not float ? do u store decimal or foat in the database ? json . dumps() does not work with Decimal at all
     household_income: List[HouseholdIncomeMember] 
-    investment_accounts: List[InvestmentAccountIn] 
+    
     outstanding_debts: List[DebtIn] 
+    subjective_answers_values_and_weights:SubjectiveAnswersValuesAndWeights
+    #investment_accounts: List[InvestmentAccountIn]  maybe should be deleted 
     life_insurance: List[InsuranceIn]
     financial_goals: List[FinancialGoalsIn] 
     

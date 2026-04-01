@@ -157,12 +157,10 @@ class GoalsAndInvestementsAdvice(BaseModel):
     
 
 
-# DTO for Questionnarie response. direction(AI --> backend --> frontend).
 
-
-class FullAiResponse(BaseModel):
-    protectionAdvice:ProtectionAdvice
-    debtsAdvice:DebtsAdvice  
-    goalsAndInvestementsAdvice:GoalsAndInvestementsAdvice
-    
+from app.core.finance.successive_value_modeling import FullDebtsUiData
+from app.core.finance.portfolio_construction import InvestementsAdviceMocks
+class FullAdviceData(BaseModel):
+    #fullDebtsUiData:FullDebtsUiData   # commented for testing, change those names.
+    investementsAdvice:InvestementsAdviceMocks 
 

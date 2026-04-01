@@ -37,7 +37,7 @@ export default function MainLayout() {
             }
           >
             <Target className="w-5 h-5" />
-            <span className="text-sm font-medium">Goals & Strategy</span>
+            <span className="text-sm font-medium">Recommended Portfolio</span>
           </NavLink>
 
           <NavLink

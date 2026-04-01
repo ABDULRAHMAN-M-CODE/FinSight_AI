@@ -11,7 +11,7 @@ from app.core.dependencies import get_current_user
 from app.schemas.questionnaire_schemas import QuestionnaireSubmit
 
 #  necessary imports to talk to the AI
-from app.schemas.questionnarie_response_schemas import FullAiResponse
+
 #from app.system_prompts import full_service_system_prompt
 from app.user_prompts import full_service_user_prompt
 from app.core.utils.llm_utils import call_llm
@@ -34,21 +34,23 @@ from app.core.finance.successive_value_modeling import (
 )
 from app.schemas.questionnaire_schemas import DebtIn
 
+
 # questionnaire router (questionnaire only).
 router = APIRouter(prefix="/onboarding")
 
-
-@router.post("/questionnaire", status_code=status.HTTP_201_CREATED)
+from app.schemas.questionnarie_response_schemas import FullAdviceData
+@router.post("/questionnaire", status_code=status.HTTP_201_CREATED) #this router is executed after the user provide all his context 
 def submit_questionnaire(
      data: QuestionnaireSubmit,
-     current_user: User = Depends(get_current_user), 
-     db: Session = Depends(get_db),
-)->FullDebtsUiData:
+     #current_user: User = Depends(get_current_user), 
+     #db: Session = Depends(get_db),
+)->FullAdviceData:
     try:
         print("recived data successfully")
 
         # check if user already filled finance data
-        
+
+        """
         if not current_user.is_first_login :
             print("if block was executed")
             raise HTTPException(
@@ -57,7 +59,6 @@ def submit_questionnaire(
             )
 
         # 1- Store all submitted user's info "data" in the  appropriate database tables.
-
         # Store User Financial Data
         total_income = sum(member.annual_income for member in data.household_income)
         user_financial_data = UserFinancialData(
@@ -98,6 +99,7 @@ def submit_questionnaire(
             
         # 2- Perform all the required computations and data modeling
         # first, we model the Successive value formula which is : b(k)=(b(k-1)*(1+interestRate))-p, the inputs to this equation is exlicitly  provided by user info
+        
         # all the results of this equation or function call  must be passed to the full_service_user_prompt (or define that prompt in the same file containing  the function implmentation)
 
         debts:list[DebtIn]=data.outstanding_debts
@@ -121,13 +123,25 @@ def submit_questionnaire(
         
         # 4- Mark first login as completed
         current_user.is_first_login = False
-        db.commit()
+        db.commit()"""
 
-        # 5- Return the advice to the frontend.
-        return debts_ui_data
+        
+        
+        #bussines logic 
+        from app.core.finance.portfolio_construction import investements_advice_orchestrator,InvestementsAdviceMocks
+        total_portfolio_value=3500.0                        #PROBLEM : total_investement_amount # Fetch from user_portfolio_state table 
+        question_scores = [8, 8, 8, 8, 8, 8, 8, 8, 8, 8]    #PROBLEM:  provided by frontend (simulated for now)
+        answers_weights = [1,2 , 3, 4, 5, 6, 7, 8, 9, 10]    #PROBLEM : provided by frontend(simulated for now )
+        investements_advice:InvestementsAdviceMocks=investements_advice_orchestrator(question_scores,answers_weights,total_portfolio_value)
+        print("number of scatter points to be shown on the frontend(must be compatible with frontend number of scatters)",len(investements_advice.assetsScatter))
+
+        #PROBLEM :  in the future, we will add many other things to this returned object.
+        #PROBLEM : DON"T JUST RETURN IT , STROE IN DATABASE, in frontend, if the user is new , he consume returned data, if not , he consume stored data
+        return FullAdviceData(investementsAdvice=investements_advice)
+        
         
     except Exception as e:
-        db.rollback()
+        #db.rollback()
         print("ERROR:", str(e))
         raise HTTPException(
             status_code=500,

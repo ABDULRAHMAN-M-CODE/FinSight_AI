@@ -18,10 +18,7 @@ interface HouseholdIncomeSectionProps {
  * @returns 
  */
 /** this function currently mixes Logic with rendering, now it works ,  we must Separate them  for better redablity */
-export const HouseholdIncomeSection: React.FC<HouseholdIncomeSectionProps> = ({ 
-  members, 
-  onUpdate 
-}) => {
+export const HouseholdIncomeSection: React.FC<HouseholdIncomeSectionProps> = ({ members, onUpdate }) => {
   /**Logic */
   const updateMember = (index: number, field: keyof HouseholdMember, value: string) => {
     const updatedMembers = [...members];

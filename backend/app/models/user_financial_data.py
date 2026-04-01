@@ -26,7 +26,9 @@ class UserFinancialData(Base):
     income_sources = Column(JSONB, nullable=False)
     monthly_budget = Column(DECIMAL(12, 2), nullable=False)
 
-    investment_accounts = Column(JSONB, nullable=True)
+    investment_accounts = Column(JSONB, nullable=True) # problem:  must be deleted  later
+    #problem : total_investement_amount must be added, portfolio construction and rebalancing service depends on it .
+
     outstanding_debts = Column(JSONB, nullable=True)
     life_insurance = Column(JSONB, nullable=True)
 

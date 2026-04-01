@@ -11,7 +11,5 @@ import { type extractAndSaveDataToLocalStorageProps } from "../../../Types/extra
 
 export const extractAndSaveDataToLocalStorage = async <T>({response, localStorageKey}:extractAndSaveDataToLocalStorageProps) => {
     const data: T = await response.json();// extracting
-    console.log("data recived from backend is : ")
-    console.log(data);
     localStorage.setItem(localStorageKey, JSON.stringify(data));// storing response as key:value in the local storage
 };

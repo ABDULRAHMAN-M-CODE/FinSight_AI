@@ -4,3 +4,6 @@ Other Required references
 https://www.investopedia.com/terms/r/roboadvisor-roboadviser.asp
 https://en.wikipedia.org/wiki/Robo-advisor
 https://investor.vanguard.com/investor-resources-education/taxes/offset-gains-loss-harvesting
+
+for the investments questions  (used to calculate risk score)
+https://jigsawfp.com.au/risk-profile-questionnaire/

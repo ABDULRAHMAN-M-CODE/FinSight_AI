@@ -24,7 +24,9 @@ import SuccessiveValueFormulaModeling from './Pages/SuccessiveValueFormulaModeli
 import GoalsAndInvestementsAdvice  from './Pages/GoalsAndInvestementsAdvice';
 import SettingsPage from './Pages/SettingsPage';
 import MainLayout from './Pages/MainLayout';
+import RiskAssessment from './Components/InvestementsRiskProfileAssasementCard';
 
+import PortfolioAnalytics from './Pages/PortfolioAnalytics';
 function App() {    
    // [path="/"] is the  default route to be rendered 
    
@@ -47,11 +49,12 @@ function App() {
       <Route path="/MultiStepFlow" element={<MultiStepFlow />}/>{/**flat */}
       <Route path='/MultiStepContex' element={<MultiStepContext />} />{/**flat */}
       <Route path="/PostMultiStepContext" element={<PostMultiStepContext />}/>{/**flat */}
-      
+      {/**<Route path="/RiskAssessment" element={<RiskAssessment />}/> }
       {/**The following is supposed to be Main dashabord which have 3  components inside it , but this is new knoweldge to me ! , all I'm used to is flat things, I did not face a problem where I need nested components tell today! */}
+      
       <Route path="MainLayout" element={<MainLayout />}> 
-          {/** Nested routes */}
-          <Route index element={<GoalsAndInvestementsAdvice />}/>
+
+          <Route index element={<PortfolioAnalytics />}/>
           <Route path="DebtsAdvice" element={<SuccessiveValueFormulaModeling />}/>
           <Route path="InsuranceAdvice" element={<InsuranceAdvice />}/>
           <Route path="SettingsPage" element={<SettingsPage />}/>

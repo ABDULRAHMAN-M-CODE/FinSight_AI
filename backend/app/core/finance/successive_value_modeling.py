@@ -1,6 +1,3 @@
-
-
-
 # Pydantic models
 # some Syntax source : "https://docs.pydantic.dev/latest/api/config/#pydantic.config.ConfigDict.extra , and AI 
 # mypy and pytest where used for testing , there is zero syntax erros , outcomes of  the code was verified , there is no logical erros at all 
@@ -18,7 +15,7 @@ from typing import TypedDict
 import json
 
 
-############***Classes that are used for run time validation on the system boundary***###########################
+###########***Classes that are used for run time validation on the system boundary***###########################
 
 class  DebtTrajectoryPoint(BaseModel):
         monthLabel: str
@@ -35,9 +32,10 @@ class TextualDebtAdvice(BaseModel):
         type: Literal["urgent" , "positive" , "neutral"]# equivelemt to z.enum(["urgent" , "positive" , "neutral"]) in frontend
         textualAdvice: str
 
+from app.core.finance.portfolio_construction import AssetsAllocationsResults
 # Top level schema
 class FullDebtsUiData(BaseModel):
-    # those four fields will be provided as additional context to the AI and will be also returned to the frontend .
+    # those four debt-advice-related fields will be provided as additional context to the AI and will be also returned to the frontend .
     startingTotalBalance:float 
     trajectory:list[DebtTrajectoryPoint]
     monthsToTotalPayoff:int                         
@@ -244,3 +242,6 @@ def full_debts_ui_data_orchestrator(
                         advice=advice
                     )
        
+
+
+

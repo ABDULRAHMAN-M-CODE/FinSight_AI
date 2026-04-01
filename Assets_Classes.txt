@@ -1,0 +1,9 @@
+I will make mapper for each one; important for making constraints on assets.
+
+     1-Country / Region
+     2-Instrument Type (ETF, stock, etc.) 
+     3-Sector
+     4-Market Cap
+     5-Liquidity
+     6-Market exposure 
+     7-Factor (growth/value/etc.)
