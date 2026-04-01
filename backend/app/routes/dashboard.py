@@ -9,8 +9,8 @@ from app.core.dependencies import get_current_user
 
 # import needed models and schemas for dashboard
 from app.schemas.dashboard_schemas import DashboardSummaryResponse
-from app.models.debts_metrics import DebtMetrics
-from app.models.debts_advices import DebtsAdvices
+from app.models.debt_models.debts_metrics import DebtMetrics
+from app.models.debt_models.debts_advices import DebtsAdvices
 from app.core.finance.successive_value_modeling import FullDebtsUiData
 from app.models.registration import User
 

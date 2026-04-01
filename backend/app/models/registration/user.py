@@ -2,8 +2,9 @@ from sqlalchemy import (
     Column, Integer, String, Boolean, DateTime
 )
 from sqlalchemy.sql import func
-from app.database import Base
 from sqlalchemy.orm import relationship
+from app.database import Base
+
 
 class User(Base):
     __tablename__ = "users"
@@ -14,6 +15,7 @@ class User(Base):
     password_hash = Column(String(255), nullable=False)
     full_name = Column(String(255), nullable=True)
     phone_number = Column(String(20), nullable=True)
+
     is_email_verified = Column(Boolean, default=False, nullable=False)
     email_verified_at = Column(DateTime(timezone=True), nullable=True)
 
@@ -27,42 +29,61 @@ class User(Base):
         onupdate=func.now(),
         nullable=False
     )
+
+    # Main Relationships
+
     financial_data = relationship(
         "UserFinancialData",
         back_populates="user",
         uselist=False,
-        cascade="all, delete"
+        cascade="all, delete-orphan",
+        passive_deletes=True
     )
+
     debts_advices = relationship(
         "DebtsAdvices",
         back_populates="user",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        passive_deletes=True
     )
+
     debt_metrics = relationship(
-    "DebtMetrics",
-    back_populates="user",
-    cascade="all, delete"
+        "DebtMetrics",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        passive_deletes=True
     )
+
     protection_advices = relationship(
         "ProtectionAdvices",
         back_populates="user",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        passive_deletes=True
     )
+
     goals_and_investments_advices = relationship(
         "GoalsAndInvestmentsAdvices",
         back_populates="user",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        passive_deletes=True
     )
+
     investment_accounts = relationship(
         "InvestmentAccount",
         back_populates="user",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        passive_deletes=True
     )
-    goals = relationship(
-        "Goal",
+
+    portfolios = relationship(
+        "PortfoliosPerformanceMetrics", 
         back_populates="user",
         cascade="all, delete-orphan"
     )
 
-
-
+    goals = relationship(
+        "Goal",
+        back_populates="user",
+        cascade="all, delete-orphan",
+        passive_deletes=True
+    )
