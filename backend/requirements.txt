@@ -14,6 +14,7 @@ babel==2.18.0
 beautifulsoup4==4.14.3
 billiard==4.2.4
 bleach==6.3.0
+Bottleneck==1.6.0
 bt==1.1.4
 celery==5.6.2
 certifi==2026.1.4
@@ -46,6 +47,8 @@ fastapi-cloud-cli==0.11.0
 fastar==0.8.0
 fastjsonschema==2.21.2
 ffn==1.1.4
+financedatabase==2.3.1
+financetoolkit==2.0.7
 -e git+https://github.com/PhDFlo/foliotrack.git@94842b802ad47249387496b3bda096600a1cf0eb#egg=foliotrack
 fonttools==4.62.1
 fqdn==1.5.1
@@ -112,7 +115,9 @@ nbformat==5.10.4
 nest-asyncio==1.6.0
 notebook_shim==0.2.4
 numba==0.63.1
+numexpr==2.14.1
 numpy==2.3.5
+odfpy==1.4.1
 openai==2.15.0
 openpyxl==3.1.5
 orjson==3.11.5
@@ -137,6 +142,7 @@ psutil==7.2.2
 psycopg2-binary==2.9.11
 ptyprocess==0.7.0
 pure_eval==0.2.3
+pyarrow==23.0.1
 pyasn1==0.6.2
 pycparser==3.0
 pydantic==2.12.5
@@ -152,6 +158,7 @@ PyQt6-Qt6==6.10.2
 PyQt6_sip==13.11.1
 PySCIPOpt==6.1.0
 pytest==9.0.2
+python-calamine==0.6.2
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.1
 python-jose==3.5.0
@@ -160,6 +167,7 @@ python-multipart==0.0.22
 pytickersymbols==1.17.10
 pytimeparse==1.1.8
 pytz==2026.1.post1
+pyxlsb==1.0.10
 PyYAML==6.0.3
 pyzmq==27.1.0
 redis==7.1.0
@@ -218,6 +226,9 @@ webencodings==0.5.1
 websocket-client==1.9.0
 websockets==16.0
 wrapt==2.1.2
+xarray==2026.2.0
+xlrd==2.0.2
+xlsxwriter==3.2.9
 xxhash==3.6.0
 yfinance==1.2.0
 zstandard==0.25.0

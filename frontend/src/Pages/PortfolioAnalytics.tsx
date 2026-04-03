@@ -11,8 +11,8 @@ import {
 } from 'recharts';
 import { Briefcase, TrendingUp, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 
-import { type FullAdviceDataType } from './MultiStepContex';
-import { type InvestementsAdviceType } from './MultiStepContex';
+import { type FullAdviceDataType } from './MultiStepContext';
+import { type InvestementsAdviceType } from './MultiStepContext';
 import { useEffect } from 'react';
 import { useState } from 'react';
 

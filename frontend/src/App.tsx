@@ -17,7 +17,7 @@ import ForgotPassword from './Pages/ForgotPassword';
 import SetPasswordPage from './Pages/SetPasswordPage';
 import ForgotPassword_SuccessfullReset from './Pages/ForgotPassword_SuccessfullReset';
 import MultiStepFlow from './Pages/MultiStepFlow';
-import MultiStepContext from './Pages/MultiStepContex';
+import MultiStepContext from './Pages/MultiStepContext';
 import PostMultiStepContext from './Pages/PostMultiStepContext';
 import InsuranceAdvice from './Pages/InsuranceAdvice';
 import SuccessiveValueFormulaModeling from './Pages/SuccessiveValueFormulaModeling';
@@ -26,6 +26,7 @@ import SettingsPage from './Pages/SettingsPage';
 import MainLayout from './Pages/MainLayout';
 import RiskAssessment from './Components/InvestementsRiskProfileAssasementCard';
 
+//import PortfolioAnalytics from './Pages/PortfolioAnalytics';
 import PortfolioAnalytics from './Pages/PortfolioAnalytics';
 function App() {    
    // [path="/"] is the  default route to be rendered 
@@ -47,7 +48,7 @@ function App() {
       <Route path="/SetPasswordPage" element={<SetPasswordPage />}/>{/**flat */}
       <Route path="/ForgotPassword_SuccessfullReset" element={<ForgotPassword_SuccessfullReset />}/>{/**flat */}
       <Route path="/MultiStepFlow" element={<MultiStepFlow />}/>{/**flat */}
-      <Route path='/MultiStepContex' element={<MultiStepContext />} />{/**flat */}
+      <Route path='/MultiStepContext' element={<MultiStepContext />} />{/**flat */}
       <Route path="/PostMultiStepContext" element={<PostMultiStepContext />}/>{/**flat */}
       {/**<Route path="/RiskAssessment" element={<RiskAssessment />}/> }
       {/**The following is supposed to be Main dashabord which have 3  components inside it , but this is new knoweldge to me ! , all I'm used to is flat things, I did not face a problem where I need nested components tell today! */}

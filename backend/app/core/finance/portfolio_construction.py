@@ -18,49 +18,9 @@ import yfinance as yf
 from datetime import datetime, timedelta
 from datetime import datetime, timedelta
 import time
-
-
-def safe_download(symbols:list[str])->pd.DataFrame|None:
-    try:
-        end_date = (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d')
-
-        data = yf.download(
-            symbols,
-            start="2000-01-01",
-            end=end_date,
-            auto_adjust=False,
-            threads=True
-        )
-
-        return data if data is not None else None
-
-    except Exception as e:
-        print(f"[ERROR] Download failed: {e}")
-        return None
-
-def robust_download(symbols, max_retries=5)->pd.DataFrame|None:
-    for attempt in range(max_retries):
-        try:
-            data:pd.DataFrame = safe_download(symbols)
-            if data is not None and not data.empty:
-                return data
-        except Exception as e:
-            print(f"[Retry {attempt+1}] {e}")
-
-        time.sleep(2)  # wait before retry
-
-    print("[FAILURE] All retries failed")
-    return None
-def get_data(symbols:list[str])->tuple[bool,pd.DataFrame]:
-    data:pd.DataFrame = robust_download(symbols)
-
-    if data is None:
-        print("[WARNING] Using fallback data")
-        is_default=True
-        return is_default,pd.read_csv("default_real_close_prices")
-    is_default=False
-    return is_default,data
-
+import json
+from abc import ABC, abstractmethod
+from pathlib import Path
 def get_risk_appetite(questions_scores:list[int], answers_weights:list[int])-> tuple[str,int]:
     
     total_weight = sum(answers_weights)
@@ -86,6 +46,83 @@ def get_risk_appetite(questions_scores:list[int], answers_weights:list[int])-> t
 
     return risk_appetite,normalized_score
 
+class PricesData(ABC):
+    @abstractmethod
+    def get_data(self):
+        pass
+
+class ApiOrMockPricesData(PricesData):
+    """Honestly, this Entity has to parameters in its interface, which is fantastically few, but it have powerful functionality, which is good.
+
+    Args:
+        PricesData (_type_): _description_
+    """
+    def __init__(self,assets_tickers:list[str],start_date:str):
+        self.is_default=False
+        self.assets_tickers=assets_tickers
+        self.start_date=start_date
+    
+    def safe_download(self,assets_tickers:list[str],start_date:str)->pd.DataFrame|None:
+        try:
+
+            end_date = (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d')
+            data = yf.download(
+                assets_tickers,
+                start=start_date, 
+                end=end_date,
+                auto_adjust=False,
+                threads=True
+            )
+
+            return data if data is not None else None
+
+        except Exception as e:
+            print(f"[ERROR] Download failed: {e}")
+            return None
+
+    def robust_download(self, max_retries=5)->pd.DataFrame|None:
+        for attempt in range(max_retries):
+            try:
+                data:pd.DataFrame = self.safe_download(self.assets_tickers,self.start_date)#third pass of the start_date variable
+                if data is not None and not data.empty:
+                    return data
+            except Exception as e:
+                print(f"[Retry {attempt+1}] {e}")
+
+            time.sleep(2)  # wait before retry
+        print("[FAILURE] All retries failed")
+        return None
+
+    def get_data(self)->tuple[bool,pd.DataFrame]:
+        data:pd.DataFrame = self.robust_download()
+        if data is None:
+            print("[WARNING] Using fallback data")
+            self.is_default=True
+            data=pd.read_parquet("historical_prices.parquet")
+        return self.is_default,data
+    
+class MockData(PricesData):
+    def __init__(self):
+        self.is_default=True
+
+    def get_data(self)->tuple[bool,pd.DataFrame]:
+        return self.is_default,pd.read_parquet("historical_prices.parquet")
+
+#I can add any other classes I want to represent some input.
+class HistoricalPricesService:
+    """ 
+        This class uses the DIP design pattern; the domain logic does not depend on hardcoded input, but depend on interface.
+        In other words, this class depend on static and non-volatile entity, which is the interface in this case.
+        In other words, higher level policy depends does not depend on lower level policy.
+        The higher level policy-the HistoricalPricesService- uses/controls the lower level policy and does not depend on it.
+        The lower level policy does depend on a higher level policy-the interface- by implmenting the abstract methods defined inside that interface. 
+    """
+    def __init__(self, data_source: PricesData):
+        self.data_source = data_source
+        
+    def get_data(self)->tuple[bool,pd.DataFrame]:
+        return self.data_source.get_data()
+
 
 def clean_data(df:pd.DataFrame, nan_percentage:float,ffil_max_gap:int)->pd.DataFrame:
     """
@@ -108,7 +145,6 @@ def clean_data(df:pd.DataFrame, nan_percentage:float,ffil_max_gap:int)->pd.DataF
     return df
 
 
-
 class ReturnsAndPrices(TypedDict):
     selectedAssetsReturns:pd.DataFrame
     selectedAssetsPrices:pd.DataFrame
@@ -119,31 +155,34 @@ def select_assets(
     """fetch real-time assets prices data, cleans it from missing values, and picks assets that with acceptable risk .
 
     Args:
-       
-        real_time_assets_names (list[str]): assets names must be comma separated without spaces like: "A,B,C,D"
-        start_date(str): example :"2025-3-10"
         user_risk_prefrence (float): upperbound of preferred risk; measure of the willingness to hold volatile assets
         OHLC (str, optional): to get prices of assets in differnt time line of the market; when the market "Open", "High", "Low", or "Close". Defaults to "close".. Defaults to "close".
-
     Returns:
         pd.DataFrame:  The returns(in decimal) for each selected asset over time. negative return values incidcates a drop in the asset price relative to the last observed price.  
     """
+    #guard against non-logical risk prefrence using clipping; max controls lower bound, min control upper bound
     user_risk_prefrence = max(0, min(1, user_risk_prefrence))
-    # Download multi-asset data
-   
-    is_default,data=get_data(list(sector_mapper.keys()))
+    
+    BASE_DIR = Path(__file__).resolve().parent
+    file_path = BASE_DIR / "country_mapper.txt"
+    with open(file_path, 'r') as f:
+        assets_countries = json.load(f)
+
+    first_service=HistoricalPricesService(ApiOrMockPricesData(assets_tickers=list(assets_countries.keys()),start_date="2016-1-1" ))#first pass of the start_date variable
+    is_default,prices=first_service.get_data()#this  method call never changes regardless of the underlying implementation ; DIP design pattern.
     print(f"THE DEFAULT REAL-TIME PRICES WAS USED ? :  {is_default}")
-    cleaned_prices=clean_data(data[OHLC],0.50 ,3)
-    returns = cleaned_prices.pct_change().dropna() 
-    
-    
+    cleaned_prices=clean_data(prices[OHLC],0.50 ,3)
+    returns = cleaned_prices.pct_change() 
+    print('\nreturns shape is : ',returns.shape,'\n') #nothing wrong here, after this line, something is modifying this data?
+
     covarience_matrix :pd.DataFrame | NDArray[Any] | Any= CovarianceShrinkage(returns, returns_data=True).ledoit_wolf() 
     assets_volatilities:NDArray[Any] = np.sqrt(np.diag(covarience_matrix))
-           
+    print("\nassets volatalities are",assets_volatilities,'\n')
+    #ONLY THING I DICUSS WITH CHATGPT: THE FOLLOWING CODE IS CAUSING CHANGING IN THE SHAPE OF THE RETURNS, POSIBLY DELETING ALL THE COLUMNS
+    print("\nuser_risk_preference is:",user_risk_prefrence,"\n")
     selected_assets_indicies=[index for index  in range(len(list(cleaned_prices.columns) )) if  assets_volatilities[index]<= user_risk_prefrence]
-    
-    
     selected_assets_names=[list(cleaned_prices.columns)[i] for i in selected_assets_indicies]
+    print("\nselected assets names are: ",selected_assets_names,"\n") # chatGPT should notice that the output of this print statement is empty list.
     
     return ReturnsAndPrices(
             selectedAssetsReturns=returns[selected_assets_names],
@@ -361,8 +400,9 @@ def investements_advice_orchestrator(
     risk_appetite, normalized_risk_score=get_risk_appetite(questions_scores=question_scores,answers_weights=answers_weights)
 
     returns_and_prices: ReturnsAndPrices=select_assets(normalized_risk_score)#PROBLEM REGARDING SELECTING: SHOULD WE USE FIXED ASSET UNIVERSE?
-    
-    intermediate_results:AssetsAllocationsResults=perform_assets_allocation(returns_and_prices["selectedAssetsReturns"], returns_and_prices["selectedAssetsPrices"],total_portfolio_value,risk_appetitie=risk_appetite,risk_score=normalized_risk_score)
+    print("\n",returns_and_prices["selectedAssetsReturns"].shape,"\n")
+    print(returns_and_prices["selectedAssetsPrices"].shape,"\n")
+    intermediate_results:AssetsAllocationsResults=perform_assets_allocation(returns_and_prices["selectedAssetsReturns"], returns_and_prices["selectedAssetsPrices"],total_portfolio_value,risk_appetite,normalized_risk_score)
     
     selected_assets_names=list(intermediate_results["capitalAllocationsPercentages"].keys())
     
