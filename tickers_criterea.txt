@@ -1,0 +1,24 @@
+### CONSIDERATIONS WHEN  SEARCHING FOR TICKERS/INSTRUMENTS)
+
+context: Ticker=Instrument. Instrument!= Asset Class.
+Asset Classes  are many , we are only interested about the following classes:
+	1-Commodities
+	2-Fixed Income Class.
+	3-Cash & Cash Equivalents
+	4-Real Estate 
+	5-Infrastructure
+	6-Insurance 
+	7-Equities
+But for now , we only Care about commodities.
+Criteria on searching for tickers (before selection and allocation)
+
+	1- as many as tickers as possible that satisfies all the following conditions - max number of tickers is 30-:
+		A- all the tickers must point to the same asset class.
+		B- all the tickers must belong to entities or companies that has the main headquarter located explicitly in the United States, domiciled in 			the United States.
+		C-Preventing double exposure entirely : if some ticker or instrument to specific sector, sub class, or sub type, no other ticket should point 			to that sector, sub class, or sub type. this means that all the tickers must point to completely unique something or product within 			exactly the same class.
+			
+		D- All tickers must be supported by yahoo finance and finance API.
+		
+		E-The Ideal, yet possible case if for a ticker to point to one class only and does not point to any other class and does not point to any other 			Sub Classes.
+
+

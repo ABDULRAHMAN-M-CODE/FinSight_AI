@@ -125,18 +125,18 @@ def submit_questionnaire(
         current_user.is_first_login = False
         db.commit()"""
 
-        
-        
-        #bussines logic 
-        from app.core.finance.portfolio_construction import investements_advice_orchestrator,InvestementsAdviceMocks
-        total_portfolio_value=3500.0                        #PROBLEM : total_investement_amount # Fetch from user_portfolio_state table 
-        question_scores = [8, 8, 8, 8, 8, 8, 8, 8, 8, 8]    #PROBLEM:  provided by frontend (simulated for now)
-        answers_weights = [1,2 , 3, 4, 5, 6, 7, 8, 9, 10]    #PROBLEM : provided by frontend(simulated for now )
-        investements_advice:InvestementsAdviceMocks=investements_advice_orchestrator(question_scores,answers_weights,total_portfolio_value)
-        print("number of scatter points to be shown on the frontend(must be compatible with frontend number of scatters)",len(investements_advice.assetsScatter))
-
+        #PROBLEM : total_investement_amount # Fetch from user_portfolio_state table 
+        #PROBLEM:  provided by frontend (simulated for now)
+        #PROBLEM : provided by frontend(simulated for now )
         #PROBLEM :  in the future, we will add many other things to this returned object.
         #PROBLEM : DON"T JUST RETURN IT , STROE IN DATABASE, in frontend, if the user is new , he consume returned data, if not , he consume stored data
+        #bussines logic 
+        from app.core.finance.portfolio_construction import investements_advice_orchestrator,InvestementsAdviceMocks
+        total_portfolio_value=3000.0                        
+        question_scores = [8, 8, 8, 8, 8, 8, 8, 8,8 , 8]    
+        answers_weights = [1,2 , 3, 4, 5, 6, 7, 8, 9, 10]   
+        investements_advice:InvestementsAdviceMocks=investements_advice_orchestrator(question_scores,answers_weights,total_portfolio_value,"2024-01-01")
+        print("number of scatter points to be shown on the frontend(must be compatible with frontend number of scatters)",len(investements_advice.assetsScatter))
         return FullAdviceData(investementsAdvice=investements_advice)
         
         

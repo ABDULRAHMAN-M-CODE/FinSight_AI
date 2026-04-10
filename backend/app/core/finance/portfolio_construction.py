@@ -16,7 +16,6 @@ from pydantic import BaseModel
 from typing import TypedDict
 import yfinance as yf
 from datetime import datetime, timedelta
-from datetime import datetime, timedelta
 import time
 import json
 from abc import ABC, abstractmethod
@@ -52,15 +51,11 @@ class PricesData(ABC):
         pass
 
 class ApiOrMockPricesData(PricesData):
-    """Honestly, this Entity has to parameters in its interface, which is fantastically few, but it have powerful functionality, which is good.
-
-    Args:
-        PricesData (_type_): _description_
-    """
-    def __init__(self,assets_tickers:list[str],start_date:str):
+    def __init__(self,assets_tickers:list[str],start_date:str,interval:str):
         self.is_default=False
         self.assets_tickers=assets_tickers
         self.start_date=start_date
+        self.interval=interval
     
     def safe_download(self,assets_tickers:list[str],start_date:str)->pd.DataFrame|None:
         try:
@@ -71,7 +66,8 @@ class ApiOrMockPricesData(PricesData):
                 start=start_date, 
                 end=end_date,
                 auto_adjust=False,
-                threads=True
+                threads=True,
+                interval=self.interval
             )
 
             return data if data is not None else None
@@ -108,7 +104,6 @@ class MockData(PricesData):
     def get_data(self)->tuple[bool,pd.DataFrame]:
         return self.is_default,pd.read_parquet("historical_prices.parquet")
 
-#I can add any other classes I want to represent some input.
 class HistoricalPricesService:
     """ 
         This class uses the DIP design pattern; the domain logic does not depend on hardcoded input, but depend on interface.
@@ -124,24 +119,29 @@ class HistoricalPricesService:
         return self.data_source.get_data()
 
 
-def clean_data(df:pd.DataFrame, nan_percentage:float,ffil_max_gap:int)->pd.DataFrame:
+def clean_data(df:pd.DataFrame, nan_percentage:float,fill_max_gap:int=4)->pd.DataFrame:
     """
         this function perform three cleaning phases on a dataframe:
         1- if any column has a lot of missing values, the function will drop this column entirely, if the number of missing values is acceptable, the function drops the records that contains missing data without deleting the whole column.
-        2-limited filling for gaps in the data
 
     Args:
-        df (pd.DataFrame): Two Diminsional DataFrame
-        nan_percentage (float): Upper bound for the amount of  missing values
-        ffil_max_gap (int): biggest number of contigeouse missing data to fill\n, for example; if the value is 10\n, the function will only fill 10 contigouse missing values\n ,it won't fill the next missing data until another sequnce of missing data appears. 
+        df (pd.DataFrame): Two Diminsional DataFrame.
+        nan_percentage (float): Upper bound for the amount of  missing values.
 
     Returns:
-        pd.DataFrame: Two dimensional dataFrame that contains no missing values.
+        pd.DataFrame: table that contains no missing values.
     """
+    old_num_rows=df.shape[0]
+    print("number of rows, which are prices records, before cleaning is :",old_num_rows)
+    
     cols = [col for col in df.columns if (df[col].isna().sum()/df[col].shape[0])>nan_percentage]
+    print("\ndeleted columns are : ",cols,"\n")
     df = df.drop(cols, axis=1)
-    df.ffill(limit=ffil_max_gap,inplace=True)
+    df.ffill(limit=fill_max_gap,inplace=True)
     df.dropna(inplace=True)
+    
+    print("numnber of  prices records after cleaning: ",df.shape[0],'\n')
+    print(100*df.shape[0]/old_num_rows,"%","of the prices records survived the cleaning, the more the better to keep the observations to be daily observations as possible  \n")
     return df
 
 
@@ -150,7 +150,8 @@ class ReturnsAndPrices(TypedDict):
     selectedAssetsPrices:pd.DataFrame
 def select_assets(
     user_risk_prefrence:float,
-    OHLC:str="Close"
+    OHLC:str="Close",
+    start_date:str="2024-1-1",
     )->ReturnsAndPrices:
     """fetch real-time assets prices data, cleans it from missing values, and picks assets that with acceptable risk .
 
@@ -166,23 +167,29 @@ def select_assets(
     BASE_DIR = Path(__file__).resolve().parent
     file_path = BASE_DIR / "country_mapper.txt"
     with open(file_path, 'r') as f:
-        assets_countries = json.load(f)
-
-    first_service=HistoricalPricesService(ApiOrMockPricesData(assets_tickers=list(assets_countries.keys()),start_date="2016-1-1" ))#first pass of the start_date variable
+        stored_dict = json.load(f)
+        stored_assets_tickers:list[str]=list(stored_dict.keys())
+    print("number of current stored assets in the universe is : ",len(stored_assets_tickers),"\n")
+    first_service=HistoricalPricesService(ApiOrMockPricesData(
+            assets_tickers=stored_assets_tickers, 
+            start_date=start_date,
+            interval="1d" 
+    ))
+    
     is_default,prices=first_service.get_data()#this  method call never changes regardless of the underlying implementation ; DIP design pattern.
     print(f"THE DEFAULT REAL-TIME PRICES WAS USED ? :  {is_default}")
-    cleaned_prices=clean_data(prices[OHLC],0.50 ,3)
+    cleaned_prices=clean_data(prices[OHLC],0.05,4)
+    
     returns = cleaned_prices.pct_change() 
-    print('\nreturns shape is : ',returns.shape,'\n') #nothing wrong here, after this line, something is modifying this data?
-
+    print('\nreturns shape -before selection ,number of columns is intact, after selection -: ',returns.shape,'\n') 
     covarience_matrix :pd.DataFrame | NDArray[Any] | Any= CovarianceShrinkage(returns, returns_data=True).ledoit_wolf() 
+    
     assets_volatilities:NDArray[Any] = np.sqrt(np.diag(covarience_matrix))
-    print("\nassets volatalities are",assets_volatilities,'\n')
-    #ONLY THING I DICUSS WITH CHATGPT: THE FOLLOWING CODE IS CAUSING CHANGING IN THE SHAPE OF THE RETURNS, POSIBLY DELETING ALL THE COLUMNS
     print("\nuser_risk_preference is:",user_risk_prefrence,"\n")
     selected_assets_indicies=[index for index  in range(len(list(cleaned_prices.columns) )) if  assets_volatilities[index]<= user_risk_prefrence]
     selected_assets_names=[list(cleaned_prices.columns)[i] for i in selected_assets_indicies]
-    print("\nselected assets names are: ",selected_assets_names,"\n") # chatGPT should notice that the output of this print statement is empty list.
+    print("\nselected assets names are: ",selected_assets_names,"\n") 
+    print("\nnumber of selected assets: ",len(selected_assets_names),"\n") 
     
     return ReturnsAndPrices(
             selectedAssetsReturns=returns[selected_assets_names],
@@ -294,7 +301,7 @@ def perform_assets_allocation(
       
     covarience_matrix :DataFrame | NDArray[Any] | Any= CovarianceShrinkage(selected_assets_returns,returns_data=True).ledoit_wolf()       
     volatilities:NDArray[Any] = np.sqrt(np.diag(covarience_matrix))                                  
-    annualized_mean_returns :  (Series | Any)= mean_historical_return(selected_assets_returns,returns_data=True) # Note 3 : use Series[Any] for mypy, python does not accept it .
+    annualized_mean_returns :  (Series | Any)= mean_historical_return(selected_assets_returns,returns_data=True,frequency=252) # Note 3 : use Series[Any] for mypy, python does not accept it .
     tickers:list[str] = list(annualized_mean_returns.index)
     # PROBLEM: must be returned to frontend and stored in the database
     risk_return_scatter_points = [
@@ -337,9 +344,8 @@ def perform_assets_allocation(
         "annualVolatility": performence_metrics[1],   
         "sharpeRatio": performence_metrics[2]
         }
-    latest_prices = get_latest_prices(selected_assets_prices)                                  # Problem : Print the value of this 
-    #print(df1.iloc[-1]==latest_prices)
-    #print(latest_prices.sort_values())
+    latest_prices = get_latest_prices(selected_assets_prices)                                  
+
     
     da = DiscreteAllocation(cleaned_assets_allocations, latest_prices, total_portfolio_value=total_portfolio_value)
     shares_quantities, leftover = da.lp_portfolio(verbose=False) # Problem :  reinvest is related to the rebalancing
@@ -393,15 +399,15 @@ class  InvestementsAdviceMocks (BaseModel) :
 def investements_advice_orchestrator(
         question_scores:list[int],
         answers_weights:list[int], 
-        total_portfolio_value:float, 
+        total_portfolio_value:float,
+        start_date:str="2024-1-1"
     )->InvestementsAdviceMocks:
 
 
     risk_appetite, normalized_risk_score=get_risk_appetite(questions_scores=question_scores,answers_weights=answers_weights)
 
-    returns_and_prices: ReturnsAndPrices=select_assets(normalized_risk_score)#PROBLEM REGARDING SELECTING: SHOULD WE USE FIXED ASSET UNIVERSE?
-    print("\n",returns_and_prices["selectedAssetsReturns"].shape,"\n")
-    print(returns_and_prices["selectedAssetsPrices"].shape,"\n")
+    returns_and_prices: ReturnsAndPrices=select_assets(normalized_risk_score,start_date=start_date)#PROBLEM REGARDING SELECTING: SHOULD WE USE FIXED ASSET UNIVERSE?
+
     intermediate_results:AssetsAllocationsResults=perform_assets_allocation(returns_and_prices["selectedAssetsReturns"], returns_and_prices["selectedAssetsPrices"],total_portfolio_value,risk_appetite,normalized_risk_score)
     
     selected_assets_names=list(intermediate_results["capitalAllocationsPercentages"].keys())

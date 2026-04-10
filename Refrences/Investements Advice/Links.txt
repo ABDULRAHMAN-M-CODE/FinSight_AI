@@ -1,0 +1,10 @@
+1-How Many assets are enough . 
+2-practical constraints.
+3-Limitations of mean variance optimization. (My suggestion: use LSTM model to predict instead of estimation for at least one input; daily returns
+
+https://mbrenndoerfer.com/writing/modern-portfolio-theory-mean-variance-optimization?utm_source=chatgpt.com
+
+
+Classes of assets and Sub classes
+
+https://www.macroption.com/asset-classes/?utm_source=chatgpt.com#commodities

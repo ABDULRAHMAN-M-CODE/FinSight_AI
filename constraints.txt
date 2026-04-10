@@ -1,0 +1,21 @@
+
+
+
+
+
+
+-Things to do immediately: 
+ A-Get more Arabic assets and apply step 'B' to them  
+ B- Data cleaning and preparation before calculating returns, 
+ C- Constraints before optimization after calculating returns and before optimization
+
+
+B-
+context: our main input is the returns that are generated from the prices, so we must ensure the prices are logical to ensure returns are logical
+
+   1-If missing > 20–30% → drop asset
+   2-Limit forward filling
+   3-add lower bound to the volatility threshold 
+
+
+C-Constraints   
