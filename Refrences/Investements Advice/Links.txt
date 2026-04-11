@@ -5,6 +5,21 @@
 https://mbrenndoerfer.com/writing/modern-portfolio-theory-mean-variance-optimization?utm_source=chatgpt.com
 
 
-Classes of assets and Sub classes
+Classes of assets and Sub classes,Assets classes vs Instruments
 
 https://www.macroption.com/asset-classes/?utm_source=chatgpt.com#commodities
+ 
+
+
+ https://www.investopedia.com/how-robo-advisors-actually-invest-your-money-11776454
+
+Other Required references 
+https://www.investopedia.com/terms/r/roboadvisor-roboadviser.asp
+https://en.wikipedia.org/wiki/Robo-advisor
+https://investor.vanguard.com/investor-resources-education/taxes/offset-gains-loss-harvesting
+
+for the investments questions  (used to calculate risk score)
+https://jigsawfp.com.au/risk-profile-questionnaire/
+
+
+

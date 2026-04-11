@@ -9,16 +9,30 @@ Asset Classes  are many , we are only interested about the following classes:
 	5-Infrastructure
 	6-Insurance 
 	7-Equities
-But for now , we only Care about commodities.
-Criteria on searching for tickers (before selection and allocation)
+But for now , we only Care about Fixed Income Class.
+Tip: Fixed Income Class have the following Sub classes:
+ Subclasses: by maturity, fixed vs. floating interest rate, government vs. corporate bonds, the latter further by sector, credit risk / rating
 
-	1- as many as tickers as possible that satisfies all the following conditions - max number of tickers is 30-:
+Here are some background about the Commodities:
+only four Subclasses exactly: energy, agriculture, industrial metals, precious metals
+Generally high risk, lower return than equities
+Good for diversification and as inflation hedge
+Correlation to equities and sensitivity to economic cycle varies (highest for energy and industrial metals)
+Agricultural commodities subject to specific factors (weather)
+Often high seasonality of returns
+Storage costs and convenience yield
+Liquidity varies (futures and ETFs on popular commodities like gold and crude oil are most liquid)
+
+	1- as many as tickers as possible that satisfies all the following conditions - max number of tickers is 40-:
 		A- all the tickers must point to the same asset class.
 		B- all the tickers must belong to entities or companies that has the main headquarter located explicitly in the United States, domiciled in 			the United States.
-		C-Preventing double exposure entirely : if some ticker or instrument to specific sector, sub class, or sub type, no other ticket should point 			to that sector, sub class, or sub type. this means that all the tickers must point to completely unique something or product within 			exactly the same class.
+		C- we relaxed this criteria : multiple tickers can point to similar sub classes  or sectors, we know this is considered double exposure, but 		that's not problem here 		because we will apply constraints so that the exposure to some sub class or sector is constrained to  		a limited percentage, it's very important 		to search for many tickers because they are considered competitors , it's ok for them 		to point to similar fields or sectors, but the important 		is that all of them must strictly point to the top level class.
 			
 		D- All tickers must be supported by yahoo finance and finance API.
 		
-		E-The Ideal, yet possible case if for a ticker to point to one class only and does not point to any other class and does not point to any other 			Sub Classes.
+		E-You must Search for as Instruments as you can, for example , do not just give me ETF instruments , but give me many other instruments that 			points to the specific class I'm interested about. which means that you should try at your best to diversify the instruments, not 			just to use ETFs, unless forced to do that. 
 
+it's totally ok for one multiple  tickers to same subclass . cautious: it is entirely bad for any ticker to point to multiple subclasses unless it is ETF, we will enforce constraints during optimization, we are now only searching for tickers that balance the subclasses  of commodities.
+Don't forget that the commodities.
+now go ahead and give me the 60 tickers that satisfies all my requirements exactly  as possible
 

@@ -313,6 +313,7 @@ def perform_assets_allocation(
         for ticker, vol, expec_ret in zip(tickers, volatilities, annualized_mean_returns.values)
     ] 
     ef = EfficientFrontier(annualized_mean_returns, covarience_matrix,verbose=False,solver='CLARABEL')#['CLARABEL', 'HIGHS', 'OSQP', 'SCIP', 'SCIPY', 'SCS']
+    ef.add_sector_constraints
     ###CONSTRAINTS#####
     #ef.add_constraint(lambda x : x >= 0.01) #Note that chatGPT that must consider : before adding this constraint, and assuming the user want aggressive portfolio, 100% was allocated to SLV, after adding the constrant, slv got 30%, and all other assets got 1%
     

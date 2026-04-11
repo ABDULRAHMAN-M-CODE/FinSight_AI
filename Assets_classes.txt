@@ -1,0 +1,8 @@
+Asset Classes  are many , we are only interested about the following classes:
+
+	-Equities
+	-Cash & Cash Equivalents
+	-Real Estate 
+	-Infrastructure
+	-Insurance 
+	
