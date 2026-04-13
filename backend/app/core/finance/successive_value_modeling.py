@@ -46,7 +46,7 @@ class FullDebtsUiData(BaseModel):
     advice:TextualDebtAdvice                        
      
 
-###########**** calasses that defines data shape and  types only; no run time  validation****  ########################
+###########**** classes that defines data shape and  types only; no run time  validation****  ########################
 
 # Used for assembling a strctured object to be serialized into formmated JSON string
 class UserDataAndSuccessiveValueFormulaResultsAsContext(TypedDict):
@@ -163,10 +163,83 @@ def calculate_debts_payoff_trajectory_data(
         
     return trajectory
 
+# same as the previous function , but this is based on snowball model insted of avalanche.
+def calculate_debts_payoff_trajectory_data_snowball(
+    balances: list[float],
+    interest_rates: list[float],
+    fixed_monthly_payments: list[float]
+) -> list[DebtTrajectoryPoint]:
+    
+    # Copy inputs (never mutate original)
+    current_balances = list(balances)
+    payments = list(fixed_monthly_payments)
 
+    trajectory: list[DebtTrajectoryPoint] = []
+
+    current_date = datetime.date.today().replace(day=1)
+
+    for _ in range(1200):
+
+        # Stop if all debts are paid
+        if trajectory and not any(
+            getattr(trajectory[-1], f"debt_{i}") > 0
+            for i in range(len(current_balances))
+        ):
+            break
+
+        point_data: dict[str, Union[str, float, int]] = {
+            "monthLabel": current_date.strftime("%b %Y")
+        }
+
+        #  sort debts by balance (smallest first)
+        debt_order = sorted(
+            range(len(current_balances)),
+            key=lambda i: current_balances[i] if current_balances[i] > 0 else float("inf")
+        )
+
+        # Apply interest first
+        for i in range(len(current_balances)):
+            if current_balances[i] > 0:
+                current_balances[i] *= (1 + interest_rates[i])
+
+        # Apply payments using snowball priority
+        for i in debt_order:
+            if current_balances[i] <= 0:
+                continue
+
+            payment = payments[i]
+
+            # If this debt can be fully paid
+            if payment >= current_balances[i]:
+                leftover = payment - current_balances[i]
+                current_balances[i] = 0.0
+
+                # Snowball effect → move leftover to next debt
+                for j in debt_order:
+                    if current_balances[j] > 0:
+                        current_balances[j] -= leftover
+                        break
+            else:
+                current_balances[i] -= payment
+
+        # Record values
+        for i in range(len(current_balances)):
+            point_data[f"debt_{i}"] = float(round(max(0.0, current_balances[i]), 2))
+
+        trajectory.append(
+            DebtTrajectoryPoint.model_construct(None, **point_data)
+        )
+
+        # Move to next month
+        next_month = current_date.month % 12 + 1
+        next_year = current_date.year + (current_date.month // 12)
+        current_date = current_date.replace(year=next_year, month=next_month)
+
+    return trajectory
 
 
 def full_debts_ui_data_orchestrator(
+          strategy: Literal["avalanche", "snowball"],
           balances: list[float], 
           interest_rates: list[float], 
           fixed_montlhy_payments: list[float],
@@ -189,7 +262,22 @@ def full_debts_ui_data_orchestrator(
        
        startingTotalBalance:float=sum(balances)
        
-       trajectory:list[DebtTrajectoryPoint]=calculate_debts_payoff_trajectory_data(balances,interest_rates,fixed_montlhy_payments)
+       # strategy selection (NEW)
+       strategy_map = {
+            "avalanche": calculate_debts_payoff_trajectory_data,
+            "snowball": calculate_debts_payoff_trajectory_data_snowball
+       }
+
+       try:
+            trajectory:list[DebtTrajectoryPoint] = strategy_map[strategy](
+                balances,interest_rates,fixed_montlhy_payments
+            )
+       except KeyError:
+            raise ValueError(f"Unsupported strategy: {strategy}")
+       
+       #  safety check (NEW)
+       if not trajectory:
+            raise ValueError("Trajectory calculation failed - empty result")
        
        monthsToTotalPayoff:int= len(trajectory)
        
@@ -199,7 +287,6 @@ def full_debts_ui_data_orchestrator(
        
        debts_keys_config_schema:list[DebtsKeysConfigSchema]= get_debts_keys(user_validated_data) 
     
-
 
        
        # Genrate a textual recommendation (for the now , the advice governs the debts only)
@@ -211,7 +298,9 @@ def full_debts_ui_data_orchestrator(
        prompt = "I will give you an information about my goals, investements, life insurence, household income,  my debts, and a precomputed values that describes the pay-off timeline of my debts." \
        " please give me advice, I understand nothing about finance,I'm a novice in the finance world." \
        " you ardive must tell  what I should exactly do so that I understand with least minimal mental effort." \
-       " you should mention some technical terms, but the overall advice must be very udnerstandable to me! " 
+       " you should mention some technical terms, but the overall advice must be very udnerstandable to me! " \
+       f" The strategy used is: {strategy}."  #  added context WITHOUT removing original prompt
+       
        precomputed_data = SuccessiveValueFormulaComputedData.model_construct(
             startingTotalBalance=startingTotalBalance,
             trajectory=trajectory,  
@@ -241,7 +330,3 @@ def full_debts_ui_data_orchestrator(
                         debtKeys=debts_keys_config_schema,
                         advice=advice
                     )
-       
-
-
-
