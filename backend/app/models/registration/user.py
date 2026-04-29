@@ -81,6 +81,11 @@ class User(Base):
         cascade="all, delete-orphan"
     )
 
+    user = relationship(
+        "User",
+        back_populates="tax_profiles"
+    )
+    
     goals = relationship(
         "Goal",
         back_populates="user",
