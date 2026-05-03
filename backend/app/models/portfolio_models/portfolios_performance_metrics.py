@@ -14,6 +14,7 @@ class PortfoliosPerformanceMetrics(Base):
         default=uuid.uuid4
     )
 
+    
     user_id = Column(
         Integer,
         ForeignKey("users.id", ondelete="CASCADE"),

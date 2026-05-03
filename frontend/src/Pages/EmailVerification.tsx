@@ -39,7 +39,7 @@ function useEmailVerification({email}:{email:string}) {
                                                       
     // request backend.
   try {
-      const response = await fetch("http://127.0.0.1:8000/auth/verify-email", {
+      const response = await fetch("http://localhost:8000/auth/verify-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials:"include", /// frontend expects container for JWT : coookie verify-route 

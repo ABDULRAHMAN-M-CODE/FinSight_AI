@@ -9,16 +9,14 @@ import { HouseholdIncomeSection } from "../Imports/HouseholdIncomeSection";
 import { MonthlyBudgetSection } from '../Imports/MonthlyBudgetSection';
 
 import { OutstandingDebtsSection } from '../Imports/OutstandingDebtsSection';
-import { LifeInsuranceSection } from '../Imports/LifeInsuranceSection';
-import { FinancialGoalsSection } from '../Imports/FinancialGoalsSection';
+
 import BackAndContinueButtons from "../Imports/BackAndContinueButtons";
 import RiskAssessment from "../Components/InvestementsRiskProfileAssasementCard";
 
 
 import type { HouseholdMember,  } from '../Types/HouseHoldMember';
 import type { Debt } from "../Types/Debt";
-import { type Goal } from "../Types/Goal";
-import { type InsuranceInfo } from "../Types/InsuranceInfo";
+
 import { type SubjectiveQuestionAnswer } from "../Components/InvestementsRiskProfileAssasementCard";
 //Needed later (Unless we refactor the code)
 //import { type FullServiceAdviceContract } from "../Types/FullServiceAdviceContract";
@@ -29,46 +27,30 @@ import { type SubjectiveQuestionsType } from "../Components/InvestementsRiskProf
 import { FetchData } from "../Functions/api/fetchData";
 //import { extractAndSaveDataToLocalStorage } from "../Functions/api/reusable_functions/extractAndSaveDataToLocalStorage ";
 import z from "zod";
+
 const Asset=z.object({
     assetName: z.string(),
-    capitalAllocationPercentage:z.number(),
-    quantity: z.number()
-})
-
-        
+    capitalAllocationPercentage:z.number()
+})        
 const Metrics=z.object({
     expectedAnnualReturn: z.number(),
     annualVolatility: z.number(),
     sharpeRatio: z.number()
 }) 
-
-
-
 const OptimalPortfolio=z.object({
     assets:z.array(Asset), 
     metrics:Metrics 
-})
-
-
-    
+}) 
 const AssetScatterPoint=z.object({
     ticker:z.string(),
     volatility: z.number(),
     expectedReturn:z.number()  
-})
-
-    
-const EfficientFrontierPoint=z.object({
-    volatility: z.number(),
-    expectedReturn: z.number()
 }) 
-
-
 const  InvestementsAdviceSchema =z.object({
     leftover: z.number(),
     optimalPortfolio:OptimalPortfolio, 
-    assetsScatter: z.array(AssetScatterPoint),
-    efficientFrontierPoints: z.array(EfficientFrontierPoint)
+    assetsScatter: z.array(AssetScatterPoint)
+    
 
 })
 export type InvestementsAdviceType = z.infer<typeof InvestementsAdviceSchema>; 
@@ -224,39 +206,30 @@ function useMultiStepContex(){
 
         const navigate= useNavigate();
 
-        const url="http://127.0.0.1:8000/onboarding/questionnaire";
+        const url="http://localhost:8000/onboarding/questionnaire";
 
         const key="step";
+        
         // remember that the demo uses 'currentStep' instead of 'step', so there is no conflict.
         const [step, setStep]= useState( Number( localStorage.getItem(key)) || 1 );
         
         // when the user reloads the page, error states must not persisted, they must be reset to prevent  stuck in error state.
         const [isThereError,setIsThereError]=useState(false);
         const [errorMsg,setErrorMsg]=useState("");
-
-
+        const [investementAmount,setInvestementAmount]=useState(3000);
        
-      
-        
-       const steps = [
-        { number: 1, label: "Household income" },
-        { number: 2, label: "Monthly budget" },
-        { number: 3, label: "Investestments accounts" },
-        { number: 4, label: "Outstanding debts" },
-        { number: 5, label: "Life insurence" },
-        { number: 6, label: "Goals" }
+        const steps = [
+            { number: 1, label: "Household income" },
+            { number: 2, label: "Monthly budget" },
+            { number: 3, label: "Risk-appetitie" },
+            { number: 4, label: "Outstanding debts" }
         ];
         
-       // Date.now() to unqiuely identify each id, insure all id's are unique and collisions  happen.
+        // Date.now() to unqiuely identify each id, insure all id's are unique and collisions  happen.
         const [householdMembers, setHouseholdMembers] = useState<HouseholdMember[]>([
             {id:Date.now(), member_name: '', annual_income: 0, income_source: '' }
         ]);
-        
-        const [monthlyBudget, setMonthlyBudget] = useState(0);
-        
-        
-        
-        
+        const [monthlyBudget, setMonthlyBudget] = useState(0);        
         const [answers, setAnswers] = useState< SubjectiveQuestionAnswer[] >(
             subjectiveQuestions.map((q)=> ({
             "questionId": q.questionId,
@@ -264,22 +237,11 @@ function useMultiStepContex(){
         })) // ({}) : returns object , when use {}, JS thinks {} is function block; when want to return object  implicitly in map,  ({}) ,otherwise error will occur.
         );
         const [sliderValue, setSliderValue] = useState<number>(5);
-        
-        const [goals, setGoals] = useState<Goal[]>([
-            { id:Date.now(), name: '', type: 'short-term', target_amount:0, deadline:"" }
-        ]);        
         const [debts, setDebts] = useState<Debt[]>([
             { id:Date.now(), type: '', balance: 0, monthly_payment: 0, interest_rate: 0 }
         ]);
         
-        
-        const [insurance, setInsurance] = useState<InsuranceInfo[]>([{
-            insurance_type: '',
-            death_benefit: 0,
-            cash_value: 0,
-            monthly_premium: 0
-        }]);
-        
+
 
 
         const handleBack = () => {
@@ -291,16 +253,18 @@ function useMultiStepContex(){
         };
 
         const handleNext = async (e: React.SubmitEvent<HTMLFormElement>) => {
-             e.preventDefault();
-
-            // Steps 1 to 5: Just move to the next step
-            if (step < 6) {
+            setIsThereError(false)
+            e.preventDefault();
+            // all steps before last step : data accumalation, then move to next step only.
+            if (step < steps.length) {
+    
                 setStep(step + 1);
                 localStorage.setItem("step", (step + 1).toString());
                 return;
             }
             
-            // setup
+            // last step : submite data payload to backend.
+            setIsThereError(false)
             type PayLoadTYpe={
                 
                 household_income: {
@@ -317,21 +281,8 @@ function useMultiStepContex(){
                 subjective_answers_values_and_weights:{
                     questions_weights:number[],
                     answers_values:number[],
-                },
-
-                life_insurance: {
-                    insurance_type: string;
-                    death_benefit: number;
-                    cash_value: number;
-                    
-                }[],
-                financial_goals: {
-                    id: number;
-                    name: string;
-                    type: "short-term" | "long-term";
-                    target_amount: number;
-                    deadline: string;
-                }[];    
+                    investement_amount:number
+                },   
         }
             setIsLoading(true);
             const payload:PayLoadTYpe = {
@@ -347,33 +298,15 @@ function useMultiStepContex(){
                 
                 subjective_answers_values_and_weights:{
                     questions_weights:subjectiveQuestions.map(question=>question.questionWeight),
-                    answers_values:answers.map(answer=>answer.answerValue)
-                },
-                
-                life_insurance: insurance.map(i => ({
-                    insurance_type: i.insurance_type,
-                    death_benefit: Number(i.death_benefit),
-                    cash_value: Number(i.cash_value),
-                    monthly_premium: Number(i.monthly_premium)
-                })),
-                financial_goals: goals.map(g => ({
-                    id: g.id,
-                    name: g.name,
-                    type: g.type,
-                    target_amount: Number(g.target_amount),
-                    deadline: g.deadline
-                }))
+                    answers_values:answers.map(answer=>answer.answerValue),
+                    investement_amount:investementAmount
+                },                
+
             };
 
 
             //console.table(payload) // to visulaize the sent data as table on the console.
-    
-            // Problem 2 : after making this function work, replace the try catch block with already made function, maybe it's the 'handleDemoSubmit'
-            try {
-
-                console.log("user's info which used as context for the LLM  and to be stored in the database is  :\n ")
-                console.log(payload)
-                
+            try {                
                 // send a request
                 const response= await FetchData({payload, url});
 
@@ -409,6 +342,7 @@ function useMultiStepContex(){
                 console.log(`safeParse result content is ${result}`)
                 if(result.success){
                     console.log("nice!. run time validation succeed!, results stored in the local storage")
+                    
                     localStorage.setItem("FullAdviceData", JSON.stringify(data));// storing response as key:value in the local storage
                     navigate("/PostMultiStepContext");
                 }
@@ -441,15 +375,11 @@ function useMultiStepContex(){
         sliderValue,setSliderValue,
         debts,
         setDebts,
-        insurance,
-        setInsurance,
-        goals,
-        setGoals,
         handleBack,
         handleNext,
         isLoading,
         isThereError,
-        errorMsg
+        errorMsg,investementAmount,setInvestementAmount
     }
 }
 
@@ -468,22 +398,20 @@ export default function MultiStepContext(){
         sliderValue,setSliderValue,
         debts,
         setDebts,
-        insurance,
-        setInsurance,
-        goals,
-        setGoals,
         handleBack,
         handleNext,
         isLoading,
         isThereError,
-        errorMsg
+        errorMsg,
+        investementAmount,setInvestementAmount
     }= useMultiStepContex();
    
-   
+   console.log("step =", step);
     // PROBLEM: REFACTOR THE FOLLOWING JSX.
     return (
+    
      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 ">
-        
+        <p>hello world</p>    
         {/** progress bard is always rendered */}
         <div className="pt-8">
           <ProgressBar currentStep={step} steps={steps} totalSteps={6} />
@@ -523,7 +451,7 @@ export default function MultiStepContext(){
 
                     <form onSubmit={handleNext}>
 
-                        <RiskAssessment answers={answers} setAnswers={setAnswers} sliderValue={sliderValue} setSliderValue={setSliderValue} subjectiveQuestions={subjectiveQuestions}  />
+                        <RiskAssessment answers={answers} setAnswers={setAnswers} sliderValue={sliderValue} setSliderValue={setSliderValue} subjectiveQuestions={subjectiveQuestions}  investementAmount={investementAmount} setInvestementAmount={setInvestementAmount} />
                         <BackAndContinueButtons  handleBack={handleBack} isLoading={isLoading}   />                       
                     
                     </form>
@@ -531,8 +459,22 @@ export default function MultiStepContext(){
                     // should I put button here ? 
                 )}
 
-                {step==4 && (
-
+                {step==steps.length && isThereError&& (
+                    <div className="border border-red-300 bg-red-50 rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                        <svg className="w-5 h-5 text-red-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <div className="flex-1">
+                        <p className="text-sm text-red-800">
+                            {errorMsg}
+                        </p>
+                        </div>
+                    </div>
+                    </div>
+                )}
+                {step==steps.length && (
+                    
                     <form onSubmit={handleNext}>
                         <OutstandingDebtsSection
                             debts={debts}
@@ -542,40 +484,9 @@ export default function MultiStepContext(){
                     </form>
         
                 )}
-                {step==5 && (
-                    <form onSubmit={handleNext}>
-                        <LifeInsuranceSection
-                            insuranceList={insurance}
-                            onUpdate={setInsurance}
-                        />        
-                                    
-                        <BackAndContinueButtons  handleBack={handleBack} isLoading={isLoading}   /> 
-                    </form>
 
-                    // should I put button here ? 
-                )}
           
-                {/** Data Submission to backend happens here */}
-                {step==6 && (
-             
-                    <>
-                        {/** conditionally rendered error when step=6 && there is error */}
-                        {isThereError &&(
-                            <div className="border border-red-300 bg-red-50 rounded-lg p-4 text-red-800">
-                               {errorMsg}
-                            </div>                            
-                        )}
-
-                        {/** Goals Section that user must fill  */}
-                        <form onSubmit={handleNext}>
-                            <FinancialGoalsSection
-                                goals={goals}
-                                onUpdate={setGoals}
-                            />        
-                            <BackAndContinueButtons  handleBack={handleBack} isLoading={isLoading}   /> 
-                        </form>
-                    </>
-                )}              
+            
         </div>
      </div>
 )

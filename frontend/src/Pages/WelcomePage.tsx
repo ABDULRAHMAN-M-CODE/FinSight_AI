@@ -52,45 +52,7 @@ export default function WelcomePage() {
             </div>
           </div>
 
-          {/* Right Column - Product Illustration */}
-          <div className="relative">
-            <div className="bg-[#0f3d5c]/50 rounded-2xl p-8 backdrop-blur-sm border border-white/10">
-              {/* Platform Preview Container */}
-              <div className="space-y-6">
-                {/* Top Screenshot */}
-                <div className="bg-white rounded-lg overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform">
-                  <img 
-                    src={screenshot3} 
-                    alt="Investment Performance Dashboard"
-                    className="w-full h-auto"
-                  />
-                </div>
-                
-                {/* Bottom Screenshots Grid */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white rounded-lg overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform">
-                    <img 
-                      src={screenshot1} 
-                      alt="Financial Dashboard"
-                      className="w-full h-auto"
-                    />
-                  </div>
-                  
-                  <div className="bg-white rounded-lg overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform">
-                    <img 
-                      src={screenshot2} 
-                      alt="What If Simulation"
-                      className="w-full h-auto"
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              {/* Decorative accent */}
-              <div className="absolute -top-4 -right-4 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl"></div>
-              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl"></div>
-            </div>
-          </div>
+
         </div>
       </main>
     </div>

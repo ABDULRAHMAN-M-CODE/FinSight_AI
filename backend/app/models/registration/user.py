@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 
 
+
 class User(Base):
     __tablename__ = "users"
 
@@ -53,32 +54,12 @@ class User(Base):
         cascade="all, delete-orphan",
         passive_deletes=True
     )
-
-    protection_advices = relationship(
-        "ProtectionAdvices",
-        back_populates="user",
-        cascade="all, delete-orphan",
-        passive_deletes=True
-    )
-
-    goals_and_investments_advices = relationship(
-        "GoalsAndInvestmentsAdvices",
-        back_populates="user",
-        cascade="all, delete-orphan",
-        passive_deletes=True
-    )
-
-    investment_accounts = relationship(
-        "InvestmentAccount",
-        back_populates="user",
-        cascade="all, delete-orphan",
-        passive_deletes=True
-    )
-
+    # solves the problem of manually filtering the portfolios for each user . instead of manually using SQl, use python
     portfolios = relationship(
         "PortfoliosPerformanceMetrics", 
         back_populates="user",
         cascade="all, delete-orphan"
+<<<<<<< Updated upstream
     )
 
     user = relationship(
@@ -91,4 +72,6 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
         passive_deletes=True
+=======
+>>>>>>> Stashed changes
     )

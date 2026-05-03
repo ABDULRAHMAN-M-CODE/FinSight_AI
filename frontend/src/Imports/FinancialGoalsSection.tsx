@@ -11,11 +11,13 @@ import { type Goal } from '../Types/Goal';
 interface FinancialGoalsSectionProps {
   goals: Goal[];
   onUpdate: (goals: Goal[]) => void;
+  isLoading:boolean
 }
 
 export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({ 
   goals, 
-  onUpdate 
+  onUpdate,
+  isLoading 
 }) => {
   const updateGoal = (id: number, field: keyof Goal, value: Goal[keyof Goal] )=> {
     const updatedGoals = goals.map(goal => 
@@ -71,6 +73,7 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
                 variant="danger"
                 onClick={() => removeGoal(goal.id)}
                 className="absolute top-2 right-2"
+                disabled={isLoading}
               >
                 <Trash2 className="h-4 w-4" />
               </IconButton>
@@ -86,6 +89,7 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
                   type='text'
                   value={goal.name}
                   onChange={(e) => updateGoal(goal.id, 'name',   e.target.value)}
+                  disabled={isLoading}
                 />
               </div>
               <div className="space-y-2">
@@ -95,6 +99,7 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
                   name={`goals[${index}][type]`}
                   value={goal.type}
                   onChange={(e) => updateGoal(goal.id, 'type', e.target.value as 'short-term' | 'long-term')}
+                  disabled={isLoading}
                 >
                   <option value="short-term">Short-term (0-5 years)</option>
                   <option value="long-term">Long-term (5+ years)</option>
@@ -109,6 +114,7 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
                   name={`goals[${index}][target_amount]`}
                   placeholder="$50,000"
                   value={goal.target_amount}
+                  disabled={isLoading}
                   type='number'
                   onChange={(e) => updateGoal(goal.id, 'target_amount', Number(e.target.value))}
                 />
@@ -119,6 +125,7 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
                   id={`goal-deadline-${goal.id}`}
                   name={`goals[${index}][deadline]`}
                   type="date"
+                  disabled={isLoading}
                   value={goal.deadline}
                   onChange={(e) => updateGoal(goal.id, 'deadline', e.target.value)}
                 />
@@ -127,7 +134,7 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
           </div>
         ))}
         
-        <Button variant="link" onClick={addGoal} className="p-0" type='button'>
+        <Button variant="link" onClick={addGoal} className="p-0" type='button' disabled={isLoading}>
           + Add another goal
         </Button>
       

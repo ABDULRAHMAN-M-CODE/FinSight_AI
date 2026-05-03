@@ -69,7 +69,7 @@ function useIntroStepper(){
     if (isLastStep) {
       // I want to redirect user to other page,I do not know if I should use Link or useNavigate(): user-intention based vs side-effect navigation
       // decision using if statement : I will use useNavigate() !
-      navigate ("/DataCollectionIntro")
+      navigate ("/MultiStepContext")
     } else {
       setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
     }

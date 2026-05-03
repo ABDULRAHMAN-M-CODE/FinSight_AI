@@ -6,7 +6,6 @@ from app.database import get_db
 
 # import needed models
 from app.models.registration import User, EmailVerificationToken, PasswordResetToken
-
 from datetime import datetime, timedelta
 
 # import needed schemas for this router
@@ -64,6 +63,9 @@ def register(user: UserRegister, background_tasks: BackgroundTasks, request: Req
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
+
+    
+
     raw_token = generate_raw_token()
     hashed_token = hash_token(raw_token)
 
@@ -141,15 +143,15 @@ def verify_email(
     )
 
     # frontend will store the following cookie so that every future request to the backend will include this cookie/token
+    
     response.set_cookie(
         key="access_token",
         value=access_token,
         httponly=True,              # Prevent JS access (protect against XSS "javascript injection" token theft)
         secure=False,               
-        samesite="lax",             # Helps protect against CSRF, you can read about it , I do not understand it well .
-        # Long age for testing purposes.
+        samesite="lax",                    
         max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60, 
-        path="/"                    # Cookie available to entire app
+        path="/"                    
     )
 
     return {
@@ -194,6 +196,8 @@ def login(user: UserLogin, response: Response,request: Request, db: Session = De
         path="/"
     )
 
+    print("SETTING COOKIE:", access_token)
+    print("HEADERS OUT:", response.headers)
     return {
         "message": "Login successful",
         "first_login": db_user.is_first_login

@@ -3,17 +3,17 @@ import os
 from dotenv import load_dotenv
 load_dotenv() # loads the .env file
 
-# import fastapi packages -----------------------------------------------------
+#fastapi packages -----------------------------------------------------
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, engine
 
-# import routers -------------------------------------------------------
+# routers -------------------------------------------------------
 from app.routes.auth import router as auth_router
 from app.routes.user_settings import router as user_settings_router
 from app.routes.questionnaire import router as questionnaire_router 
-from app.routes.demo import router as demo_router
 from app.routes.dashboard import router as dashboard_router
+from app.routes.ticker import router as ticker_router
 # -------------------------------------------------------
 
 # import limiter -------------------------------------------------------
@@ -44,8 +44,8 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(user_settings_router)
 app.include_router(questionnaire_router)
-app.include_router(demo_router)
 app.include_router(dashboard_router)
+app.include_router(ticker_router)
 
 # main endpoint
 @app.get("/")

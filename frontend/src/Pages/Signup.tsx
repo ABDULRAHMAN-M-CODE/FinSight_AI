@@ -91,7 +91,7 @@ const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
   // if client-side validation passed, try register the user, 
   setIsLoading(true);
   try {
-    const response = await fetch("http://127.0.0.1:8000/auth/register", { 
+    const response = await fetch("http://localhost:8000/auth/register", { 
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -100,7 +100,8 @@ const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         email: formData.email.trim().toLowerCase(),
         password: formData.password,
         confirm_password: formData.confirmPassword, // Must be confirm_password
-      }),
+      })
+      
     });
 
     // return immidately if could not register the user, then either to tell him the exact reason or notify him with general massege.

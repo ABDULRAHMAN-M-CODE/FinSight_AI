@@ -18,6 +18,8 @@ export type SubjectiveQuestionAnswer={
   answerValue:number; // should I rename this 
 }
 type   RiskAssessmentProps={
+  investementAmount:number;
+  setInvestementAmount:React.Dispatch<React.SetStateAction<number>>;
   answers: SubjectiveQuestionAnswer[];
   setAnswers: React.Dispatch<React.SetStateAction< SubjectiveQuestionAnswer[]  > >;
   sliderValue: number;
@@ -44,7 +46,7 @@ function useRiskAssessment( setAnswers:  React.Dispatch<React.SetStateAction<Sub
 }
 
 
-export default function RiskAssessment({answers,setAnswers,sliderValue,setSliderValue,subjectiveQuestions}:RiskAssessmentProps ) {
+export default function RiskAssessment({answers,setAnswers,sliderValue,setSliderValue,subjectiveQuestions,investementAmount,setInvestementAmount}:RiskAssessmentProps ) {
 
 
   const {handleSelectChange}=useRiskAssessment(setAnswers);
@@ -61,7 +63,7 @@ export default function RiskAssessment({answers,setAnswers,sliderValue,setSlider
  
         <div className={`p-6 `}>
         
-            {/** question to chatGPT: I want to add the question here along with it's input, it's style must be compatible witheverything else, don't ever change my code, just give me the division element I should put here */}
+            {/** question to Gemini: I want to add the question here along with it's input, it's style must be compatible witheverything else, don't ever change my code, just give me the code the snippit that I need to */}
             
             {/* Compact layout for questions 1-10, instead of making label and select element for each question manually */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
@@ -135,51 +137,39 @@ export default function RiskAssessment({answers,setAnswers,sliderValue,setSlider
                 </div>
 
               </div>
-            </div>
-
-          
-          
-          
-          
-          
-{/*             <div className="pt-6 border-t border-gray-100">
-              
-              <span className="font-semibold text-sm text-gray-900 block mb-1">
-                12. Desired Annual Return
-              </span>
-
-              <label htmlFor="target-return" className="text-sm text-gray-600 mb-4 block">
-                What annual return (%) would you like your investment to target?
-                <br />
-                <span className="text-gray-400 text-xs">
-                  Typical range: 2% (very safe) to 15% (high growth). Higher values involve significantly higher risk.
-                </span>
-              </label>
-
-              <div className="px-2 max-w-lg">
-                
-                <input
-                  id="target-return"
-                  type="number"
-                  min={2}
-                  max={20}
-                  step={0.5}
-                  value={sliderValue}
-                  onChange={(e) => setSliderValue(Number(e.target.value))}
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  placeholder="e.g. 8"
-                />
-
-                <div className="flex justify-between text-xs text-gray-500 mt-2 font-medium">
-                  <span>Low (2–5%)</span>
-                  <span className="text-blue-600 font-bold text-sm">
-                    Selected: {sliderValue}%
-                  </span>
-                  <span>High (10–15%+)</span>
-                </div>
-
               </div>
-            </div> */}
+
+
+              {/** Question 12 :  total investement amount */}
+              <div className="pt-6 border-t border-gray-100">
+    
+                <span className="font-semibold text-sm text-gray-900 block mb-1">
+                  Investment Amount
+                </span>
+
+                <label htmlFor="investment-amount" className="text-sm text-gray-600 mb-4 block">
+                  How much would you like to invest?
+                </label>
+
+                <div className="px-2 max-w-lg">
+                  
+                  <input
+                    id="investment-amount"
+                    type="number"
+                    min={1000}
+                    value={investementAmount}
+                    onChange={(e) => setInvestementAmount(Number(e.target.value))}
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    placeholder="e.g. 10000"
+                  />
+
+                </div>
+              </div>
+                    
+          
+          
+          
+          
 
 
 

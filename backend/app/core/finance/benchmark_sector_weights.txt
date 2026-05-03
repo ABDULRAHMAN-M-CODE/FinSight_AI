@@ -1,0 +1,13 @@
+{
+   "basic-materials": 0.025829618978024636,
+   "communication-services": 0.08721799216266891,
+   "consumer-cyclical": 0.11175196929815262,
+   "consumer-defensive": 0.059131596788734385,
+   "energy": 0.04342618867612685,
+   "financial-services": 0.11850991246510817,
+   "healthcare": 0.08972905184131724,
+   "industrials": 0.07356566379557412,
+   "real-estate": 0.023331817304096083,
+   "technology": 0.3431628249989402,
+   "utilities": 0.02434336369125679
+}

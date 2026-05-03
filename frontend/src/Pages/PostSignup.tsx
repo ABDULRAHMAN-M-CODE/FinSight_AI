@@ -41,7 +41,7 @@ export default function PostSignup() {
           {/* Secondary CTA - Skip */}
           <Link
             
-            to="/DataCollectionIntro"
+            to="/MultiStepContext"
             className="w-full py-3 px-4 bg-white text-gray-700 font-medium rounded-lg border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             aria-label="Skip tutorial and go to main application"
           >

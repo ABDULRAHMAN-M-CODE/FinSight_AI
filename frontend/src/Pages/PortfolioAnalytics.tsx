@@ -139,15 +139,7 @@ export default function PortfolioAnalytics() {
                   <Legend verticalAlign="top" height={36}/>
                   
                   {/* Efficient Frontier as a line using Scatter */}
-                  <Scatter 
-                    name="Efficient Frontier" 
-                    data={mockData.efficientFrontierPoints} 
-                    fill="#10b981"
-                    stroke="#10b981" 
-                    strokeWidth={2}
-                    line={{ stroke: '#23342e', strokeWidth: 2 }}
-                    shape={() => null} 
-                  />
+
                   
                   {/* Assets */}
                   <Scatter 
@@ -200,7 +192,7 @@ export default function PortfolioAnalytics() {
                     <tr>
                       <th className="px-4 py-3 font-medium rounded-tl-lg">Asset</th>
                       <th className="px-4 py-3 font-medium">Allocation</th>
-                      <th className="px-4 py-3 font-medium rounded-tr-lg text-right">Quantity</th>
+                      
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
@@ -208,7 +200,7 @@ export default function PortfolioAnalytics() {
                       <tr key={asset.assetName} className="hover:bg-gray-50/50">
                         <td className="px-4 py-3 font-medium text-gray-900">{asset.assetName}</td>
                         <td className="px-4 py-3 text-gray-600">{Number((100*asset.capitalAllocationPercentage).toFixed(2))}%</td>
-                        <td className="px-4 py-3 text-gray-600 text-right">{asset.quantity}</td>
+                        
                       </tr>
                     ))}
                   </tbody>

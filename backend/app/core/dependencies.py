@@ -12,8 +12,6 @@ bearer_scheme = HTTPBearer()
 # to get the user info from the JWT or cookie 
 def get_current_user(
     request:Request,
-    
-    
     db: Session = Depends(get_db)
 ) -> User:
 

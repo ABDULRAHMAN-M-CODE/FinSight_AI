@@ -6,8 +6,8 @@ from app.core.config import settings
 SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM
 
-# expire time is 30 mins 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30# modified for testing, to prevent the need for repeated singup during testing the app
+
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()

@@ -32,7 +32,7 @@ class TextualDebtAdvice(BaseModel):
         type: Literal["urgent" , "positive" , "neutral"]# equivelemt to z.enum(["urgent" , "positive" , "neutral"]) in frontend
         textualAdvice: str
 
-from app.core.finance.portfolio_construction import AssetsAllocationsResults
+
 # Top level schema
 class FullDebtsUiData(BaseModel):
     # those four debt-advice-related fields will be provided as additional context to the AI and will be also returned to the frontend .
