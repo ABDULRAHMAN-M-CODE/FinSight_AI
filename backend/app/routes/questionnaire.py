@@ -96,7 +96,7 @@ def submit_questionnaire(
         # future update
 
      # 6- Mark first login as completed
-        #current_user.is_first_login = False
+        current_user.is_first_login = False
 
         print("debts type is  :",data.outstanding_debts[0].type,'\n')
         portfolio_advice:InvestementsAdviceMocks=InvestementsAdviceOrchestrator(
