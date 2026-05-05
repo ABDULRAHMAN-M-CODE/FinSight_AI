@@ -59,19 +59,6 @@ class User(Base):
         "PortfoliosPerformanceMetrics", 
         back_populates="user",
         cascade="all, delete-orphan"
-<<<<<<< Updated upstream
-    )
 
-    user = relationship(
-        "User",
-        back_populates="tax_profiles"
     )
-    
-    goals = relationship(
-        "Goal",
-        back_populates="user",
-        cascade="all, delete-orphan",
-        passive_deletes=True
-=======
->>>>>>> Stashed changes
-    )
+ 

@@ -31,7 +31,8 @@ from app.models.debt_models.debts_advices import DebtsAdvices
 from app.models.debt_models.debts_metrics import DebtMetrics
 from app.core.finance.successive_value_modeling import (
     full_debts_ui_data_orchestrator,
-    FullDebtsUiData,   
+    FullDebtsUiData,
+    choose_strategy_from_personality   
 )
 from app.schemas.questionnaire_schemas import DebtIn
 from app.core.finance.portfolio_construction import InvestementsAdviceOrchestrator,InvestementsAdviceMocks,Asset
@@ -60,9 +61,6 @@ def submit_questionnaire(
                 detail="user already filled finance data ",
             )
 
-        """
-
-
         # 1- Store all submitted user's info "data" in the  appropriate database tables.
         # Store User Financial Data
         total_income = sum(member.annual_income for member in data.household_income)
@@ -79,12 +77,20 @@ def submit_questionnaire(
         # first, we model the Successive value formula which is : b(k)=(b(k-1)*(1+interestRate))-p, the inputs to this equation is exlicitly  provided by user info
         # all the results of this equation or function call  must be passed to the full_service_user_prompt (or define that prompt in the same file containing  the function implmentation)
 
+        score = 7 # avalanche method is fixed.  
+        strategy = choose_strategy_from_personality(score)
+        
         debts:list[DebtIn]=data.outstanding_debts
         balances = [d.balance for d in debts]
         interest_rates = [d.interest_rate for d in debts]
         fixed_monthly_payments = [d.monthly_payment for d in debts]
-        debts_ui_data=full_debts_ui_data_orchestrator( balances ,interest_rates, fixed_monthly_payments,data)
-
+        debts_ui_data = full_debts_ui_data_orchestrator(
+            strategy=strategy,   
+            balances=balances,
+            interest_rates=interest_rates,
+            fixed_montlhy_payments=fixed_monthly_payments,
+            user_validated_data=data
+        )
         
         # 3- Store the AI results in the Database.
         db.add(DebtsAdvices(
@@ -97,42 +103,46 @@ def submit_questionnaire(
                 metrics=json_safe(
                     debts_ui_data.model_dump(exclude={"advice"}))
         ))
+        # # 4- Investement advice
+        # portfolio_advice:InvestementsAdviceMocks=InvestementsAdviceOrchestrator(
+        #     answers_weights=data.subjective_answers_values_and_weights.questions_weights,
+        #     questions_scores=data.subjective_answers_values_and_weights.answers_values,
+        #     total_portfolio_value=data.subjective_answers_values_and_weights.investement_amount
+        # ).get_investement_advice()
         
-        # 4- Mark first login as completed
+        
+        # # is the following correct 
+        # portfolio_description=PortfoliosPerformanceMetrics(
+        #     user_id=current_user.id,
+        #     expected_annual_return=portfolio_advice.optimalPortfolio.metrics.expectedAnnualReturn,
+        #     annual_volatility=portfolio_advice.optimalPortfolio.metrics.annualVolatility,
+        #     sharpe_ratio=portfolio_advice.optimalPortfolio.metrics.sharpeRatio
+        # )
+        # assets:list[Asset]=portfolio_advice.optimalPortfolio.assets
+        # assets_names=[]
+        # for asset in assets:
+        #     assets_names.append(asset.assetName)
+        # assets_percentages=[]
+        # for asset in assets:
+        #     assets_percentages.append(asset.capitalAllocationPercentage)
+
+        # portfolio_description.assets=[Portfolios(asset_name=name,capital_allocation_percentage=percentage) for name,percentage in zip(assets_names,assets_percentages)]
+        # db.add(portfolio_description)
+
+     # goals advice
+        # future update
+
+     # 6- Mark first login as completed
         current_user.is_first_login = False
-        db.commit()"""
 
-
-
-        portfolio_advice:InvestementsAdviceMocks=InvestementsAdviceOrchestrator(
-            answers_weights=data.subjective_answers_values_and_weights.questions_weights,
-            questions_scores=data.subjective_answers_values_and_weights.answers_values,
-            total_portfolio_value=data.subjective_answers_values_and_weights.investement_amount
-        ).get_investement_advice()
-        
-        
-        # is the following correct 
-        portfolio_description=PortfoliosPerformanceMetrics(
-            user_id=current_user.id,
-            expected_annual_return=portfolio_advice.optimalPortfolio.metrics.expectedAnnualReturn,
-            annual_volatility=portfolio_advice.optimalPortfolio.metrics.annualVolatility,
-            sharpe_ratio=portfolio_advice.optimalPortfolio.metrics.sharpeRatio
-        )
-        assets:list[Asset]=portfolio_advice.optimalPortfolio.assets
-        assets_names=[]
-        for asset in assets:
-            assets_names.append(asset.assetName)
-        assets_percentages=[]
-        for asset in assets:
-            assets_percentages.append(asset.capitalAllocationPercentage)
-
-        portfolio_description.assets=[Portfolios(asset_name=name,capital_allocation_percentage=percentage) for name,percentage in zip(assets_names,assets_percentages)]
-        db.add(portfolio_description)
+     # 7- commit changes to DB.
         db.commit()
-        
-        return FullAdviceData(investementsAdvice=portfolio_advice)
+
+     # 8- return data to frontend.
+        return FullAdviceData(fullDebtsUiData=debts_ui_data)
+    
     except Exception as e:
-        #db.rollback()
+        db.rollback()
         print("ERROR:", str(e))
         raise HTTPException(
             status_code=500,

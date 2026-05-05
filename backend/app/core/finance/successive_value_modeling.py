@@ -36,6 +36,7 @@ class TextualDebtAdvice(BaseModel):
 # Top level schema
 class FullDebtsUiData(BaseModel):
     # those four debt-advice-related fields will be provided as additional context to the AI and will be also returned to the frontend .
+    strategy: Literal["snowball", "avalanche"]   # NEW
     startingTotalBalance:float 
     trajectory:list[DebtTrajectoryPoint]
     monthsToTotalPayoff:int                         
@@ -91,152 +92,179 @@ def get_debts_keys(
         
         return keys   
 
+from decimal import Decimal, getcontext
+from typing import List
+import datetime
+
+getcontext().prec = 28  # high precision for finance
 
 
-# this function return  list of pydantic models instead of TypeDict ; justification is that tthe result of this function should be returned to the frontend, thus, this is a operation related to the boundary f the system, thus it must be validated
-def calculate_debts_payoff_trajectory_data( 
-          balances: list[float],  
-          interest_rates: list[float],  
-          fixed_montlhy_payments: list[float]
-          ) -> list[DebtTrajectoryPoint]:
-    
-    """summary of the function behavior
+def to_decimal_list(values: List[float]) -> List[Decimal]:
+    return [Decimal(str(v)) for v in values]
 
-        This function models the successive value formula in finance, the desired outcome is to let the user know when all his debts will be payedoff.
-        For a single debt, the successive value formula is balance(k) = balance(k-1)*(1+interest rate) - (fixed_monthly_payment).
-        Thus, to determine the debt-payoff trajectroy timeline for each debt, we need a array of balances, array of intrest rates, and array of fixed_monthly_payments.
-     
-     Args:
-        
-        balances (list[float]): the amount of money that is borrowed for each debt. 
-        
-        interest_rates (list[float]): represents time value of money for each debt.
-        
-        fixed_montlhy_payments (list[float]): the amount of money paid monthly for each debt. 
-        
-    
-    Returns:
 
-        list[DebtTrajectoryPoint]: Array of records , each record contains a month and variable number of corresponding balnaces values for each debt name -debt name can be any thing- , example of a  single record : {monthLabel="March 17", firstDebtName=45, secondDebtName=56456 } 
+def monthly_rate(apr: Decimal) -> Decimal:
+    return apr / Decimal("12")
+
+
+def is_all_paid(balances: List[Decimal]) -> bool:
+    return all(b <= 0 for b in balances)
+
+
+
+def choose_strategy_from_personality(score: float) -> str:
+    """
+    score ~ 1 → impulsive / emotional
+    score ~ 5 → disciplined / analytical
     """
 
-    
-    # 1. Create a working copy of balances so we don't mutate the user's original input list
-    current_balances = list(balances)
-    trajectory:list[DebtTrajectoryPoint] = []
-    
-    # 2. Initialize date to the 1st of the current month.
-    # CRITICAL FIX: We set day=1 to avoid "End of Month" bugs. 
-    # (e.g. If today is Jan 31st, trying to jump to Feb 31st would crash Python).
-    current_date = datetime.date.today().replace(day=1)
+    if score < 3:
+        return "snowball"   # needs motivation
+    else:
+        return "avalanche"  # can handle long-term optimization
 
-    # 3. Use a standard loop bounded to 1200 (100 years) as our built-in safety net
-    for _ in range(1200):
-        
-        # BASE CASE: If no balances are greater than 0, we are completely debt-free. Stop looping., ensure every balance reach zero
-        if trajectory and not any(getattr(trajectory[-1], f"debt_{i}") > 0 for i in range(len(current_balances))):
-             break
-            
-        # Create the dictionary for this month
-        point_data: dict[str, Union[str, float, int]] = {"monthLabel": current_date.strftime("%b %Y")}
-        
-        # Process each debt
-        for i in range(len(current_balances)):
-            bal = current_balances[i]
-            
-            # Record the current balance (floored at 0.0)
-            point_data[f"debt_{i}"] = float(round(max(0.0, bal), 2))
-            
-            # Calculate next month's balance and update the array directly
-            if bal > 0:
-                current_balances[i] = bal * (1 + interest_rates[i]) - fixed_montlhy_payments[i]
-            else:
-                current_balances[i] = 0.0
-        
-        # Instantiate the Pydantic model and add it to our results list
-        trajectory.append(DebtTrajectoryPoint.model_construct(None,**point_data))# data is already validated, let's bypass the validation to enhance performence ! (I do not know what "None" here means)
-        
-        # Increment the date to the next month (handles December -> January year rollover)
-        next_month = current_date.month % 12 + 1
-        next_year = current_date.year + (current_date.month // 12)
-        current_date = current_date.replace(year=next_year, month=next_month)
-        
-    return trajectory
-
-# same as the previous function , but this is based on snowball model insted of avalanche.
-def calculate_debts_payoff_trajectory_data_snowball(
+def calculate_debts_payoff_trajectory_data(
     balances: list[float],
-    interest_rates: list[float],
+    interest_rates: list[float],  # APR
     fixed_monthly_payments: list[float]
 ) -> list[DebtTrajectoryPoint]:
-    
-    # Copy inputs (never mutate original)
-    current_balances = list(balances)
-    payments = list(fixed_monthly_payments)
+
+    balances_d = to_decimal_list(balances)
+    rates_d = to_decimal_list(interest_rates)
+    payments_d = to_decimal_list(fixed_monthly_payments)
 
     trajectory: list[DebtTrajectoryPoint] = []
-
     current_date = datetime.date.today().replace(day=1)
 
     for _ in range(1200):
 
-        # Stop if all debts are paid
-        if trajectory and not any(
-            getattr(trajectory[-1], f"debt_{i}") > 0
-            for i in range(len(current_balances))
-        ):
+        if is_all_paid(balances_d):
             break
 
-        point_data: dict[str, Union[str, float, int]] = {
+        # Step 1: apply monthly interest
+        for i in range(len(balances_d)):
+            if balances_d[i] > 0:
+                balances_d[i] *= (Decimal("1") + monthly_rate(rates_d[i]))
+
+        # Step 2: sort by highest interest (avalanche)
+        debt_order = sorted(
+            range(len(balances_d)),
+            key=lambda i: rates_d[i],
+            reverse=True
+        )
+
+        # Step 3: apply payments with cascade
+        for i in debt_order:
+            if balances_d[i] <= 0:
+                continue
+
+            payment = payments_d[i]
+
+            if payment >= balances_d[i]:
+                leftover = payment - balances_d[i]
+                balances_d[i] = Decimal("0")
+
+                # cascade leftover
+                remaining = leftover
+                for j in debt_order:
+                    if balances_d[j] > 0:
+                        if remaining >= balances_d[j]:
+                            remaining -= balances_d[j]
+                            balances_d[j] = Decimal("0")
+                        else:
+                            balances_d[j] -= remaining
+                            break
+            else:
+                balances_d[i] -= payment
+
+        # Step 4: clamp + record
+        point_data = {
             "monthLabel": current_date.strftime("%b %Y")
         }
 
-        #  sort debts by balance (smallest first)
-        debt_order = sorted(
-            range(len(current_balances)),
-            key=lambda i: current_balances[i] if current_balances[i] > 0 else float("inf")
-        )
+        for i in range(len(balances_d)):
+            balances_d[i] = max(Decimal("0"), balances_d[i])
+            point_data[f"debt_{i}"] = float(round(balances_d[i], 2))
 
-        # Apply interest first
-        for i in range(len(current_balances)):
-            if current_balances[i] > 0:
-                current_balances[i] *= (1 + interest_rates[i])
+        trajectory.append(DebtTrajectoryPoint(**point_data))
 
-        # Apply payments using snowball priority
-        for i in debt_order:
-            if current_balances[i] <= 0:
-                continue
-
-            payment = payments[i]
-
-            # If this debt can be fully paid
-            if payment >= current_balances[i]:
-                leftover = payment - current_balances[i]
-                current_balances[i] = 0.0
-
-                # Snowball effect → move leftover to next debt
-                for j in debt_order:
-                    if current_balances[j] > 0:
-                        current_balances[j] -= leftover
-                        break
-            else:
-                current_balances[i] -= payment
-
-        # Record values
-        for i in range(len(current_balances)):
-            point_data[f"debt_{i}"] = float(round(max(0.0, current_balances[i]), 2))
-
-        trajectory.append(
-            DebtTrajectoryPoint.model_construct(None, **point_data)
-        )
-
-        # Move to next month
+        # next month
         next_month = current_date.month % 12 + 1
         next_year = current_date.year + (current_date.month // 12)
         current_date = current_date.replace(year=next_year, month=next_month)
 
     return trajectory
 
+def calculate_debts_payoff_trajectory_data_snowball(
+    balances: list[float],
+    interest_rates: list[float],
+    minimum_payments: list[float]
+) -> list[DebtTrajectoryPoint]:
+
+    balances_d = to_decimal_list(balances)
+    rates_d = to_decimal_list(interest_rates)
+    payments_d = to_decimal_list(minimum_payments)
+
+    trajectory: list[DebtTrajectoryPoint] = []
+    current_date = datetime.date.today().replace(day=1)
+
+    for _ in range(1200):
+
+        if is_all_paid(balances_d):
+            break
+
+        # Step 1: apply interest
+        for i in range(len(balances_d)):
+            if balances_d[i] > 0:
+                balances_d[i] *= (Decimal("1") + monthly_rate(rates_d[i]))
+
+        # Step 2: sort by smallest balance (snowball)
+        debt_order = sorted(
+            range(len(balances_d)),
+            key=lambda i: balances_d[i] if balances_d[i] > 0 else Decimal("Infinity")
+        )
+
+        # Step 3: apply payments with cascade
+        for i in debt_order:
+            if balances_d[i] <= 0:
+                continue
+
+            payment = payments_d[i]
+
+            if payment >= balances_d[i]:
+                leftover = payment - balances_d[i]
+                balances_d[i] = Decimal("0")
+
+                # cascade leftover
+                remaining = leftover
+                for j in debt_order:
+                    if balances_d[j] > 0:
+                        if remaining >= balances_d[j]:
+                            remaining -= balances_d[j]
+                            balances_d[j] = Decimal("0")
+                        else:
+                            balances_d[j] -= remaining
+                            break
+            else:
+                balances_d[i] -= payment
+
+        # Step 4: clamp + record
+        point_data = {
+            "monthLabel": current_date.strftime("%b %Y")
+        }
+
+        for i in range(len(balances_d)):
+            balances_d[i] = max(Decimal("0"), balances_d[i])
+            point_data[f"debt_{i}"] = float(round(balances_d[i], 2))
+
+        trajectory.append(DebtTrajectoryPoint(**point_data))
+
+        # next month
+        next_month = current_date.month % 12 + 1
+        next_year = current_date.year + (current_date.month // 12)
+        current_date = current_date.replace(year=next_year, month=next_month)
+
+    return trajectory
 
 def full_debts_ui_data_orchestrator(
           strategy: Literal["avalanche", "snowball"],
@@ -295,12 +323,27 @@ def full_debts_ui_data_orchestrator(
        role="user"
        # in contrast to the system_prompt , the following user prompt is dynamic ; it's not meant to be static.
        #first question we are concerend abou : question we are concerend about for now: why not to inject the user_ context in the prompt it self like `${user_context}`
-       prompt = "I will give you an information about my goals, investements, life insurence, household income,  my debts, and a precomputed values that describes the pay-off timeline of my debts." \
-       " please give me advice, I understand nothing about finance,I'm a novice in the finance world." \
-       " you ardive must tell  what I should exactly do so that I understand with least minimal mental effort." \
-       " you should mention some technical terms, but the overall advice must be very udnerstandable to me! " \
-       f" The strategy used is: {strategy}."  #  added context WITHOUT removing original prompt
-       
+       prompt = (
+    "You are a strict, accurate financial advisor analyzing a user's debt simulation results.\n"
+    "Return EXACTLY 3 sentences, no more, no less.\n\n"
+
+    "You will be given a debt payoff simulation that was computed using a specific strategy:\n"
+    "- 'snowball' = pay smallest debts first for motivation\n"
+    "- 'avalanche' = pay highest interest debts first for financial optimization\n\n"
+
+    f"Sentence 1: Clearly explain the user's current debt situation, INCLUDING the strategy used ({strategy}), and what it means for their repayment path.\n"
+    "Sentence 2: State the REQUIRED monthly payment level needed to achieve the projected payoff timeline, and explicitly compare it to their current payment level.\n"
+    "Sentence 3: Give one clear, actionable habit or rule that improves financial discipline and ensures they stay on track long-term.\n\n"
+
+    "Rules:\n"
+    "- Address the user directly.\n"
+    "- Be factual, numeric, and realistic — do NOT soften financial truths.\n"
+    "- Always mention the strategy name in Sentence 1.\n"
+    "- Make Sentence 2 numerical and explicit when possible.\n"
+    "- Do NOT exceed 3 sentences.\n"
+    "- Do NOT merge sentences.\n"
+    "- Keep language simple, direct, and practical.\n"
+)
        precomputed_data = SuccessiveValueFormulaComputedData.model_construct(
             startingTotalBalance=startingTotalBalance,
             trajectory=trajectory,  
@@ -323,6 +366,7 @@ def full_debts_ui_data_orchestrator(
     
        #results will be validated at run time
        return   FullDebtsUiData(
+                        strategy=strategy,  
                         trajectory=trajectory,
                         monthsToTotalPayoff=monthsToTotalPayoff,
                         estimatedPayoffDate=estimatedPayoffDate,

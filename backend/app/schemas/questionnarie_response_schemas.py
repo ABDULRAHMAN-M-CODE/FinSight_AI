@@ -161,6 +161,6 @@ class GoalsAndInvestementsAdvice(BaseModel):
 from app.core.finance.successive_value_modeling import FullDebtsUiData
 from app.core.finance.portfolio_construction import InvestementsAdviceMocks
 class FullAdviceData(BaseModel):
-    #fullDebtsUiData:FullDebtsUiData   # commented for testing, change those names.
-    investementsAdvice:InvestementsAdviceMocks 
+    fullDebtsUiData:FullDebtsUiData   
+    #investementsAdvice:InvestementsAdviceMocks 
 
