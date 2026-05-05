@@ -1,12 +1,6 @@
-
-import screenshot1 from '../assets/Dashboard2.png';
-import screenshot3 from '../assets/whatIF.png';
-import screenshot2 from '../assets/image.png';
 import FinanceLogo from '../Imports/Logo';
 import { Link } from 'react-router-dom';
-export default function WelcomePage() {
-
-    
+export default function WelcomePage() {    
   return (
     <div className="min-h-screen bg-[#0a2540] text-white">
       {/* Header */}
@@ -42,14 +36,7 @@ export default function WelcomePage() {
                 track progress and receive personalized financial recommendations with adaptive AI that helps you make smarter decisions every day.
               </p>
             </div>
-            
-            <div>
-              {/** Reset The Demo state in the local storage before navigation */}
-              <Link to="/MultiStepFlow" className="px-8 py-3.5 bg-white text-[#0a2540] rounded-md font-medium hover:bg-gray-100 transition-colors" 
-               onClick={()=> localStorage.removeItem("currentStep")}>
-                See a Demo
-              </Link>
-            </div>
+    
           </div>
 
 

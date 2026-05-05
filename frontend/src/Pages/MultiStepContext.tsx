@@ -238,7 +238,7 @@ function useMultiStepContex(){
         );
         const [sliderValue, setSliderValue] = useState<number>(5);
         const [debts, setDebts] = useState<Debt[]>([
-            { id:Date.now(), type: '', balance: 0, monthly_payment: 0, interest_rate: 0 }
+            { id:Date.now(), type: 'Islamic', balance: 0, monthly_payment: 0, interest_rate: 0 }
         ]);
         
 
@@ -305,8 +305,9 @@ function useMultiStepContex(){
             };
 
 
-            //console.table(payload) // to visulaize the sent data as table on the console.
-            try {                
+            
+            try { 
+                console.log('debts data is ',payload.outstanding_debts,'\n'); // to visulaize the sent data as table on the console.               
                 // send a request
                 const response= await FetchData({payload, url});
 
@@ -411,7 +412,7 @@ export default function MultiStepContext(){
     return (
     
      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 ">
-        <p>hello world</p>    
+        
         {/** progress bard is always rendered */}
         <div className="pt-8">
           <ProgressBar currentStep={step} steps={steps} totalSteps={6} />

@@ -135,7 +135,36 @@ def submit_questionnaire(
      # 6- Mark first login as completed
         current_user.is_first_login = False
 
+<<<<<<< Updated upstream
      # 7- commit changes to DB.
+=======
+
+        print("debts type is  :",data.outstanding_debts[0].type,'\n')
+        portfolio_advice:InvestementsAdviceMocks=InvestementsAdviceOrchestrator(
+            answers_weights=data.subjective_answers_values_and_weights.questions_weights,
+            questions_scores=data.subjective_answers_values_and_weights.answers_values,
+            total_portfolio_value=data.subjective_answers_values_and_weights.investement_amount
+        ).get_investement_advice()
+        
+        
+        # is the following correct 
+        portfolio_description=PortfoliosPerformanceMetrics(
+            user_id=current_user.id,
+            expected_annual_return=portfolio_advice.optimalPortfolio.metrics.expectedAnnualReturn,
+            annual_volatility=portfolio_advice.optimalPortfolio.metrics.annualVolatility,
+            sharpe_ratio=portfolio_advice.optimalPortfolio.metrics.sharpeRatio
+        )
+        assets:list[Asset]=portfolio_advice.optimalPortfolio.assets
+        assets_names=[]
+        for asset in assets:
+            assets_names.append(asset.assetName)
+        assets_percentages=[]
+        for asset in assets:
+            assets_percentages.append(asset.capitalAllocationPercentage)
+
+        portfolio_description.assets=[Portfolios(asset_name=name,capital_allocation_percentage=percentage) for name,percentage in zip(assets_names,assets_percentages)]
+        db.add(portfolio_description)
+>>>>>>> Stashed changes
         db.commit()
 
      # 8- return data to frontend.

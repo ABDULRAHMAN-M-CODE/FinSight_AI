@@ -69,14 +69,24 @@ export const OutstandingDebtsSection: React.FC<OutstandingDebtsSectionProps> = (
             <div className="space-y-2">
               <Label htmlFor={`debt-type-${debt.id}`}>Debt Type</Label>
               
-              {/**  problem : make this select element instead of input */}
-              <Input
-                id={`debt-type-${debt.id}`}
-                pattern="[A-Za-z\s]+"
-                placeholder="e.g., Mortgage, Student Loan, Credit Card"
-                value={debt.type}
-                onChange={(e) => updateDebt(debt.id, 'type',e.target.value)}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                    <select 
+                    id={`debt-type-${debt.id}`} 
+                    value={debt.type}
+                    onChange={(e) => updateDebt(debt.id, 'type',e.target.value)}
+                    >
+                      
+                      <option value=''>select type</option>                
+                      <option value="Islamic">Islamic</option>
+                      <option value="Regular">Regular</option>
+
+                    </select>                
+                </div>  
+              </div>
+
+              {/** how to transform the following input into select elemnt of two options */}
+
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">

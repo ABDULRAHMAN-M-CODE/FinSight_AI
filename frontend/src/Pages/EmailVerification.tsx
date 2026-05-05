@@ -54,7 +54,7 @@ function useEmailVerification({email}:{email:string}) {
         return;
       }
       
-       localStorage.removeItem("fullAdvice")//for fresh user, there should be no advice yet. ensure there is no cached advice before calling the LLM
+       localStorage.removeItem("fullAdvice")//for fresh user, there should be no advice yet. 
 
       navigate("/PostSignup");
     

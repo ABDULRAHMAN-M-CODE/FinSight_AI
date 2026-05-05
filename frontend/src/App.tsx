@@ -14,7 +14,7 @@ import Dashboard from './Pages/Dashboard';
 import ForgotPassword from './Pages/ForgotPassword';
 import SetPasswordPage from './Pages/SetPasswordPage';
 import ForgotPassword_SuccessfullReset from './Pages/ForgotPassword_SuccessfullReset';
-import MultiStepFlow from './Pages/MultiStepFlow';
+
 import MultiStepContext from './Pages/MultiStepContext';
 import PostMultiStepContext from './Pages/PostMultiStepContext';
 import InsuranceAdvice from './Pages/InsuranceAdvice';
@@ -40,7 +40,7 @@ function App() {
       <Route path="/ForgotPassword" element={<ForgotPassword />}/> 
       <Route path="/SetPasswordPage" element={<SetPasswordPage />}/> 
       <Route path="/ForgotPassword_SuccessfullReset" element={<ForgotPassword_SuccessfullReset />}/> 
-      <Route path="/MultiStepFlow" element={<MultiStepFlow />}/> 
+      
       <Route path='/MultiStepContext' element={<MultiStepContext />} /> 
       <Route path="/PostMultiStepContext" element={<PostMultiStepContext />}/>
       <Route path="/StreamViewer" element={<StreamViewer />}/>  

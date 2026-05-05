@@ -59,6 +59,12 @@ class User(Base):
         "PortfoliosPerformanceMetrics", 
         back_populates="user",
         cascade="all, delete-orphan"
+<<<<<<< Updated upstream
 
     )
  
+=======
+    )
+
+
+>>>>>>> Stashed changes
