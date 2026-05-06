@@ -55,7 +55,7 @@ function useEmailVerification({email}:{email:string}) {
       }
       
        localStorage.removeItem("fullAdvice")//for fresh user, there should be no advice yet. 
-
+        localStorage.setItem("step","1");
       navigate("/PostSignup");
     
     // Guard against  failed connection.

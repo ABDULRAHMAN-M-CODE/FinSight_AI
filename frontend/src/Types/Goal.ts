@@ -1,8 +1,8 @@
 export interface Goal {
   id: number;
-  name: string;
-  type: "short-term" | "long-term";
+  goal_name:string;
   target_amount: number;
-  deadline: string ;
+  deadline: string;
+  description: string;
 
 }

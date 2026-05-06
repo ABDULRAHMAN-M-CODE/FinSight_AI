@@ -17,17 +17,17 @@ import RiskAssessment from "../Components/InvestementsRiskProfileAssasementCard"
 import type { HouseholdMember,  } from '../Types/HouseHoldMember';
 import type { Debt } from "../Types/Debt";
 
+
 import { type SubjectiveQuestionAnswer } from "../Components/InvestementsRiskProfileAssasementCard";
 //Needed later (Unless we refactor the code)
 //import { type FullServiceAdviceContract } from "../Types/FullServiceAdviceContract";
 //import { type DebtsAdviceUiDataShape } from "../Components/MultiDebtPayoffTrajectory";
 import { type SubjectiveQuestionsType } from "../Components/InvestementsRiskProfileAssasementCard";
-
+import { type Goal } from "../Types/Goal";
 //  custome functions
 import { FetchData } from "../Functions/api/fetchData";
-//import { extractAndSaveDataToLocalStorage } from "../Functions/api/reusable_functions/extractAndSaveDataToLocalStorage ";
 import z from "zod";
-
+import { FinancialGoalsSection } from "../Imports/FinancialGoalsSection";
 const Asset=z.object({
     assetName: z.string(),
     capitalAllocationPercentage:z.number()
@@ -222,7 +222,8 @@ function useMultiStepContex(){
             { number: 1, label: "Household income" },
             { number: 2, label: "Monthly budget" },
             { number: 3, label: "Risk-appetitie" },
-            { number: 4, label: "Outstanding debts" }
+            { number: 4, label: "Goals" },
+            { number: 5, label: "Debts" },
         ];
         
         // Date.now() to unqiuely identify each id, insure all id's are unique and collisions  happen.
@@ -238,12 +239,12 @@ function useMultiStepContex(){
         );
         const [sliderValue, setSliderValue] = useState<number>(5);
         const [debts, setDebts] = useState<Debt[]>([
-            { id:Date.now(), type: 'Islamic', balance: 0, monthly_payment: 0, interest_rate: 0 }
+            { id:Date.now(), type: '', balance: 0, monthly_payment: 0, interest_rate: 0 }
+        ]);
+        const [goals, setGoals] = useState<Goal[]>([
+            { id:Date.now(), goal_name: '', target_amount: 0, deadline: "",description: "" }
         ]);
         
-
-
-
         const handleBack = () => {
           if (step > 1) {
             setStep(step - 1);
@@ -282,7 +283,8 @@ function useMultiStepContex(){
                     questions_weights:number[],
                     answers_values:number[],
                     investement_amount:number
-                },   
+                },
+                goals:Goal[]
         }
             setIsLoading(true);
             const payload:PayLoadTYpe = {
@@ -294,19 +296,20 @@ function useMultiStepContex(){
                 })),
                 monthly_budget: Number(monthlyBudget),
 
-                outstanding_debts: debts, // Map this if needed
+                outstanding_debts: debts, // onlty comment chatgpt should care about : this worked, then why the fuck to use map at all ? questio nto chatgpt
                 
                 subjective_answers_values_and_weights:{
                     questions_weights:subjectiveQuestions.map(question=>question.questionWeight),
                     answers_values:answers.map(answer=>answer.answerValue),
                     investement_amount:investementAmount
-                },                
-
+                },   
+                goals:goals        
             };
 
 
             
             try { 
+                console.log('goals are ',payload.goals,'\n'); 
                 console.log('debts data is ',payload.outstanding_debts,'\n'); // to visulaize the sent data as table on the console.               
                 // send a request
                 const response= await FetchData({payload, url});
@@ -381,6 +384,7 @@ function useMultiStepContex(){
         isLoading,
         isThereError,
         errorMsg,investementAmount,setInvestementAmount
+        ,goals,setGoals
     }
 }
 
@@ -404,7 +408,8 @@ export default function MultiStepContext(){
         isLoading,
         isThereError,
         errorMsg,
-        investementAmount,setInvestementAmount
+        investementAmount,setInvestementAmount,
+        goals,setGoals
     }= useMultiStepContex();
    
    console.log("step =", step);
@@ -453,6 +458,17 @@ export default function MultiStepContext(){
                     <form onSubmit={handleNext}>
 
                         <RiskAssessment answers={answers} setAnswers={setAnswers} sliderValue={sliderValue} setSliderValue={setSliderValue} subjectiveQuestions={subjectiveQuestions}  investementAmount={investementAmount} setInvestementAmount={setInvestementAmount} />
+                        <BackAndContinueButtons  handleBack={handleBack} isLoading={isLoading}   />                       
+                    
+                    </form>
+                    
+                    // should I put button here ? 
+                )}
+                {step==4 && (
+
+                    <form onSubmit={handleNext}>
+
+                        <FinancialGoalsSection goals={goals} onUpdate={setGoals} isLoading={isLoading} />                        
                         <BackAndContinueButtons  handleBack={handleBack} isLoading={isLoading}   />                       
                     
                     </form>

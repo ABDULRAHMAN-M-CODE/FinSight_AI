@@ -12,6 +12,7 @@ from app.models.portfolio_models.portfolios import Portfolios
 from app.models.portfolio_models.portfolios_performance_metrics import PortfoliosPerformanceMetrics
 from app.models.debt_models.debts_advices import DebtsAdvices
 from app.models.debt_models.debts_metrics import DebtMetrics
+from app.schemas.questionnaire_schemas import Goal
 from app.core.finance.successive_value_modeling import (
     full_debts_ui_data_orchestrator,
     FullDebtsUiData,
@@ -20,14 +21,11 @@ from app.core.finance.successive_value_modeling import (
 from app.schemas.questionnaire_schemas import DebtIn
 from app.core.finance.portfolio_construction import InvestementsAdviceOrchestrator,InvestementsAdviceMocks,Asset
 from pydantic import BaseModel
-
-
-
 # when piece of code is used by one entity → keep it close to the entity, don't define other file for it.
+
 class FullAdviceData(BaseModel):
     fullDebtsUiData:FullDebtsUiData   
     investementsAdvice:InvestementsAdviceMocks 
-
 
 router = APIRouter(prefix="/onboarding")
 @router.post("/questionnaire", status_code=status.HTTP_201_CREATED,response_model=FullAdviceData) #this router is executed after the user provide all his context 
@@ -38,8 +36,8 @@ def submit_questionnaire(
      
 )->FullAdviceData:
     try:
-        print("recived data successfully")
-
+        print("recived data successfully\n")
+        print(f"visualizing first goal  :{data.goals[0]}")
         # check if user already filled finance data
 
         if not current_user.is_first_login :
@@ -92,10 +90,12 @@ def submit_questionnaire(
 
 
 
-     # goals advice
-        # future update
-
-     # 6- Mark first login as completed
+     ####GOALS advice future update###########
+        # I have made everything necessary to get the goals from frontend, frontend, pydantic, etc..
+        
+        goals:list[Goal]=data.goals # you can use this goals  for your future  logic.
+    ##########################
+        
         current_user.is_first_login = False
 
         print("debts type is  :",data.outstanding_debts[0].type,'\n')
@@ -125,7 +125,7 @@ def submit_questionnaire(
         db.add(portfolio_description)
         db.commit()
 
-     # 8- return data to frontend.
+     
         return FullAdviceData(fullDebtsUiData=debts_advice,investementsAdvice=portfolio_advice)
     
     except Exception as e:

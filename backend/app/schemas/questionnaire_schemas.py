@@ -29,8 +29,17 @@ class SubjectiveAnswersValuesAndWeights(BaseModel):
     questions_weights:list[int]
     answers_values:list[int]
     investement_amount:float=3000
+
+class Goal(BaseModel):
+    id:int
+    goal_name:str
+    target_amount:float
+    deadline:str
+    description:str
+
 class QuestionnaireSubmit(BaseModel):
     monthly_budget: Decimal 
     household_income: List[HouseholdIncomeMember] 
     outstanding_debts: List[DebtIn] 
-    subjective_answers_values_and_weights:SubjectiveAnswersValuesAndWeights#related to risk assasement
+    subjective_answers_values_and_weights:SubjectiveAnswersValuesAndWeights
+    goals:list[Goal]

@@ -4,7 +4,6 @@ import { Card, CardHeader, CardContent } from './Card';
 import { Input } from './Input';
 import { Label } from './Label';
 import { Button } from './Button';
-import { Select } from './Select';
 import { IconButton } from './IconButton';
 import { type Goal } from '../Types/Goal';
 
@@ -29,8 +28,8 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
   const addGoal = () => {
     const newGoal: Goal = {
       id: Date.now(),
-      name: '',
-      type: 'short-term',
+      goal_name: '',
+      description: '',
       target_amount: 0,
       deadline: ''
     };
@@ -87,23 +86,20 @@ export const FinancialGoalsSection: React.FC<FinancialGoalsSectionProps> = ({
                   name={`goals[${index}][name]`}
                   placeholder="e.g., Build emergency fund"
                   type='text'
-                  value={goal.name}
-                  onChange={(e) => updateGoal(goal.id, 'name',   e.target.value)}
+                  value={goal.goal_name}
+                  onChange={(e) => updateGoal(goal.id, 'goal_name',   e.target.value)}
                   disabled={isLoading}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor={`goal-type-${goal.id}`}>Goal Type</Label>
-                <Select
-                  id={`goal-type-${goal.id}`}
+                <Label htmlFor={`description-${goal.id}`}>Description</Label>
+                <Input
+                  id={`description-${goal.id}`}
                   name={`goals[${index}][type]`}
-                  value={goal.type}
-                  onChange={(e) => updateGoal(goal.id, 'type', e.target.value as 'short-term' | 'long-term')}
+                  value={goal.description}
+                  onChange={(e) => updateGoal(goal.id, 'description', e.target.value )}
                   disabled={isLoading}
-                >
-                  <option value="short-term">Short-term (0-5 years)</option>
-                  <option value="long-term">Long-term (5+ years)</option>
-                </Select>
+                />
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
