@@ -47,6 +47,12 @@ class User(Base):
         cascade="all, delete-orphan",
         passive_deletes=True
     )
+    
+    goals = relationship(
+    "Goal",
+    back_populates="user",
+    cascade="all, delete-orphan"
+    )
 
     debt_metrics = relationship(
         "DebtMetrics",
