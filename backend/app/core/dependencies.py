@@ -7,8 +7,6 @@ from app.core.security.jwt import SECRET_KEY, ALGORITHM
 from app.models.registration.user import User
 from app.database import get_db
 
-bearer_scheme = HTTPBearer()
-
 # to get the user info from the JWT or cookie 
 def get_current_user(
     request:Request,
