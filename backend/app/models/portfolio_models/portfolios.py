@@ -17,7 +17,7 @@ class Portfolios(Base):
     )
     asset_name = Column(String, nullable=False)
     capital_allocation_percentage = Column(DECIMAL(5, 2), nullable=False)
-    
+    quantity=Column(Integer, nullable=False)
     __table_args__ = (
         CheckConstraint(
             "capital_allocation_percentage >= 0 AND capital_allocation_percentage <= 100",

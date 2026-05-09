@@ -2,11 +2,12 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.core.dependencies import get_current_user
+from app.models.registration import User
 from app.schemas.questionnaire_schemas import QuestionnaireSubmit
 from app.user_prompts import full_service_user_prompt
 from app.core.utils.llm_utils import call_llm
 from app.core.utils.json_safe_utils import json_safe
-from app.models.registration import User
+
 from app.models.user_financial_data import UserFinancialData
 from app.models.portfolio_models.portfolios import Portfolios
 from app.models.portfolio_models.portfolios_performance_metrics import PortfoliosPerformanceMetrics
@@ -21,7 +22,12 @@ from app.core.finance.successive_value_modeling import (
 from app.schemas.questionnaire_schemas import DebtIn
 from app.core.finance.portfolio_construction import InvestementsAdviceOrchestrator,InvestementsAdviceMocks,Asset
 from pydantic import BaseModel
-# when piece of code is used by one entity → keep it close to the entity, don't define other file for it.
+####################################
+# imports related to rebalancing .
+from app.worker import cel_app
+
+###################################
+
 
 class FullAdviceData(BaseModel):
     fullDebtsUiData:FullDebtsUiData   
@@ -120,12 +126,18 @@ def submit_questionnaire(
         assets_percentages=[]
         for asset in assets:
             assets_percentages.append(asset.capitalAllocationPercentage)
-
-        portfolio_description.assets=[Portfolios(asset_name=name,capital_allocation_percentage=percentage) for name,percentage in zip(assets_names,assets_percentages)]
+        quantities=[]
+        for asset in assets:
+            quantities.append(asset.quantity)
+        portfolio_description.assets=[Portfolios(asset_name=name,capital_allocation_percentage=percentage,quantity=quantity) for name,percentage,quantity in zip(assets_names,assets_percentages,quantities)]
         db.add(portfolio_description)
         db.commit()
 
-     
+        #the route trigger the  rebalancing_logic, but does not execute it.
+        #monitor_user is insde rebalancing_engine.py
+        # questionB to chatgpt: I want to pass the session 'db' to the cel_app.send_task
+        cel_app.send_task("monitor_user_task", args=[current_user.id])
+        
         return FullAdviceData(fullDebtsUiData=debts_advice,investementsAdvice=portfolio_advice)
     
     except Exception as e:

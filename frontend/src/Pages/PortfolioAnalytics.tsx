@@ -16,7 +16,34 @@ import { type InvestementsAdviceType } from './MultiStepContext';
 import { useEffect } from 'react';
 import { useState } from 'react';
 
-
+type rebalancingDataType ={
+    tradeOrders: {
+        assetName: string;
+        action: string;
+        numOfShares: number;
+    }[];
+    rebalancingNeedDetectedAt: string;
+}
+const rebalanceDataDefaults: rebalancingDataType = {
+  rebalancingNeedDetectedAt: "2026-05-08T09:00:00Z", // When the check occurred
+  tradeOrders: [
+    {
+      assetName: "default1",
+      action: "SELL",
+      numOfShares: 50.5
+    },
+    {
+      assetName: "default2",
+      action: "BUY",
+      numOfShares: 120
+    },
+    {
+      assetName: "default3",
+      action: "BUY",
+      numOfShares: 75
+    }
+  ]
+};
 
 
 const formatPercent = (value: number) => `${(value * 100).toFixed(2)}%`;
@@ -48,20 +75,15 @@ const CustomTooltip = ({ active, payload }: any) => {
   return null;
 };
 
-//PROBLEM: DESIGN BACKEND THAT GIVES US THIS DATA; INJECT IT INSIDE THE InvestementsAdvice inside the FullAdviceData
-const rebalancingData= {
-    tradeOrders: [
-      { assetName: "AAPL", action: "Sell", numOfShares: 10 },
-      { assetName: "BABA", action: "Buy", numOfShares: 15 },
-      { assetName: "MA", action: "Sell", numOfShares: 5 }
-    ],
-    rebalancingNeedDetectedAt: "March 20, 2026, 15:42"
-  }
+
+
+
 //rendering
 
 export default function PortfolioAnalytics() {
   const [mockData, setMockData] = useState<InvestementsAdviceType | null>(null);
-  const [needsRebalancing,setNeedsRebalancing] =useState<boolean>(false); 
+  const [needsRebalancing,setNeedsRebalancing] =useState<boolean>(false);
+  const [rebalancingData, setRebalancingData] = useState<rebalancingDataType>(rebalanceDataDefaults); 
    // PROBLEM: use 'useQuery' instead of locat storage
   useEffect(()=>{
     const rawString:string |null =localStorage.getItem("FullAdviceData")
@@ -69,7 +91,40 @@ export default function PortfolioAnalytics() {
       const backendData:FullAdviceDataType=JSON.parse(rawString)
       setMockData(backendData.investementsAdvice)
     }
-  },[]) /** question : why not to define custome hook that contains those two hooks , so that I get rid of this useEffect ? */
+  },[])
+
+  useEffect(() => {
+
+    const websocket = new WebSocket(
+        "ws://localhost:8000/ws/rebalancing"
+    );
+
+    websocket.onopen = () => {
+        console.log("websocket connected");
+    };
+
+    websocket.onmessage = (event) => {
+
+        const backendData = JSON.parse(event.data);
+
+        console.log("received backend data", backendData);
+
+        setRebalancingData(backendData);
+    };
+
+    websocket.onclose = () => {
+        console.log("websocket disconnected");
+    };
+
+    websocket.onerror = (error) => {
+        console.log("websocket error", error);
+    };
+
+    return () => {
+        websocket.close();
+    };
+
+}, []);
   
   if(!mockData){
     return(
@@ -81,7 +136,7 @@ export default function PortfolioAnalytics() {
   
   
   
-  //PROBLEM in rebalncing : rebalancingData.tradeOrders.length < 0;
+  
  
   console.log("Recommended portfolio data: ",mockData.optimalPortfolio)
   console.log("leftover is :", mockData.leftover)

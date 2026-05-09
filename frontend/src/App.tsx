@@ -17,7 +17,7 @@ import ForgotPassword_SuccessfullReset from './Pages/ForgotPassword_SuccessfullR
 
 import MultiStepContext from './Pages/MultiStepContext';
 import PostMultiStepContext from './Pages/PostMultiStepContext';
-import InsuranceAdvice from './Pages/InsuranceAdvice';
+
 import SuccessiveValueFormulaModeling from './Pages/SuccessiveValueFormulaModeling';
 import SettingsPage from './Pages/SettingsPage';
 import MainLayout from './Pages/MainLayout';
@@ -47,7 +47,6 @@ function App() {
       <Route path="MainLayout" element={<MainLayout />}> 
           <Route index element={<PortfolioAnalytics />}/>
           <Route path="DebtsAdvice" element={<SuccessiveValueFormulaModeling />}/>
-          <Route path="InsuranceAdvice" element={<InsuranceAdvice />}/>
           <Route path="SettingsPage" element={<SettingsPage />}/>
       </Route> 
     </Routes>

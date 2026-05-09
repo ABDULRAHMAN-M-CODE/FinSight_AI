@@ -9,7 +9,7 @@ from pypfopt.risk_models import CovarianceShrinkage
 from pypfopt.efficient_frontier import EfficientFrontier
 import pandas as pd
 from pydantic import BaseModel
-from typing import TypedDict
+from typing import TypedDict    
 import yfinance as yf
 import time
 import json
@@ -35,12 +35,10 @@ class ApiOrMockPricesData(PricesData):
     
     def safe_download(self,assets_tickers:list[str],start_date:str)->pd.DataFrame|None:
         try:
-
-            
             cleaned_prices=clean_data( yf.download(
                 assets_tickers,
                 start="2020-04-09",
-                auto_adjust=False,
+                auto_adjust=True,
                 threads=True,
                 interval=self.interval,
                 group_by="ticker"
@@ -148,6 +146,7 @@ class AssetsAllocationsResults(TypedDict):
 class Asset(BaseModel):
     assetName: str
     capitalAllocationPercentage: float
+    quantity:int
 
 class Metrics(BaseModel): 
     expectedAnnualReturn: float
@@ -156,8 +155,8 @@ class Metrics(BaseModel):
 
 class OptimalPortfolio(BaseModel): 
 
-    assets:list[Asset] 
-    metrics:Metrics 
+    assets:list[Asset] # descripes details of portfolio
+    metrics:Metrics # descripes the whole portfolio 
       
 class AssetScatterPoint(BaseModel):
     ticker: str
@@ -168,6 +167,7 @@ class  InvestementsAdviceMocks (BaseModel) :
       leftover: float
       optimalPortfolio:OptimalPortfolio 
       assetsScatter: list[AssetScatterPoint]
+      
       
 
 class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseModel) or other stuff ?
@@ -335,24 +335,25 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
             "sharpeRatio": performence_metrics[2]
             }
         print("322  good")
-        latest_prices =self.cleaned_prices.xs("Close",level=1,axis=1).iloc[-1]
+        latest_prices =self.cleaned_prices.xs("Close",level=1,axis=1).iloc[-2]
         print("328  good")
         
         da = DiscreteAllocation(self.ef.clean_weights(), latest_prices, total_portfolio_value=self.total_portfolio_value)
-        shares_quantities, leftover = da.lp_portfolio(verbose=False) 
+        self.quantities, leftover = da.lp_portfolio(verbose=False) 
         self.leftover=float(leftover)
         print("333  good")
         
-        capital_allocations_percentages={k:v for k,v in capital_allocations_percentages.items() if k in list(shares_quantities.keys()) }
+        capital_allocations_percentages={k:v for k,v in capital_allocations_percentages.items() if k in list(self.quantities.keys()) }
         print("336  good") 
         self.optimal_portfolio:OptimalPortfolio={
         
             "assets":[
                 {
                     "assetName":asset_name,
-                    "capitalAllocationPercentage":capital_allocations_percentages[asset_name]
+                    "capitalAllocationPercentage":capital_allocations_percentages[asset_name],
+                    "quantity":quantity
                 }
-                for asset_name in capital_allocations_percentages.keys()
+                for asset_name,quantity in zip(capital_allocations_percentages.keys(),self.quantities.values())
             ] ,
             
             
@@ -516,7 +517,6 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
         return InvestementsAdviceMocks(
                 leftover=self.leftover,
                 optimalPortfolio=self.optimal_portfolio,
-                assetsScatter=self.risk_return_scatter_points,
-                
+                assetsScatter=self.risk_return_scatter_points,   
             )
 
