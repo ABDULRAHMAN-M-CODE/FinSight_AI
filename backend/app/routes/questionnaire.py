@@ -65,11 +65,8 @@ from app.schemas.goals_schemas import GoalAdviceItemSchema,GoalAdviceResponseSch
 # =========================================================
 
 class FullAdviceData(BaseModel):
-
     fullDebtsUiData: FullDebtsUiData
-
     investementsAdvice: InvestementsAdviceMocks
-
     goalsAdvice: list[GoalAdviceItemSchema]
 
 # =========================================================
@@ -95,23 +92,14 @@ def submit_questionnaire(
 ) -> FullAdviceData:
 
     try:
-        # =================================================
-        # DEBUG LOGS
-        # =================================================
+
 
         print("received questionnaire successfully")
-
         if data.goals:
             print(
                 f"first goal: {data.goals[0]}"
             )
-
-        # =================================================
-        # PREVENT USER FROM SUBMITTING TWICE
-        # =================================================
-
         if not current_user.is_first_login:
-
             raise HTTPException(
                 status_code=400,
                 detail="user already filled finance data"

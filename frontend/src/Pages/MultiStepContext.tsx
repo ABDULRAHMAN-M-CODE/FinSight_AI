@@ -7,27 +7,26 @@ import { useNavigate } from "react-router-dom";
 import { ProgressBar } from "../Imports/ProgressBar"
 import { HouseholdIncomeSection } from "../Imports/HouseholdIncomeSection";
 import { MonthlyBudgetSection } from '../Imports/MonthlyBudgetSection';
-
+import { FinancialGoalsSection } from "../Imports/FinancialGoalsSection";
 import { OutstandingDebtsSection } from '../Imports/OutstandingDebtsSection';
-
 import BackAndContinueButtons from "../Imports/BackAndContinueButtons";
 import RiskAssessment from "../Components/InvestementsRiskProfileAssasementCard";
 
 
-import type { HouseholdMember,  } from '../Types/HouseHoldMember';
-import type { Debt } from "../Types/Debt";
-
-
+// types
+import { type HouseholdMember,  } from '../Types/HouseHoldMember';
+import { type Debt } from "../Types/Debt";
 import { type SubjectiveQuestionAnswer } from "../Components/InvestementsRiskProfileAssasementCard";
-//Needed later (Unless we refactor the code)
-//import { type FullServiceAdviceContract } from "../Types/FullServiceAdviceContract";
-//import { type DebtsAdviceUiDataShape } from "../Components/MultiDebtPayoffTrajectory";
 import { type SubjectiveQuestionsType } from "../Components/InvestementsRiskProfileAssasementCard";
 import { type Goal } from "../Types/Goal";
-//  custome functions
+
+//custome function
 import { FetchData } from "../Functions/api/fetchData";
+
+//run time validation
 import z from "zod";
-import { FinancialGoalsSection } from "../Imports/FinancialGoalsSection";
+import { DebtsAdviceUiDataSchema } from "../Components/MultiDebtPayoffTrajectory";
+import { GoalAdviceItemSchema } from "./GoalsAdvice";
 const Asset=z.object({
     assetName: z.string(),
     capitalAllocationPercentage:z.number()
@@ -50,13 +49,14 @@ const  InvestementsAdviceSchema =z.object({
     leftover: z.number(),
     optimalPortfolio:OptimalPortfolio, 
     assetsScatter: z.array(AssetScatterPoint)
-    
-
 })
+
+
 export type InvestementsAdviceType = z.infer<typeof InvestementsAdviceSchema>; 
 export const FullAdviceDataSchema=z.object({
-    //fullDebtsUiData:FullDebtsUiData   # commented for testing, add it later, change those names
-    investementsAdvice:InvestementsAdviceSchema 
+    fullDebtsUiData:DebtsAdviceUiDataSchema, 
+    investementsAdvice:InvestementsAdviceSchema, 
+    goalsAdvice:z.array(GoalAdviceItemSchema)
 })
 export type FullAdviceDataType= z.infer<typeof FullAdviceDataSchema>; 
 
@@ -195,11 +195,10 @@ export const subjectiveQuestions:SubjectiveQuestionsType = [
 ];
 
 
-// custome hook : Logic and States 
-
+// logic and states. 
 function useMultiStepContex(){
 
-        // Problem 1 : Refactor this custom hook, apply separation of concerns.
+        
         
              
         const [isLoading, setIsLoading]=useState(false);
@@ -313,46 +312,30 @@ function useMultiStepContex(){
                 console.log('debts data is ',payload.outstanding_debts,'\n'); // to visulaize the sent data as table on the console.               
                 // send a request
                 const response= await FetchData({payload, url});
-
-
                 // Show the error (if any) returned by the backend
                 if (!response.ok) {
                     setIsLoading(false)
                     setIsThereError(true);
-                    
                     const errorData= await response.json();
                     console.log(errorData)
                     setErrorMsg(errorData.detail)
-                    
                     return
                 }
                 
                 setIsLoading(false);
                 setIsThereError(false);
                 setErrorMsg("");
-                                
-
-
-
-                //PROBLEM: CHANGE THE FOLLOWING 
-                
-                               
-                
+        
                 const data: FullAdviceDataType = await response.json();
                 
-                console.table(`data recived from backend  before validation is : ${data}`)
-                    
+                console.table(`data recived from backend  before validation is : ${data}`)    
                 const result=FullAdviceDataSchema.safeParse(data); // run time validation on the unknown data, checks the 'correctness' of the  existing data
                 console.log(`safeParse result content is ${result}`)
                 if(result.success){
-                    console.log("nice!. run time validation succeed!, results stored in the local storage")
-                    
+                    console.log("run time validation succeed!, results stored in the local storage")
                     localStorage.setItem("FullAdviceData", JSON.stringify(data));// storing response as key:value in the local storage
                     navigate("/PostMultiStepContext");
                 }
-/*                 if (!result.success) {
-                    console.error("Zod Validation Errors:", result.error.format());
-                } */
                else{
                     setIsThereError(true)
                     setErrorMsg("Run Time validation failed\n, data recived from the backend does not follow the contract\nInspect the console for more details")
@@ -367,7 +350,7 @@ function useMultiStepContex(){
             }
 };
     
-    // returns object, thus, use destructing at calling site
+// returns object, thus, use destructing at calling site
     return{
         step,
         steps,
@@ -387,7 +370,7 @@ function useMultiStepContex(){
         ,goals,setGoals
     }
 }
-
+// presentation component.
 export default function MultiStepContext(){
     
     

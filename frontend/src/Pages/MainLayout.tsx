@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import { Target, TrendingDown, Settings } from "lucide-react";
+import { Target, TrendingDown, Settings,ChartPie } from "lucide-react";
 //import { useState } from "react";
 
 export default function MainLayout() {
@@ -19,12 +19,8 @@ export default function MainLayout() {
           <span className="font-semibold text-lg">Financial Intelligence</span>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-1 ">
-          <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-3 ">
-            General
-          </div>
-          
+        {/* Navigation Bar contains multiple NavLink */}
+        <nav className="flex-1 px-4 py-6 space-y-1 ">          
           <NavLink
             to="."
             end
@@ -36,7 +32,7 @@ export default function MainLayout() {
               }`
             }
           >
-            <Target className="w-5 h-5" />
+            <ChartPie className="w-5 h-5" />
             <span className="text-sm font-medium">Recommended Portfolio</span>
           </NavLink>
 
@@ -53,7 +49,19 @@ export default function MainLayout() {
             <TrendingDown className="w-5 h-5" />
             <span className="text-sm font-medium">Debt Optimization</span>
           </NavLink>
-
+          <NavLink
+            to="GoalsAdvice"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                isActive
+                  ? "bg-gray-800 text-white"
+                  : "text-gray-400 hover:text-white hover:bg-gray-800/50"
+              }`
+            }
+          >
+            <Target className="w-5 h-5" />
+            <span className="text-sm font-medium">Goals prioritization</span>
+          </NavLink>
 
         </nav>
 

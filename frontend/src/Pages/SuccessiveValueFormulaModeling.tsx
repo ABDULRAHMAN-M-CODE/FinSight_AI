@@ -1,22 +1,24 @@
-import z from "zod";
-// run time validation related
-import { DebtsAdviceUiDataSchema } from "../Components/MultiDebtPayoffTrajectory";
-
-
+// components
 import { MultiDebtPayoffTrajectory } from "../Components/MultiDebtPayoffTrajectory";
 import { DebtTrajectoryPoint } from "../Components/MultiDebtPayoffTrajectory";
 import { DebtKeyConfigSchema } from "../Components/MultiDebtPayoffTrajectory";
-import { type DebtsAdviceUiDataShape } from "../Components/MultiDebtPayoffTrajectory";
 import { TextualDebtAdvice } from "../Components/MultiDebtPayoffTrajectory";
-import { resolveData } from "../Functions/api/resolveData";
 
-// --- MOCK PRE-CALCULATED DATA (Provided by Backend or Parent) ---
-// Notice how the backend did all the heavy lifting.
-// It determined the total month-by-month trajectory, when the Chase card drops to 0 (Month 5),
-// when the Personal Loan drops to 0 (Month 9), and finally when the Auto Loan drops to 0 (Month 12).
-// The UI is completely dumb and just loops over the data!
+//hooks
+import { useEffect} from "react";
+import { useState } from "react";
+
+// types
+import { type FullAdviceDataType } from "./MultiStepContext";
+import { type DebtsAdviceUiDataShape } from "../Components/MultiDebtPayoffTrajectory";
+
+// run time validation inference
+import z from "zod";
 type FigureTrajectoryPoint=z.infer<typeof DebtTrajectoryPoint>;
-// the function that produces data like 'FigureTrajectoryPoint' already exist in the backend, the following is just a mock
+type DebtKeyConfig=z.infer<typeof DebtKeyConfigSchema>
+type AdviceItem= z.infer<typeof TextualDebtAdvice>;
+
+// default mocks
 const mockMultiDebtTrajectory:FigureTrajectoryPoint[] = [
   { monthLabel: 'Jan 2026', default1: 4500, default2: 10000, default3: 15000 }, // initial 
   { monthLabel: 'Feb 2026', default1: 3600, default2: 9800, default3: 14700 }, 
@@ -34,12 +36,10 @@ const mockMultiDebtTrajectory:FigureTrajectoryPoint[] = [
   // Auto Loan is paid off!
   { monthLabel: 'Dec 2026', default1: 0, default2: 0, default3: 0 },
 ];
-
-// Configuration array tells the dumb component which keys to look for and how to style them.
-// We order them by urgency: Red (Urgent) -> Blue -> Emerald (Lowest urgency)
-
-type DebtKeyConfig=z.infer<typeof DebtKeyConfigSchema>
-// we did not make a function in the backend that generates a data like 'debtConfiguration', because this data contains the color attribute, that means it's a presentational data, not a business logic, at least, this is what I think , it may be wrong, it may be right, what you think ? 
+const mockAdviceData:AdviceItem = {
+  type: "neutral" as const,
+  textualAdvice: " ERROR: THIS IS A DEFAULT DATA, THE BACKEND DATA DID NOT REACH THE UI FOR SOME REASON"
+};
 const debtConfiguration:DebtKeyConfig[] = [
   // I noticed that when I change the key, the red Trajectory disappears !
   // why the design choice is to use key and name?
@@ -47,17 +47,7 @@ const debtConfiguration:DebtKeyConfig[] = [
   { key: 'default2', name: 'default2 Loan (11% APR)', color: '#3b82f6' }, // Tailwind Blue-500
   { key: 'default3', name: 'default3 (5% APR)', color: '#10b981' }, // Tailwind Emerald-500
 ];
-
-
-type AdviceItem= z.infer<typeof TextualDebtAdvice>;
-const mockAdviceData:AdviceItem = {
-  type: "neutral" as const,
-  textualAdvice: " ERROR: THIS IS A DEFAULT DATA, THE BACKEND DATA DID NOT REACH THE UI FOR SOME REASON"
-};
-
-
-//default Data , consider using it as fallback for the stored data in the local storage. 
- const  defaultDebtsUiData:DebtsAdviceUiDataShape= {
+const defaultDebtsUiData:DebtsAdviceUiDataShape= {
     trajectory: mockMultiDebtTrajectory,
     debtKeys: debtConfiguration,
     monthsToTotalPayoff: 11,
@@ -65,38 +55,36 @@ const mockAdviceData:AdviceItem = {
     startingTotalBalance: 29500,
     advice: mockAdviceData,
 }
-
-const mocks:DebtsAdviceUiDataShape=resolveData<DebtsAdviceUiDataShape, typeof DebtsAdviceUiDataSchema >(
-    "debtsUiData", 
-    DebtsAdviceUiDataSchema, 
-    defaultDebtsUiData,
-    (data)=>data 
-  )
+// rendering
+export default function SuccessiveValueFormulaModeling(){
+    const [mockData, setMockData] = useState<DebtsAdviceUiDataShape>(defaultDebtsUiData);
+    useEffect(()=>{
+      const rawString:string |null =localStorage.getItem("FullAdviceData")
+      if(rawString){ // if data exist in local storage
+        const backendData:FullAdviceDataType=JSON.parse(rawString)
+        setMockData(backendData.fullDebtsUiData)
+      }
+    },[])
   
-  console.log("Does mocks equal default or  production data ????\n")
-  console.log("Answer is : \n")
-  if (mocks==defaultDebtsUiData){
+  // console visualization  
+  console.log("Does debts advice mocks equal default or backend calculated data ? Answer is : \n")
+  if (mockData==defaultDebtsUiData){
     console.log("mocks equal the default data")
-  }
+   }
   else{
     console.log("mocks equal the producton data")
   }
-export default function SuccessiveValueFormulaModeling(){
    return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-900">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-
-        {/* "dumb" Stacked Area Chart component */}
         <MultiDebtPayoffTrajectory 
-          trajectory={mocks.trajectory}
-          debtKeys={mocks.debtKeys}
-          monthsToTotalPayoff={mocks.monthsToTotalPayoff}        
-          estimatedPayoffDate={mocks.estimatedPayoffDate}  
-          startingTotalBalance={mocks.startingTotalBalance} 
-          advice={mocks.advice}
+          trajectory={mockData.trajectory}
+          debtKeys={mockData.debtKeys}
+          monthsToTotalPayoff={mockData.monthsToTotalPayoff}        
+          estimatedPayoffDate={mockData.estimatedPayoffDate}  
+          startingTotalBalance={mockData.startingTotalBalance} 
+          advice={mockData.advice}
         />
-        
       </main>
     </div>
   ); 

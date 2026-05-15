@@ -84,7 +84,7 @@ export default function PortfolioAnalytics() {
   const [mockData, setMockData] = useState<InvestementsAdviceType | null>(null);
   const [needsRebalancing,setNeedsRebalancing] =useState<boolean>(false);
   const [rebalancingData, setRebalancingData] = useState<rebalancingDataType>(rebalanceDataDefaults); 
-   // PROBLEM: use 'useQuery' instead of locat storage
+  
   useEffect(()=>{
     const rawString:string |null =localStorage.getItem("FullAdviceData")
     if(rawString){

@@ -24,19 +24,16 @@ class DebtIn(BaseModel):
         if self.monthly_payment < min_payment:
             self.monthly_payment = min_payment + Decimal('1') 
         return self 
-
 class SubjectiveAnswersValuesAndWeights(BaseModel):    
     questions_weights:list[int]
     answers_values:list[int]
     investement_amount:float=3000
-
 class Goal(BaseModel):
     id:int
     goal_name:str
     target_amount:float
     deadline:str
     description:str
-
 class QuestionnaireSubmit(BaseModel):
     monthly_budget: Decimal 
     household_income: List[HouseholdIncomeMember] 

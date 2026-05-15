@@ -1,5 +1,4 @@
 import { CalendarCheck, Target, TrendingDown, AlertCircle, CheckCircle2, Info } from 'lucide-react';
-
 import * as z from "zod";
 import { 
   AreaChart, 
@@ -12,68 +11,31 @@ import {
   Legend
 } from 'recharts';
 
-
-
-
- export const DebtTrajectoryPoint=z.object({
-    monthLabel:z.string(), // required
-    
-    // validation for unrecognized keys
-    //catchall is equivelent to the following index signature in type script  →   [key:string]:number|string;
-    // allows any additional properties with unknown keys and  with values of number or srings
+export const DebtTrajectoryPoint=z.object({
+    monthLabel:z.string(),
 }).catchall(z.union([z.number(),z.string()])) 
-
-/*******Exmaple on catch all from the documentation****** 
- *  const DogWithStrings = z.object({
-  name: z.string(),
-  age: z.number().optional(),
-}).catchall(z.string());
- 
-DogWithStrings.parse({ name: "Yeller", extraKey: "extraValue" }); // PARED CORRECTLY (ACCEPTED)!
-DogWithStrings.parse({ name: "Yeller", extraKey: 42 }); //NOT PARSED (REJECTED)  */
 export const DebtKeyConfigSchema=z.object({
-    /** I do not understand the difference between key and name  */
-  /** The key representing this debt in the trajectory data objects (e.g., 'creditCardA') */
-  key: z.string(),
-  /** The human-readable name for the legend and tooltip (e.g., 'Chase Sapphire') */
+  key: z.string(), // key= name visually, not functionally.
   name: z.string(),
-  /** The hex color code for this debt layer. Red/Orange for high interest, Blue/Green for lower. */
   color: z.string()    
  })
 export  const TextualDebtAdvice=z.object({
-   //type: 'urgent' | 'positive' | 'neutral';
    type:z.enum(["urgent", "positive", "neutral"]),
    textualAdvice: z.string()
  })
-
 export  const  DebtsAdviceUiDataSchema = z.object({
   trajectory: z.array(DebtTrajectoryPoint),
-  /** Array configuring which debts to plot, their display names, and colors */
   debtKeys: z.array(DebtKeyConfigSchema),
-  /** Pre-calculated total months until ALL debt is completely gone */
   monthsToTotalPayoff: z.number(),
-  /** Pre-calculated date string when balance reaches 0 (e.g., "August 2026") */
   estimatedPayoffDate: z.string(),
-  /** The combined starting debt amount across all accounts */
   startingTotalBalance: z.number(),
-  /** A single pre-calculated textual advice object to render in the container */
   advice: TextualDebtAdvice
   });
 export type DebtsAdviceUiDataShape=z.infer<typeof DebtsAdviceUiDataSchema>
+export function MultiDebtPayoffTrajectory({trajectory,debtKeys,monthsToTotalPayoff,estimatedPayoffDate,startingTotalBalance,advice}: DebtsAdviceUiDataShape) {
 
-
-
-export function MultiDebtPayoffTrajectory({
-  trajectory,
-  debtKeys,
-  monthsToTotalPayoff,
-  estimatedPayoffDate,
-  startingTotalBalance,
-  advice
-}: DebtsAdviceUiDataShape) {
-  
-  // Presentation logic only (no financial math)
-  const formatCurrency = (value: number | string | Array<any> | undefined) => {
+  // Presentation logic only (not financial math)
+const formatCurrency = (value: number | string | Array<any> | undefined) => {
     if (typeof value === 'number') {
       if (value === 0) return '$0';
       if (value >= 1000) return `$${(value / 1000).toFixed(1)}k`;

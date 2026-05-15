@@ -169,14 +169,14 @@ Return ALL goals.
     # VALIDATION
     # -----------------------------------------------------
 
-    if not llm_response.goals:
+    if not llm_response.goalsAdvice:
         raise Exception("LLM returned empty goals")
 
     validated_goals = []
 
     valid_goal_ids = {g.id for g in goals_input}
 
-    for advice in llm_response.goals:
+    for advice in llm_response.goalsAdvice:
 
         # ensure correct goal
         if int(advice.goal_id) not in valid_goal_ids:
