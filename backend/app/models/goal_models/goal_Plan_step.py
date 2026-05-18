@@ -14,7 +14,7 @@ class GoalPlanStep(Base):
 
     analysis_id = Column(
         Integer,
-        ForeignKey("goal_analysis.id")
+        ForeignKey("goal_analysis.id", ondelete="CASCADE")
     )
 
     step_order = Column(Integer)

@@ -14,6 +14,7 @@ from app.routes.user_settings import router as user_settings_router
 from app.routes.questionnaire import router as questionnaire_router 
 from app.routes.dashboard import router as dashboard_router
 from app.routes.ticker import router as ticker_router
+from app.routes.rebalancing_ws import router as web_socket_router
 # -------------------------------------------------------
 
 # import limiter -------------------------------------------------------
@@ -34,7 +35,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-    ],
+    ],#
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -45,7 +46,8 @@ app.include_router(auth_router)
 app.include_router(user_settings_router)
 app.include_router(questionnaire_router)
 app.include_router(dashboard_router)
-app.include_router(ticker_router)
+app.include_router(web_socket_router)# real service 
+app.include_router(ticker_router) #  problem : delete in future.
 
 # main endpoint
 @app.get("/")

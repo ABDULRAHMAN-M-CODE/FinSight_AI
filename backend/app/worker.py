@@ -13,6 +13,7 @@ from app.models.debt_models.debts_metrics import DebtMetrics  #  Note for later 
 from app.models.portfolio_models.portfolios_performance_metrics import PortfoliosPerformanceMetrics # Note for later : why imported ? even if it's not used?
 from app.models.registration.user import User  # Note for later : why imported ? even if it's not used?
 from app.core.dependencies import get_current_user
+from app.models.goal_models.goals import Goal
 from datetime import datetime, timezone
 import yfinance as yf
 import pandas as pd
@@ -22,7 +23,7 @@ class ConnectionManager:
         self.active_connections: dict[int, WebSocket] = {}
 
     async def connect(self, user_id: int, websocket: WebSocket):
-        await websocket.accept()
+        
         self.active_connections[user_id] = websocket
 
     def disconnect(self, user_id: int):

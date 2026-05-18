@@ -12,7 +12,7 @@ class GoalAnalysis(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    goal_id = Column(Integer, ForeignKey("goals.id"))
+    goal_id = Column(Integer,ForeignKey("goals.id", ondelete="CASCADE"))
 
     is_possible = Column(Boolean, nullable=False)
 

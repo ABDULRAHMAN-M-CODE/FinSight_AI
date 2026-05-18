@@ -314,7 +314,7 @@ def submit_questionnaire(
 
 
         cel_app.send_task("monitor_user_task", args=[current_user.id])
-        
+                
         
     
         # =================================================

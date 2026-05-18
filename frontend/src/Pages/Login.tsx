@@ -1,15 +1,24 @@
-//import { Link, useNavigate } from "react-router";
 
-  
-// is this line mandatory for this code and why ? answer is : yes , because we are using setPage action from mainSlice to update the current page in the redux store. 
 
 import { useState } from "react";
+
+
 import svgPaths from "../Imports/svg-i38a9njwbx";
 import { Loader2 } from "lucide-react";
 import {  useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
+import { type FullAdviceDataType } from "./MultiStepContext";
+import { FullAdviceDataSchema } from "./MultiStepContext";
 type LoginState = "default" | "filled" | "loading" | "error";
+type BackendExcpetion={
+  status_code:number;
+  detail:string;
+}
+type LoginResponse={
+    message: string;
+    first_login: boolean
+}
 
 // Logic , make it works (functional) , make it readable  , optimize 
 function  useLoginPageLogic(){
@@ -32,40 +41,72 @@ function  useLoginPageLogic(){
     setLoginState("loading");
     
     try{
-    const response = await fetch("http://127.0.0.1:8000/auth/login", { 
+    const response = await fetch("http://localhost:8000/auth/login", { 
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials:"include",
-      body: JSON.stringify({
-          
+      body: JSON.stringify({   
         email: email.trim().toLowerCase(),
         password: password
       }),
     });
-    const data = await response.json();
 
     if (!response.ok) { 
       
         setLoginState("error");// can't set error massege  if  not in the error state.
-        setErrorMessage( data.detail );
+        const errorData:BackendExcpetion= await response.json();
+        console.log("status code is : ",errorData.status_code,"\n")
+        setErrorMessage(errorData.detail)
         return;
     }
+    const data: LoginResponse = await response.json();
+    console.log("data returned from auth/login route is: ",  data,'\n');
+    if (data.first_login){
+      setLoginState("default")
+      navigate("/MultiStepContext");
+      return;
+    }
 
+    
+    try{
+      const response1 = await fetch("http://localhost:8000/dashboard", { 
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials:"include"
+      });
+    if (!response1.ok) { 
+      
+        setLoginState("error");// can't set error massege  if  not in the error state.
+        const errorData:BackendExcpetion= await response1.json();
+        console.log("status code is : ",errorData.status_code,"\n")
+        setErrorMessage(errorData.detail)
+        return;
+    }
+      const fullAdviceData: FullAdviceDataType = await response1.json();
+      const result=FullAdviceDataSchema.safeParse(fullAdviceData); // run time validation on the unknown data, checks the 'correctness' of the  existing data
+      console.log(`safeParse result inside the Login.tsx  content is ${result}`)
+      if(result.success){
+          console.log("run time validation succeed!, results stored in the local storage")
+          localStorage.setItem("FullAdviceData", JSON.stringify(fullAdviceData));// storing response as key:value in the local storage
+          setLoginState("default")
+          navigate("/MainLayout");
+      }
+      
+      else{
+          setLoginState("error");
+          setErrorMessage("Run Time validation failed inside Login.tsx")
+      }    
+    }catch(error){
+      console.log(error) 
+      setLoginState("error")
+      setErrorMessage( "Network error , please try again later." );
 
-        // 
-        //********** GET ALL THE RELEVANT USER'S INFO AND SET THEM IN LOCAL STORAGE. ********************************
-           // Data retrivel for specific user, I  may need another logic here
-           // My Logic will be : Define a function in another file and import it , that function will handle retriving the data and storing it in the local storage, thus, before the MainLayout renders,  that means other UI's or functions  or compoments can access the shared local storage ,the data will be ready, the Question is :  Which design pattern is this based on the philosophy of softawre design ? 
-            //localStorage.setItem("data",data)
-          //**********************  
+    }
 
-          // Clear some stuff before Navigation.
         setLoginState("default");
 
-
-        navigate("/MainLayout");      
     }catch(error){ 
-      console.log(error) // for debugging
+      console.log(error) 
       setLoginState("error")
       setErrorMessage( "Network error , please try again later." );
     }

@@ -327,7 +327,6 @@ function useMultiStepContex(){
                 setErrorMsg("");
         
                 const data: FullAdviceDataType = await response.json();
-                
                 console.table(`data recived from backend  before validation is : ${data}`)    
                 const result=FullAdviceDataSchema.safeParse(data); // run time validation on the unknown data, checks the 'correctness' of the  existing data
                 console.log(`safeParse result content is ${result}`)

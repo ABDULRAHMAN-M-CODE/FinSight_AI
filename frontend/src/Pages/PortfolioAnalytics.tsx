@@ -81,22 +81,27 @@ const CustomTooltip = ({ active, payload }: any) => {
 //rendering
 
 export default function PortfolioAnalytics() {
-  const [mockData, setMockData] = useState<InvestementsAdviceType | null>(null);
+  const [mockData, setMockData] = useState<InvestementsAdviceType | null>(()=>{
+    const rawString:string |null =localStorage.getItem("FullAdviceData")
+      if(rawString){
+        const backendData:FullAdviceDataType=JSON.parse(rawString)
+        return backendData.investementsAdvice
+      }
+      
+        return null;
+      
+  });
   const [needsRebalancing,setNeedsRebalancing] =useState<boolean>(false);
   const [rebalancingData, setRebalancingData] = useState<rebalancingDataType>(rebalanceDataDefaults); 
   
-  useEffect(()=>{
-    const rawString:string |null =localStorage.getItem("FullAdviceData")
-    if(rawString){
-      const backendData:FullAdviceDataType=JSON.parse(rawString)
-      setMockData(backendData.investementsAdvice)
-    }
-  },[])
+  
+
 
   useEffect(() => {
 
+
     const websocket = new WebSocket(
-        "ws://localhost:8000/ws/rebalancing"
+        "ws://127.0.0.1:8000/ws/rebalancing"
     );
 
     websocket.onopen = () => {
@@ -137,7 +142,7 @@ export default function PortfolioAnalytics() {
   
   
   
- 
+  console.log("FRONTEND COOKIES:", document.cookie);
   console.log("Recommended portfolio data: ",mockData.optimalPortfolio)
   console.log("leftover is :", mockData.leftover)
   console.log("number of assets shown on the scatter plot",mockData.assetsScatter.length)

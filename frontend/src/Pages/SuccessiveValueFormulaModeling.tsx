@@ -57,14 +57,15 @@ const defaultDebtsUiData:DebtsAdviceUiDataShape= {
 }
 // rendering
 export default function SuccessiveValueFormulaModeling(){
-    const [mockData, setMockData] = useState<DebtsAdviceUiDataShape>(defaultDebtsUiData);
-    useEffect(()=>{
+    const [mockData, setMockData] = useState<DebtsAdviceUiDataShape>(()=>{
       const rawString:string |null =localStorage.getItem("FullAdviceData")
       if(rawString){ // if data exist in local storage
         const backendData:FullAdviceDataType=JSON.parse(rawString)
-        setMockData(backendData.fullDebtsUiData)
+        return backendData.fullDebtsUiData
       }
-    },[])
+      return defaultDebtsUiData
+    });
+
   
   // console visualization  
   console.log("Does debts advice mocks equal default or backend calculated data ? Answer is : \n")

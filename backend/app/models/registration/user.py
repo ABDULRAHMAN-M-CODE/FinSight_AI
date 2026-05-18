@@ -4,9 +4,6 @@ from sqlalchemy import (
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.database import Base
-
-
-
 class User(Base):
     __tablename__ = "users"
 
@@ -47,7 +44,7 @@ class User(Base):
         cascade="all, delete-orphan",
         passive_deletes=True
     )
-    
+    # why Goal caused problem, and DebtsAdvices did not cause problem ? even though both are not imported ? where should I import ?
     goals = relationship(
     "Goal",
     back_populates="user",

@@ -149,7 +149,7 @@ def verify_email(
         value=access_token,
         httponly=True,              # Prevent JS access (protect against XSS "javascript injection" token theft)
         secure=False,               
-        samesite="lax",                    
+        samesite="none",                    
         max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60, 
         path="/"                    
     )
@@ -159,16 +159,20 @@ def verify_email(
         "first_login": user.is_first_login
     }
 
+from pydantic import BaseModel
+class LoginResponse(BaseModel):
+    message: str
+    first_login: bool
 
-@router.post("/login")
+@router.post("/login",response_model=LoginResponse) # Excepitons are not handled by response_model
 @limiter.limit("5/minute")  # limit login attempts per IP
-def login(user: UserLogin, response: Response,request: Request, db: Session = Depends(get_db)):
+def login(user: UserLogin, request:Request, response: Response, db: Session = Depends(get_db)):
 
     db_user = db.query(User).filter(User.email == user.email).first()
 
     if not db_user or not verify_password(user.password, db_user.password_hash):
-        raise HTTPException(status_code=401, detail="Invalid Email or password")
 
+        raise HTTPException(status_code=401, detail="Invalid Email or password")    
     if not db_user.is_email_verified:
         raise HTTPException(
             status_code=403,
@@ -192,16 +196,21 @@ def login(user: UserLogin, response: Response,request: Request, db: Session = De
         httponly=True,
         secure=False,
         samesite="lax",
-        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 600000,
         path="/"
     )
 
     print("SETTING COOKIE:", access_token)
     print("HEADERS OUT:", response.headers)
-    return {
+    # let's call the returned data to be : data X .
+    return LoginResponse(
+        message= "Login successful",
+        first_login= db_user.is_first_login
+        )
+"""     return {
         "message": "Login successful",
         "first_login": db_user.is_first_login
-    }
+    } """
 
 @router.post("/forgot-password")
 @limiter.limit("3/minute")  # limit registration attempts

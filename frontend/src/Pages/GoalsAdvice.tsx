@@ -86,15 +86,18 @@ import { useState } from 'react';
 
 //types
 export default function GoalsAdvice() {
-  const [mockData, setMockData] = useState< GoalAdvice[]>(defaultData);
+  const [mockData, setMockData] = useState< GoalAdvice[]>(()=>{
+      const rawString:string |null =localStorage.getItem("FullAdviceData") // FullAdviceData was set in localStorage using setItem() in MultiStepContext.tsx
+      if(rawString){
+        const parsedData:FullAdviceDataType=JSON.parse(rawString)
+        console.log("BACKEND DATA =", parsedData);
+        return parsedData.goalsAdvice 
+      }
+      return defaultData
+  });
   
     useEffect(()=>{
-      const rawString:string |null =localStorage.getItem("FullAdviceData")
-      if(rawString){
-        const backendData:FullAdviceDataType=JSON.parse(rawString)
-        console.log("BACKEND DATA =", backendData);
-        setMockData(backendData.goalsAdvice) // error A here
-      }
+
     },[])
 
   return (
