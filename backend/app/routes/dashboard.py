@@ -1,83 +1,151 @@
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-# DB session dependency
 from app.database import get_db
-
-# Authentication dependency 
 from app.core.dependencies import get_current_user
-
-# import needed models and schemas for dashboard
-from app.schemas.dashboard_schemas import DashboardSummaryResponse
-from app.models.debt_models.debts_metrics import DebtMetrics
-from app.models.debt_models.debts_advices import DebtsAdvices
-from app.core.finance.successive_value_modeling import FullDebtsUiData
 from app.models.registration import User
 
+from app.models.debt_models.debts_advices import DebtsAdvices
+from app.models.debt_models.debts_metrics import DebtMetrics
 
-# Router for dashboard endpoint
-router = APIRouter(prefix="/dashboard")
+from app.models.portfolio_models.portfolios_performance_metrics import (
+    PortfoliosPerformanceMetrics
+)
 
-@router.get("/main-dashboard",response_model=DashboardSummaryResponse,  status_code=status.HTTP_200_OK)
-def get_main_dashboard(
+from app.models.goal_models.goal_analysis import GoalAnalysis
+
+from app.routes.questionnaire import FullAdviceData
+from app.schemas.goals_schemas import GoalAdviceItemSchema
+
+router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
+
+
+# =========================================================
+# GET DASHBOARD
+# =========================================================
+
+@router.get("/", response_model=FullAdviceData)
+def get_dashboard(
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_db)
 ):
-    """
-    Returns summary financial advice data for the main dashboard.
 
-    This endpoint:
-    - Requires authenticated user
-    - Ensures onboarding is completed
-    - Returns structured dashboard summary data
+    # =====================================================
+    # DEBTS
+    # =====================================================
 
-    We can change the returned data if needed, for now just returns the advices that are stored in DB. 
-    
-    """
-
-    # If user has not completed onboarding (still first login),
-    # block access to dashboard
-    if current_user.is_first_login:
-        raise HTTPException(
-            status_code=400,
-            detail="User did not fill finance data"
-        )
-
-    # get stored metrics
-    metrics_record = (
+    debt_metrics_row = (
         db.query(DebtMetrics)
         .filter(DebtMetrics.user_id == current_user.id)
-        .order_by(DebtMetrics.created_at.desc())
         .first()
     )
 
-    if not metrics_record:
-        raise HTTPException(
-            status_code=404,
-            detail="Debt metrics not found"
-        )
-
-    # get stored advice
-    advice_record = (
+    debt_advice_row = (
         db.query(DebtsAdvices)
         .filter(DebtsAdvices.user_id == current_user.id)
-        .order_by(DebtsAdvices.created_at.desc())
         .first()
     )
 
-    if not advice_record:
+    if not debt_metrics_row or not debt_advice_row:
         raise HTTPException(
             status_code=404,
-            detail="Debt advice not found"
+            detail="Debt data not found for this user"
         )
 
-    # combine metrics with advice to reconstruct FullDebtsUiData
-    full_data_dict = metrics_record.metrics.copy()
-    full_data_dict["advice"] = advice_record.debts_advice
+    debts_data = debt_metrics_row.metrics
+    debts_data["advice"] = debt_advice_row.debts_advice
 
-    full_debts_ui_data = FullDebtsUiData(**full_data_dict)
 
-    # Build and return dashboard summary response
-    return DashboardSummaryResponse(
-        fullDebtsUiData=full_debts_ui_data
+    # =====================================================
+    # INVESTMENTS
+    # =====================================================
+
+    portfolio_row = (
+        db.query(PortfoliosPerformanceMetrics)
+        .filter(PortfoliosPerformanceMetrics.user_id == current_user.id)
+        .first()
+    )
+
+    if not portfolio_row:
+        raise HTTPException(
+            status_code=404,
+            detail="Portfolio data not found for this user"
+        )
+
+    investments_data = {
+        "leftover": getattr(portfolio_row, "leftover", 0.0),
+
+        "optimalPortfolio": {
+            "metrics": {
+                "expectedAnnualReturn": portfolio_row.expected_annual_return,
+                "annualVolatility": portfolio_row.annual_volatility,
+                "sharpeRatio": portfolio_row.sharpe_ratio
+            },
+
+            "assets": [
+                {
+                    "assetName": asset.asset_name,
+                    "capitalAllocationPercentage": asset.capital_allocation_percentage,
+                    "quantity": asset.quantity
+                }
+                for asset in portfolio_row.assets
+            ]
+        },
+
+        "assetsScatter": getattr(portfolio_row, "assets_scatter", [])
+    }
+
+
+    # =====================================================
+    # GOALS (FIXED)
+    # =====================================================
+
+    goals_data = []
+
+    for goal in current_user.goals:
+
+        # get latest AI analysis for this goal
+        analysis = (
+            db.query(GoalAnalysis)
+            .filter(GoalAnalysis.goal_id == goal.id)
+            .order_by(GoalAnalysis.generated_at.desc())
+            .first()
+        )
+
+        if not analysis:
+            continue
+
+        goals_data.append(
+            GoalAdviceItemSchema(
+                goal_id=goal.id,
+                goal_name=goal.goal_name,
+
+                is_possible=analysis.is_possible,
+                priority=analysis.priority,
+                required_monthly_saving=analysis.required_monthly_saving,
+                months_remaining=analysis.months_remaining,
+                ai_summary=analysis.ai_summary,
+
+                simple_plan=[
+                    step.step_text
+                    for step in sorted(
+                        analysis.steps,
+                        key=lambda x: x.step_order
+                    )
+                ]
+            )
+        )
+
+
+    # =====================================================
+    # FINAL RESPONSE
+    # =====================================================
+
+    return FullAdviceData(
+
+        fullDebtsUiData=debts_data,
+
+        investementsAdvice=investments_data,
+
+        goalsAdvice=goals_data
     )
