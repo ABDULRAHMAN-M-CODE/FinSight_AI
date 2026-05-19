@@ -15,6 +15,8 @@ from app.routes.questionnaire import router as questionnaire_router
 from app.routes.dashboard import router as dashboard_router
 from app.routes.ticker import router as ticker_router
 from app.routes.rebalancing_ws import router as web_socket_router
+from app.routes.financial_data import router as financial_data_router
+
 # -------------------------------------------------------
 
 # import limiter -------------------------------------------------------
@@ -48,6 +50,7 @@ app.include_router(questionnaire_router)
 app.include_router(dashboard_router)
 app.include_router(web_socket_router)# real service 
 app.include_router(ticker_router) #  problem : delete in future.
+app.include_router(financial_data_router)
 
 # main endpoint
 @app.get("/")
