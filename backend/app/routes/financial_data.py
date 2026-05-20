@@ -107,7 +107,7 @@ def regenerate_financial_data(
         for portfolio in old_portfolios:
 
             db.query(Portfolios).filter(
-                Portfolios.portfolio_id == portfolio.id
+                Portfolios.portfolio_id == portfolio.portfolio_id
             ).delete()
 
         # =================================================

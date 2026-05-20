@@ -7,7 +7,7 @@ from app.database import get_db
 # import needed models
 from app.models.registration import User, EmailVerificationToken, PasswordResetToken
 from datetime import datetime, timedelta
-
+from pydantic import BaseModel
 # import needed schemas for this router
 from app.schemas.auth_schemas import (
     UserRegister,
@@ -66,8 +66,8 @@ def register(user: UserRegister, background_tasks: BackgroundTasks, request: Req
 
     
 
-    raw_token = generate_raw_token()
-    hashed_token = hash_token(raw_token)
+   
+   
 
     # send code to the email of the new user
     code = generate_email_code()
@@ -149,8 +149,9 @@ def verify_email(
         value=access_token,
         httponly=True,              # Prevent JS access (protect against XSS "javascript injection" token theft)
         secure=False,               
-        samesite="none",                    
+        samesite="lax",                    
         max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60, 
+         
         path="/"                    
     )
 
@@ -159,13 +160,13 @@ def verify_email(
         "first_login": user.is_first_login
     }
 
-from pydantic import BaseModel
+
 class LoginResponse(BaseModel):
     message: str
     first_login: bool
-
 @router.post("/login",response_model=LoginResponse) # Excepitons are not handled by response_model
 @limiter.limit("5/minute")  # limit login attempts per IP
+#note: request must not be deleted even though it is not explicitly used inside the code.
 def login(user: UserLogin, request:Request, response: Response, db: Session = Depends(get_db)):
 
     db_user = db.query(User).filter(User.email == user.email).first()
@@ -196,7 +197,7 @@ def login(user: UserLogin, request:Request, response: Response, db: Session = De
         httponly=True,
         secure=False,
         samesite="lax",
-        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 600000,
+        max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         path="/"
     )
 
@@ -207,10 +208,7 @@ def login(user: UserLogin, request:Request, response: Response, db: Session = De
         message= "Login successful",
         first_login= db_user.is_first_login
         )
-"""     return {
-        "message": "Login successful",
-        "first_login": db_user.is_first_login
-    } """
+
 
 @router.post("/forgot-password")
 @limiter.limit("3/minute")  # limit registration attempts

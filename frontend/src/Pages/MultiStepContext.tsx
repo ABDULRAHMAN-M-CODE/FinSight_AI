@@ -2,7 +2,7 @@
 // hooks
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
 // Prebuilt components
 import { ProgressBar } from "../Imports/ProgressBar"
 import { HouseholdIncomeSection } from "../Imports/HouseholdIncomeSection";
@@ -20,8 +20,7 @@ import { type SubjectiveQuestionAnswer } from "../Components/InvestementsRiskPro
 import { type SubjectiveQuestionsType } from "../Components/InvestementsRiskProfileAssasementCard";
 import { type Goal } from "../Types/Goal";
 
-//custome function
-import { FetchData } from "../Functions/api/fetchData";
+
 
 //run time validation
 import z from "zod";
@@ -205,8 +204,9 @@ function useMultiStepContex(){
 
         const navigate= useNavigate();
 
-        const url="http://localhost:8000/onboarding/questionnaire";
-
+        const location = useLocation();
+        console.log(location.state.endpointURL)
+        console.log("this questionnary will use HTTP method of the following kind : ",location.state.httpMethod)
         const key="step";
         
         // remember that the demo uses 'currentStep' instead of 'step', so there is no conflict.
@@ -311,7 +311,12 @@ function useMultiStepContex(){
                 console.log('goals are ',payload.goals,'\n'); 
                 console.log('debts data is ',payload.outstanding_debts,'\n'); // to visulaize the sent data as table on the console.               
                 // send a request
-                const response= await FetchData({payload, url});
+                const response = await fetch(location.state.endpointURL, { 
+                    method: location.state.httpMethod,
+                    headers: { "Content-Type": "application/json" },
+                    body:JSON.stringify(payload),
+                    credentials:"include",
+                });
                 // Show the error (if any) returned by the backend
                 if (!response.ok) {
                     setIsLoading(false)

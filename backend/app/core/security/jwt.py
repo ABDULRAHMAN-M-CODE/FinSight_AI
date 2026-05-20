@@ -7,7 +7,7 @@ SECRET_KEY = settings.SECRET_KEY
 ALGORITHM = settings.ALGORITHM
 
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 30 # PROBLEM: make it less for production
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()

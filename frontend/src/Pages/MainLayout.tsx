@@ -2,9 +2,10 @@ import { Outlet } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { Target, TrendingDown, Settings,ChartPie } from "lucide-react";
 //import { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
+import { ShowMultiStepContext } from "./PostSignup";
 export default function MainLayout() {
-  
+  const navigate=useNavigate();
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -84,6 +85,12 @@ export default function MainLayout() {
             <Settings className="w-5 h-5" />
             <span className="text-sm font-medium">Settings</span>
           </NavLink>
+          <button
+            onClick={()=> ShowMultiStepContext({n:navigate,endpointURL:"http://localhost:8000/financial-data/regenerate",httpMethod:"PUT"}) }
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-gray-400 hover:text-white hover:bg-gray-800/50 w-full text-left"
+          >           
+            <span className="text-sm font-medium">change  your data and get new advice</span>
+          </button>
         </div>
 
       </aside>

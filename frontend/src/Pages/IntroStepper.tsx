@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Brain, Bell, TrendingUp, LayoutDashboard, ChevronRight, ChevronLeft, Check } from 'lucide-react';
+import { Brain, Bell,  LayoutDashboard, ChevronRight, ChevronLeft, Check } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { type NavigateFunction } from 'react-router-dom';
+
+import { ShowMultiStepContext } from './PostSignup';
 interface Step {
   id: number;
   icon: React.ComponentType<{ className?: string }>;
@@ -25,23 +27,12 @@ const steps: Step[] = [
   {
     id: 2,
     icon: Bell,
-    title: 'Real-Time Adaptive Alerts',
+    title: 'Adaptive Alerts',
     subtitle: 'Intelligence that never sleeps',
     points: [
-      'Hourly financial monitoring',
+      'financial monitoring',
       'Context-aware alerts (in-app + email)',
       'Goal deviation notifications'
-    ]
-  },
-  {
-    id: 3,
-    icon: TrendingUp,
-    title: '"What-If" Financial Simulations',
-    subtitle: 'Predict your future with confidence',
-    points: [
-      'Decision scenario testing',
-      'Thousands of outcome simulations',
-      'Long-term trajectory charts'
     ]
   },
   {
@@ -51,25 +42,25 @@ const steps: Step[] = [
     subtitle: 'Everything in one place',
     points: [
       'Interactive dashboards',
-      'Goal status indicators',
-      'Secure, read-only baseline data'
+      'Goal status indicators'
     ]
   }
 ];
 
-function useIntroStepper(){
+function useIntroStepper(navigate:NavigateFunction){
 
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0); // changes dynamically
   const step = steps[currentStep];
   const Icon = step.icon;
-  const isFirstStep = currentStep === 0;
-  const isLastStep = currentStep === steps.length - 1;
-  const navigate=useNavigate();// rule: called out outside conditional
+  const isFirstStep = currentStep === 0; // changes dynamically
+  const isLastStep = currentStep === steps.length - 1;// changes dynamically
+  
   const handleNext = () => {
     if (isLastStep) {
-      // I want to redirect user to other page,I do not know if I should use Link or useNavigate(): user-intention based vs side-effect navigation
+      //Link vs useNavigate(): user-intention based vs side-effect navigation
       // decision using if statement : I will use useNavigate() !
-      navigate ("/MultiStepContext")
+      ShowMultiStepContext({n:navigate,endpointURL:"http://localhost:8000/onboarding/questionnaire", httpMethod:"POST"})
+      
     } else {
       setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
     }
@@ -89,6 +80,7 @@ function useIntroStepper(){
   };
 }
 export default function IntroStepper() {
+  const navigate=useNavigate();// rule: called out outside conditional
   const{
     Icon,
     isFirstStep,
@@ -97,7 +89,7 @@ export default function IntroStepper() {
     currentStep,
     step,
     isLastStep
-  }=useIntroStepper();
+  }=useIntroStepper(navigate);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 flex items-center justify-center p-4">
@@ -218,13 +210,13 @@ export default function IntroStepper() {
 
         {/* Skip option */}
         <div className="mt-6 text-center">
-          <Link 
+          <button 
+            onClick={()=>ShowMultiStepContext({n:navigate,endpointURL:"http://localhost:8000/onboarding/questionnaire",httpMethod:"POST"})}
             className="text-sm text-slate-500 hover:text-slate-700 transition-colors duration-200 underline underline-offset-4"
-            to="/DataCollectionIntro"
             aria-label="Skip introduction"
           >
             Skip introduction
-          </Link>
+          </button>
         </div>
       </div>
     </div>
