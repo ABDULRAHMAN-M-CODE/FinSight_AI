@@ -43,7 +43,7 @@ def change_password(
     current_user.password_hash = hash_password(data.new_password) 
     db.commit()
 
-    return {"message": "Password changed successfully. Please log in again."}
+    return {"message": "Password changed successfully."}
 
 
 

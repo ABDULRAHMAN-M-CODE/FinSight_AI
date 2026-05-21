@@ -211,7 +211,7 @@ def login(user: UserLogin, request:Request, response: Response, db: Session = De
 
 
 @router.post("/forgot-password")
-@limiter.limit("3/minute")  # limit registration attempts
+@limiter.limit("3/minute")  # limit  attempts
 def forgot_password(
     data: ForgotPasswordRequest,
     background_tasks: BackgroundTasks,
@@ -297,3 +297,15 @@ def reset_password(
     db.commit()
 
     return {"message": "Password reset successfully"}
+
+@router.post("/logout")
+def logout(response: Response):
+
+    response.delete_cookie(
+        key="access_token",
+        path="/",
+        samesite="lax",
+        secure=False
+    )
+
+    return {"message": "Logged out successfully"}
