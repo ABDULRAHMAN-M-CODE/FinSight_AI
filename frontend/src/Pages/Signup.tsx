@@ -185,7 +185,7 @@ export  default function SignupForm() {
     emailExistsError,
     handleInputChange,
     handleSubmit
-  } = useSignupForm();  //custome hook usage, separation between logic and rendering.
+  } = useSignupForm();  
 
   return (
     <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-lg">

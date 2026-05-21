@@ -1,33 +1,25 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-
 # DB session dependency
 from app.database import get_db
-
 # import needed models for this router
 from app.models.registration import User
-
 # Authentication dependency 
 from app.core.dependencies import get_current_user
-
-# import needed schemas for this router
-from app.schemas.user_settings_schemas import (
-    ChangePasswordRequest,
-    ChangeNameRequest,
-    ChangePhoneNumberRequest,
-)
-
 # import needed utils
 from app.core.security.security import hash_password, verify_password
 from app.core.utils.PWV_utils import validate_password
+from pydantic import BaseModel
 
 
 
-# User settings router (change name, change password, change phone number).
 router = APIRouter(prefix="/UserSettings")
 
-
-@router.post("/change-password")
+class ChangePasswordRequest(BaseModel):
+    old_password: str
+    new_password: str
+    confirm_password: str
+@router.put("/change-password")
 def change_password(
     data: ChangePasswordRequest,
     current_user: User = Depends(get_current_user),
@@ -53,31 +45,32 @@ def change_password(
 
     return {"message": "Password changed successfully. Please log in again."}
 
-@router.post("/change-name")
-def change_name(
-    data: ChangeNameRequest,
+
+
+class ChangeProfileRequest(BaseModel):
+    new_name: str 
+    new_number: str 
+@router.put("/change-profile")
+def change_profile(
+    data: ChangeProfileRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    # change the old name
-    current_user.full_name = data.new_name
-    db.commit()
+    try:
 
-    return {
-        "message": "Full name changed successfully"
-    }
+        current_user.full_name = data.new_name
+        current_user.phone_number = data.new_number
+        db.commit()
+        return {
+            "message": "success"
+        }
+    
+    except Exception as e:
 
-@router.post("/change-phoneNumber")
-def change_phone(
-    data: ChangePhoneNumberRequest,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    # change the old phone number
-    current_user.phone_number = data.new_number
+        db.rollback()
+        print("error in 'change_profile' route:", str(e))
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}"
+        )
 
-    db.commit()
-
-    return {
-        "message": "phone number changed successfully"
-    }
