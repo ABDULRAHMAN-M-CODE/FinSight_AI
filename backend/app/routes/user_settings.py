@@ -74,3 +74,37 @@ def change_profile(
             detail=f"Internal server error: {str(e)}"
         )
 
+@router.delete("/delete-account")
+def delete_account(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    try:
+
+        # Get user object from DB
+        user = db.query(User).filter(User.id == current_user.id).first()
+
+        if not user:
+            raise HTTPException(
+                status_code=404,
+                detail="User not found"
+            )
+
+        # Delete user
+        db.delete(user)
+
+        db.commit()
+
+        return {
+            "message": "Account deleted successfully"
+        }
+
+    except Exception as e:
+
+        db.rollback()
+        print("error in 'delete_account' route:", str(e))
+
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}"
+        )
