@@ -4,6 +4,7 @@ import { LogOut } from "lucide-react";
 import { User } from "lucide-react";
 import { Trash2 } from "lucide-react";
 import LoadingEffect from "../Imports/LoadingEffect";
+import { useNavigate } from "react-router-dom";
 type ChangeProfileRequest={
     new_name: string;
     new_number: string;
@@ -76,6 +77,7 @@ function MessageBox({ isErrorMsg,Msg }: MessageBoxProps) {
   );
 }
 function useSettingsPage(){
+
   // change name and password states (user's states and accessories states(additional states for user experience))
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -92,6 +94,13 @@ function useSettingsPage(){
   const [isThereError2, setIsThereError2] = useState(false);
   const [Msg2, setMsg2] = useState("");
   const [finishedProcessingPassword,setFinishedProcessingPassword]=useState(false);
+
+  //handle logout  states( accessories states(additional states for user experience))
+  const navigate=useNavigate();
+  const [isLoading3, setIsLoading3] = useState(false);
+  const [isThereError3, setIsThereError3] = useState(false);
+  const [Msg3, setMsg3] = useState("");
+  const [finishedProcessingLogout,setFinishedProcessingLogout]=useState(false);
   const   handleSaveProfile = async(e:React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading1(true);
@@ -206,9 +215,46 @@ function useSettingsPage(){
       }
     };
     
-  const handleLogout = () => {
-    //question to chatgpt, let's call it question XXX:  I want to delete the cookie that is inside the browser, and I want react to detect that it was deleted, and route the user to the login page.
-    alert("Logged out successfully!");
+  const handleLogout = async () => {
+ try{
+    const response3 = await fetch("http://localhost:8000/auth/logout", { 
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials:"include",
+        });
+        
+        if (!response3.ok) {
+              setFinishedProcessingLogout(true);
+              setIsLoading3(false)
+              setIsThereError3(true);
+              const errorData:InternalServerError= await response3.json();
+              setMsg3(errorData.detail);
+              
+              setTimeout(() => {
+                setFinishedProcessingLogout(false);
+              }, 2000);  
+              return
+        }
+        setIsLoading3(false)
+        setIsThereError3(false);
+        setFinishedProcessingLogout(true);
+        const data:SuccessResponse= await response3.json();
+        setMsg3(data.message)
+        setTimeout(() => {
+          setFinishedProcessingLogout(false);
+        }, 2000);
+        navigate("/Login") ; 
+
+ }catch(error){
+        setFinishedProcessingLogout(true);
+        setIsLoading3(false);
+        setIsThereError3(true);
+        setMsg3("Please check your internet connection");
+        setTimeout(() => {
+          setFinishedProcessingLogout(false);
+        }, 2000);    
+ }
+
   };
 
   const handleDeleteAccount = () => {
@@ -236,7 +282,11 @@ function useSettingsPage(){
     Msg2,finishedProcessingPassword,
     handleChangePassword,
 
+    isLoading3,
+    isThereError3,
+    Msg3,finishedProcessingLogout,
     handleLogout,
+    
     handleDeleteAccount,
   }
 
@@ -261,7 +311,12 @@ export   default function SettingsPage() {
     isLoading2,
     isThereError2,
     Msg2,finishedProcessingPassword,
+    
+    isLoading3,
+    isThereError3,
+    Msg3,finishedProcessingLogout,
     handleLogout,
+    
     handleDeleteAccount,
   }=useSettingsPage();
 
@@ -355,6 +410,7 @@ export   default function SettingsPage() {
 
       {/* Password Change */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">
+        
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
             <Lock className="w-5 h-5 text-gray-600" />
@@ -435,13 +491,16 @@ export   default function SettingsPage() {
             </button>
           </div>
         </form>
+
           {finishedProcessingPassword && (
             <MessageBox Msg={Msg2} isErrorMsg={isThereError2} />
           )}
+
       </div>
 
-      {/* Account Actions */}
+      {/* Account Actions  */}
       <div className="bg-white rounded-xl border border-gray-200 p-6">
+        
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
             <LogOut className="w-5 h-5 text-gray-600" />
@@ -455,17 +514,36 @@ export   default function SettingsPage() {
             </p>
           </div>
         </div>
-
         <div className="space-y-3">
+
           {/* Logout */}
           <button
             onClick={handleLogout}
             className="w-full sm:w-auto px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium flex items-center gap-2 justify-center"
+            disabled={isLoading3}
           >
-            <LogOut className="w-4 h-4" />
-            Logout
+
+            
+                     {isLoading3 ? (
+                      <>
+                         <LoadingEffect />
+                          please wait while we log you out...
+                      </>
+                     ) : (
+                      
+                      <>
+                        <LogOut className="w-4 h-4" />
+                        <p>Logout</p>
+                      </>
+
+                    )}
+            
           </button>
         </div>
+          {finishedProcessingLogout && (
+            <MessageBox Msg={Msg3} isErrorMsg={isThereError3} />
+          )}
+
       </div>
 
       {/* Danger Zone */}

@@ -300,12 +300,21 @@ def reset_password(
 
 @router.post("/logout")
 def logout(response: Response):
+    try:
+        response.delete_cookie(
+            key="access_token",
+            path="/",
+            samesite="lax",
+            secure=False
+        )
+        return {"message": "Logged out successfully"}
+    except Exception as e:
 
-    response.delete_cookie(
-        key="access_token",
-        path="/",
-        samesite="lax",
-        secure=False
-    )
+        
+        print("error in 'logout' route:", str(e))
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}"
+        )
 
-    return {"message": "Logged out successfully"}
+    
