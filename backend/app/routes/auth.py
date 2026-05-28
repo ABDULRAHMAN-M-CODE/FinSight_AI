@@ -64,11 +64,6 @@ def register(user: UserRegister, background_tasks: BackgroundTasks, request: Req
     db.commit()
     db.refresh(new_user)
 
-    
-
-   
-   
-
     # send code to the email of the new user
     code = generate_email_code()
 
@@ -96,8 +91,6 @@ def register(user: UserRegister, background_tasks: BackgroundTasks, request: Req
 
     return {"message": "User registered successfully. Please check your email for verify"}
 
-
-    
 @router.post("/verify-email")
 def verify_email(
     data: VerifyEmailCodeRequest,

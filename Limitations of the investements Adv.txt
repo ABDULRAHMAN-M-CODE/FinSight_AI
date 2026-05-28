@@ -1,4 +1,0 @@
-Limitations of the investments Advice service:
-
-1- short selling is not considered
-2-Tax loss harvesting

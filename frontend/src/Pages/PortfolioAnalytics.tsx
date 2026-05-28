@@ -1,15 +1,5 @@
 
-import {
-  ScatterChart,
-  Scatter,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend
-} from 'recharts';
-import { Briefcase, TrendingUp, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
+import { Briefcase, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 
 import { type FullAdviceDataType } from './MultiStepContext';
 import { type InvestementsAdviceType } from './MultiStepContext';
@@ -48,32 +38,6 @@ const rebalanceDataDefaults: rebalancingDataType = {
 
 const formatPercent = (value: number) => `${(value * 100).toFixed(2)}%`;
 
-const CustomTooltip = ({ active, payload }: any) => {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    const isFrontier = !data.ticker;
-    
-    return (
-      <div className="bg-white border border-gray-200 p-3 rounded-lg shadow-lg">
-        {!isFrontier && (
-          <p className="font-bold text-gray-800 mb-2">{data.ticker}</p>
-        )}
-        {isFrontier && (
-          <p className="font-bold text-emerald-600 mb-2">Efficient Frontier</p>
-        )}
-        <div className="text-sm space-y-1">
-          <p className="text-gray-600">
-            <span className="font-medium">Return:</span> {formatPercent(data.expectedReturn)}
-          </p>
-          <p className="text-gray-600">
-            <span className="font-medium">Volatility:</span> {formatPercent(data.volatility)}
-          </p>
-        </div>
-      </div>
-    );
-  }
-  return null;
-};
 
 
 
@@ -101,7 +65,7 @@ export default function PortfolioAnalytics() {
 
 
     const websocket = new WebSocket(
-        "ws://127.0.0.1:8000/ws/rebalancing"
+        "ws://localhost:8000/ws/rebalancing"
     );
 
     websocket.onopen = () => {
@@ -111,10 +75,20 @@ export default function PortfolioAnalytics() {
     websocket.onmessage = (event) => {
 
         const backendData = JSON.parse(event.data);
-
+        console.log("backend data is : ",backendData)
         console.log("received backend data", backendData);
 
         setRebalancingData(backendData);
+
+        if (
+            backendData &&
+            backendData.tradeOrders &&
+            backendData.tradeOrders.length > 0
+        ) {
+            setNeedsRebalancing(true);
+        } else {
+            setNeedsRebalancing(false);
+        }
     };
 
     websocket.onclose = () => {
@@ -145,7 +119,7 @@ export default function PortfolioAnalytics() {
   console.log("FRONTEND COOKIES:", document.cookie);
   console.log("Recommended portfolio data: ",mockData.optimalPortfolio)
   console.log("leftover is :", mockData.leftover)
-  console.log("number of assets shown on the scatter plot",mockData.assetsScatter.length)
+  
   
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 p-8 font-sans">
@@ -153,67 +127,10 @@ export default function PortfolioAnalytics() {
         <header className="mb-10">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 flex items-center gap-3">
             <Briefcase className="h-8 w-8 text-blue-600" />
-            Portfolio Analytics
+            Recommended Portfolio
           </h1>
-          <p className="text-gray-500 mt-2">Interactive review of your asset allocation and efficient frontier.</p>
+          <p className="text-gray-500 mt-2">Assets Allocation</p>
         </header>
-
-        {/* 1. Market Overview */}
-        <section className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="p-6 border-b border-gray-200 bg-gray-50/50">
-            <h2 className="text-xl font-semibold flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-gray-500" />
-              Market Overview
-            </h2>
-            <p className="text-sm text-gray-500 mt-1">
-              Risk-return profile of assets and the efficient frontier.
-            </p>
-          </div>
-          <div className="p-6">
-            <div className="h-[450px] w-full">
-              <ResponsiveContainer width="100%" height={500}>
-                
-                <ScatterChart margin={{ top: 20, right: 30, bottom: 40, left: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis 
-                    type="number" 
-                    dataKey="volatility" 
-                    name="Volatility" 
-                    tickFormatter={(tick) => `${(tick * 100).toFixed(0)}%`}
-                    domain={['auto', 'auto']}
-                    padding={{ left: 20, right: 20 }}
-                    label={{ value: 'Volatility (Risk)', position: 'insideBottom', offset: -10 }}
-                  />
-                  
-                  <YAxis 
-                    type="number" 
-                    dataKey="expectedReturn" 
-                    name="Return" 
-                    tickFormatter={(tick) => `${(tick * 100).toFixed(0)}%`}
-                    domain={['auto', 'auto']}
-                    padding={{ top: 20, bottom: 20 }}
-                    label={{ value: 'Expected Return', angle: -90, position: 'insideLeft', offset: 0 }}
-                  />
-
-                  <Tooltip content={<CustomTooltip />} cursor={{ strokeDasharray: '3 3' }} />
-                  <Legend verticalAlign="top" height={36}/>
-                  
-                  {/* Efficient Frontier as a line using Scatter */}
-
-                  
-                  {/* Assets */}
-                  <Scatter 
-                    name="Assets" 
-                    data={mockData.assetsScatter} 
-                    fill="#3b82f6" 
-                  />
-                </ScatterChart>
-              
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </section>
-
         {/** Recommendations */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* 2. Optimal Portfolio Section */}

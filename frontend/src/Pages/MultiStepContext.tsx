@@ -39,15 +39,11 @@ const OptimalPortfolio=z.object({
     assets:z.array(Asset), 
     metrics:Metrics 
 }) 
-const AssetScatterPoint=z.object({
-    ticker:z.string(),
-    volatility: z.number(),
-    expectedReturn:z.number()  
-}) 
+
 const  InvestementsAdviceSchema =z.object({
     leftover: z.number(),
-    optimalPortfolio:OptimalPortfolio, 
-    assetsScatter: z.array(AssetScatterPoint)
+    optimalPortfolio:OptimalPortfolio
+
 })
 
 

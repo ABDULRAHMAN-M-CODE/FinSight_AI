@@ -1,1 +1,0 @@
-"1211.SR": "Saudi Arabia", "7010.SR": "Saudi Arabia", "2010.SR": "Saudi Arabia", "ETEL.CA": "Egypt", "SWDY.CA": "Egypt", "UAE": "United Arab Emirates", "QAT": "Qatar", "KFH.KW": "Kuwait", "NBK.KW": "Kuwait", "IGIC": "Jordan","QOIS.QA":"Qatar","DFM.AE": "United Arab Emirates", "DIB.AE": "United Arab Emirates","BNB-USD": "Crypto","BTC-USD": "Crypto","ETH-USD": "Crypto"

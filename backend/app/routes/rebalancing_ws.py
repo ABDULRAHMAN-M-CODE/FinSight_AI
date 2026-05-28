@@ -6,7 +6,8 @@ from fastapi import Depends
 from jose import jwt, JWTError
 from app.core.security.jwt import SECRET_KEY, ALGORITHM
 from typing import Annotated
-
+import redis.asyncio as redis
+import json
 from fastapi import (
     Cookie,
     Depends,
@@ -32,7 +33,7 @@ async def websocket_endpoint(
         cookie_or_token: Annotated[str, Depends(get_cookie_or_token)]
         ):
     await websocket.accept()
-   
+
     # Extract user_id from the verified token/cookie string
     try:
         payload = jwt.decode(
@@ -51,8 +52,12 @@ async def websocket_endpoint(
         return
     
     await manager.connect(int(user_id), websocket)
+    r = redis.Redis(host="localhost", port=6379, db=0)
+    pubsub = r.pubsub()
+    await pubsub.subscribe(f"user:{user_id}")
     try:
-        while True:
-            await asyncio.sleep(3600)
+        async for msg in pubsub.listen():
+            if msg["type"] == "message":
+                await websocket.send_json(json.loads(msg["data"]))
     except:
-        manager.disconnect(int(user_id))
+        pass

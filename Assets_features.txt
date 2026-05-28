@@ -1,7 +1,0 @@
-
-     -Class
-     -SubClasses and sectors
-     -Instrument Type 
-     -Market Cap
-     -Liquidity
-     -Factor (growth/value/etc.)

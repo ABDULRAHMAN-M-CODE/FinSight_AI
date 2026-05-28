@@ -31,7 +31,7 @@ class ConnectionManager:
 
     async def send_to_user(self, user_id: int, data: dict):
         websocket = self.active_connections.get(user_id)
-
+        print(self.active_connections) # I added this line just now, then I saw the following output [WARNING:  WatchFiles detected changes in 'app/worker.py'. Reloading...INFO:     Shutting down,INFO:     connection closed,INFO:     Waiting for background tasks to complete. (CTRL+C to force quit)]
         if websocket:
             await websocket.send_json(data)
 
@@ -116,7 +116,13 @@ async def rebalancing_logic(current_user_id: int)->None: # question xx , what sh
         }
     else:
         result=None
-    await manager.send_to_user(current_user_id, result)
+    import redis
+    r = redis.Redis(host="localhost", port=6379, db=0)
+
+    r.publish(
+        f"user:{current_user_id}",
+        json.dumps(result)
+    ) 
 
 
 ###############################

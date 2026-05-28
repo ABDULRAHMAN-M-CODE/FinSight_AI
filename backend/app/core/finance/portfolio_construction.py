@@ -166,7 +166,7 @@ class AssetScatterPoint(BaseModel):
 class  InvestementsAdviceMocks (BaseModel) :
       leftover: float
       optimalPortfolio:OptimalPortfolio 
-      assetsScatter: list[AssetScatterPoint]
+      
       
       
 
@@ -311,7 +311,7 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
         ] 
         print("314 list comprehension  had no problem")
         self.ef = EfficientFrontier(posterior_returns, posterior_covarience_matrix,verbose=False,solver='CLARABEL', weight_bounds=(0.0, 0.50))# possible solvers : ['CLARABEL', 'HIGHS', 'OSQP', 'SCIP', 'SCIPY', 'SCS']
-
+        
         
                                         
         
@@ -452,15 +452,11 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
             stored_dict = json.load(f)
         initial_equities_tickers=[key for key in list(stored_dict.keys()) if stored_dict[key]=="Equities"]
         first_service=HistoricalPricesService(ApiOrMockPricesData(assets_tickers=initial_equities_tickers, start_date="2024-1-1",interval="1d" )) #PROBLEM:the definition of the HistoricalPricesService class is outside the main class , is it ok or not ? can I put definition of class inside class ?
-        
-        
         """ 
         #other way to get 'first service'
         BASE_DIR = Path(__file__).resolve().parent
         first_service=HistoricalPricesService(MockData(BASE_DIR / "cleaned_multiindex_prices.parquet")) 
         """
-        
-        
         _,self.cleaned_prices=first_service.get_data()#this  method call never changes regardless of the underlying implementation ; DIP design pattern.
         self.cleaning_survived_tickers=list(self.cleaned_prices.columns.get_level_values(0).unique())
         
@@ -475,7 +471,6 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
         equities_latest_close_prices = self.equities_prices.xs('Close', level=1, axis=1).iloc[-2] # don't use -1
         print("line 470 has no problem")
         self.equities_market_caps= (equities_latest_close_prices*equities_num_shares).dropna()
-        
         self.average_daily_volume = self.equities_prices.xs('Volume', level=1, axis=1).iloc[-50:].mean()                    
         
         selected_equities = self.equities_filtering_algorithm(top_n=int(0.2 * len(cleaning_survived_equities)),adv_threshold=1_000_000,slop_threshold=0.001 )
@@ -516,7 +511,6 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
         print(self.selected_assets)
         return InvestementsAdviceMocks(
                 leftover=self.leftover,
-                optimalPortfolio=self.optimal_portfolio,
-                assetsScatter=self.risk_return_scatter_points,   
+                optimalPortfolio=self.optimal_portfolio 
             )
 
