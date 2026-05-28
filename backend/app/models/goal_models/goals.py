@@ -35,5 +35,5 @@ class Goal(Base):
     analyses = relationship(
         "GoalAnalysis",
         back_populates="goal",
-        cascade="all, delete"
+        cascade="all, delete-orphan"
     )
