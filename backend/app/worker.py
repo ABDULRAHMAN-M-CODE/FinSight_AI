@@ -14,6 +14,8 @@ from app.models.portfolio_models.portfolios_performance_metrics import Portfolio
 from app.models.registration.user import User  # Note for later : why imported ? even if it's not used?
 from app.core.dependencies import get_current_user
 from app.models.goal_models.goals import Goal
+from app.models.goal_models.goal_analysis import GoalAnalysis
+from app.models.goal_models.goal_Plan_step import GoalPlanStep
 from datetime import datetime, timezone
 import yfinance as yf
 import pandas as pd
@@ -44,9 +46,7 @@ class RebalanceResult(TypedDict):
     tradeOrders:list[TradeOrder] """
 
 #used by monitor_user function
-async def rebalancing_logic(current_user_id: int)->None: # question xx , what should be the type hint for output of this functon ?
-    
-    
+async def rebalancing_logic(current_user_id: int)->None:     
     BASE_DIR = Path(__file__).resolve().parent   
     file_path = BASE_DIR / "sector_mapper.txt"
     with open(file_path, 'r') as f:

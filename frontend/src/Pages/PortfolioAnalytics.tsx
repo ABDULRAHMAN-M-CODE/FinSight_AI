@@ -75,7 +75,7 @@ export default function PortfolioAnalytics() {
     websocket.onmessage = (event) => {
 
         const backendData = JSON.parse(event.data);
-        console.log("backend data is : ",backendData)
+        
         console.log("received backend data", backendData);
 
         setRebalancingData(backendData);
@@ -116,9 +116,9 @@ export default function PortfolioAnalytics() {
   
   
   
-  console.log("FRONTEND COOKIES:", document.cookie);
-  console.log("Recommended portfolio data: ",mockData.optimalPortfolio)
-  console.log("leftover is :", mockData.leftover)
+  
+  
+  
   
   
   return (
@@ -223,7 +223,6 @@ export default function PortfolioAnalytics() {
                         <tr>
                           <th className="px-4 py-3 font-medium">Asset</th>
                           <th className="px-4 py-3 font-medium">Action</th>
-                          <th className="px-4 py-3 font-medium text-right">Shares</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-100">

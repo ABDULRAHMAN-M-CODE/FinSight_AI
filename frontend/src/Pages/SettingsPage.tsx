@@ -77,7 +77,7 @@ function MessageBox({ isErrorMsg,Msg }: MessageBoxProps) {
   );
 }
 function useSettingsPage(){
-
+  const navigate=useNavigate();
   // change name and password states (user's states and accessories states(additional states for user experience))
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -96,11 +96,20 @@ function useSettingsPage(){
   const [finishedProcessingPassword,setFinishedProcessingPassword]=useState(false);
 
   //handle logout  states( accessories states(additional states for user experience))
-  const navigate=useNavigate();
+  
   const [isLoading3, setIsLoading3] = useState(false);
   const [isThereError3, setIsThereError3] = useState(false);
   const [Msg3, setMsg3] = useState("");
   const [finishedProcessingLogout,setFinishedProcessingLogout]=useState(false);
+
+
+  
+  const [isLoading4, setIsLoading4] = useState(false);
+  const [isThereError4, setIsThereError4] = useState(false);
+  const [Msg4, setMsg4]  = useState("");
+  const [finishedProcessingDeletion,setFinishedProcessingDeletion]=useState(false);
+
+
   const   handleSaveProfile = async(e:React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading1(true);
@@ -257,13 +266,51 @@ function useSettingsPage(){
 
   };
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async() => {
     // Frontend only - no backend logic
     const confirm = window.confirm(
       "Are you sure you want to delete your account? This action cannot be undone."
     );
     if (confirm) {
-      alert("Account deleted successfully!");
+      try{
+          const response4 = await fetch("http://localhost:8000/UserSettings/delete-account", { 
+                  method: "DELETE",
+                  headers: { "Content-Type": "application/json" },
+                  credentials:"include",
+              });
+              
+              if (!response4.ok) {
+                    setFinishedProcessingDeletion(true);
+                    setIsLoading4(false)
+                    setIsThereError4(true);
+                    const x:InternalServerError= await response4.json();
+                    setMsg4(x.detail);
+                    
+                    setTimeout(() => {
+                      setFinishedProcessingDeletion(false);
+                    }, 2000);  
+                    return
+              }
+              setIsLoading4(false)
+              setIsThereError4(false);
+              setFinishedProcessingDeletion(true);
+              const sr:SuccessResponse= await response4.json();
+              setMsg4(sr.message)
+              setTimeout(() => {
+                setFinishedProcessingDeletion(false);
+              }, 2000);
+              navigate("/Login") ; 
+
+      }catch(error){
+              setFinishedProcessingDeletion(true);
+              setIsLoading4(false);
+              setIsThereError4(true);
+              setMsg4("Please check your internet connection");
+              setTimeout(() => {
+                setFinishedProcessingDeletion(false);
+              }, 2000);    
+      }
+
     }
   };
   return{
@@ -286,7 +333,10 @@ function useSettingsPage(){
     isThereError3,
     Msg3,finishedProcessingLogout,
     handleLogout,
-    
+
+    isLoading4,
+    isThereError4,
+    Msg4,finishedProcessingDeletion,
     handleDeleteAccount,
   }
 
@@ -316,7 +366,10 @@ export   default function SettingsPage() {
     isThereError3,
     Msg3,finishedProcessingLogout,
     handleLogout,
-    
+
+    isLoading4,
+    isThereError4,
+    Msg4,finishedProcessingDeletion,
     handleDeleteAccount,
   }=useSettingsPage();
 
@@ -571,10 +624,26 @@ export   default function SettingsPage() {
           onClick={handleDeleteAccount}
           className="px-6 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium flex items-center gap-2"
         >
-          <Trash2 className="w-4 h-4" />
-          Delete Account
+                     {isLoading4 ? (
+                      <>
+                         <LoadingEffect />
+                          processing...
+                      </>
+                     ) : (
+                      
+                      <>
+                        <Trash2 className="w-4 h-4" />
+                        <p>Delete Account</p>
+                      </>
+
+                    )}
+          
+          
         </button>
       </div>
+          {finishedProcessingDeletion && (
+            <MessageBox Msg={Msg4} isErrorMsg={isThereError4} />
+          )}
     </div>
   );
 }
