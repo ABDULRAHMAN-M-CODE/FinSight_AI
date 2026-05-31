@@ -58,7 +58,7 @@ from app.core.finance.goals_advisor import (
 )
 
 from app.schemas.goals_schemas import GoalAdviceItemSchema,GoalAdviceResponseSchema
-
+import traceback
 
 # =========================================================
 # FINAL API RESPONSE SCHEMA
@@ -312,7 +312,7 @@ def submit_questionnaire(
 
         db.commit()
 
-
+        
         cel_app.send_task("monitor_user_task", args=[current_user.id])
                 
         
@@ -332,17 +332,8 @@ def submit_questionnaire(
 
         )
 
-    # =====================================================
-    # ERROR HANDLING
-    # =====================================================
 
     except Exception as e:
-
         db.rollback()
-
-        print("ERROR:", str(e))
-
-        raise HTTPException(
-            status_code=500,
-            detail=f"Internal server error: {str(e)}"
-        )
+        traceback.print_exc()
+        raise

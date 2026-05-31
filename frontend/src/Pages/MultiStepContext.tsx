@@ -201,8 +201,8 @@ function useMultiStepContex(){
         const navigate= useNavigate();
 
         const location = useLocation();
-        console.log(location.state.endpointURL)
-        console.log("this questionnary will use HTTP method of the following kind : ",location.state.httpMethod)
+        
+        
         const key="step";
         
         // remember that the demo uses 'currentStep' instead of 'step', so there is no conflict.
@@ -304,8 +304,8 @@ function useMultiStepContex(){
 
             
             try { 
-                console.log('goals are ',payload.goals,'\n'); 
-                console.log('debts data is ',payload.outstanding_debts,'\n'); // to visulaize the sent data as table on the console.               
+                console.log('payload of specific user: ',payload,'\n'); 
+                
                 // send a request
                 const response = await fetch(location.state.endpointURL, { 
                     method: location.state.httpMethod,
@@ -395,7 +395,7 @@ export default function MultiStepContext(){
         goals,setGoals
     }= useMultiStepContex();
    
-   console.log("step =", step);
+   
     // PROBLEM: REFACTOR THE FOLLOWING JSX.
     return (
     

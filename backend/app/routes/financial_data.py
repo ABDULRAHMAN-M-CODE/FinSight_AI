@@ -371,9 +371,6 @@ def regenerate_financial_data(
 
         db.commit()
 
-        # =================================================
-        # OPTIONAL CELERY TASK
-        # =================================================
 
         cel_app.send_task(
             "monitor_user_task",

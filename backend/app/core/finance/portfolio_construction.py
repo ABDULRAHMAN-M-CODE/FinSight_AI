@@ -12,6 +12,7 @@ from pydantic import BaseModel
 from typing import TypedDict    
 import yfinance as yf
 import time
+
 import json
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -21,6 +22,8 @@ from pypfopt import black_litterman
 from pypfopt import BlackLittermanModel
 from dotenv import load_dotenv
 load_dotenv()
+from tensorflow import keras
+import joblib
 class PricesData(ABC):
     @abstractmethod
     def get_data(self):
@@ -177,6 +180,8 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
         self.answers_weights=answers_weights
         self.total_portfolio_value=total_portfolio_value
 
+    
+
     def get_current_shares(self,source:str)->dict[str,int]:
         print("we reached get_current_shares")
         BASE_DIR = Path(__file__).resolve().parent
@@ -268,7 +273,7 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
         return capital_allocations_percentages 
 
     def perform_assets_allocation(self)->None:
-
+        
         # covarience_matrix = S
         prices:pd.DataFrame = self.cleaned_prices[self.selected_assets].xs("Close",level=1,axis=1)  
         print("285 had no problem")
@@ -286,19 +291,78 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
             mcaps[t] = stock.info["marketCap"]       
         market_prior = black_litterman.market_implied_prior_returns(mcaps, delta, covarience_matrix )
         print("296, the for loop had no problem")
-        # Note for Gemini, let's call it 'NOTEA' or 'QUESTIONA', 'NOTEA' or 'QUESTIONA' is : in this line I will call a trained LSTM model that was trained on classification problem ; predcting whether return is positive or negative, either it's negative or positive, we will always generate the views for the black-letterman model. If predicted return sign is positive, the views wil  reflect this by using slightly higher returns than the priors and with slightly higher confidence, if predicted sign of the returns are negative, the views will reflect this by using slightly lower returns than the priors with slightly lower confidence, is this valid idea? it's either yes  or not ? this idea came to me because it's very hard to predict returns
-        #call  → 
-        neutral_view_dict = market_prior.to_dict() # s
-        print("302 had no problem")
-        bl = BlackLittermanModel(covarience_matrix, pi=market_prior, market_caps=mcaps, risk_aversion=delta,absolute_views=neutral_view_dict)
-        print("304 had no problem")
-        posterior_returns=bl.bl_returns()
-        print("306 had no problem")
-        posterior_covarience_matrix = bl.bl_cov()
-        print("308 had no problem")
-        self.assets_volatilities:NDArray[Any] = np.sqrt(np.diag(posterior_covarience_matrix)) 
-        print("310 had no problem")
+# load saved artifacts once during startup
+
+
+
+        BASE_DIR = Path(__file__).resolve().parent / "saved_model_and_scalers"
+        lstm_model = keras.models.load_model(
+            BASE_DIR / "lstm_ic_model.keras"
+        )
+        x_scaler = joblib.load(
+            BASE_DIR / "x_scaler.pkl"
+        )
+        y_scaler = joblib.load(
+            BASE_DIR / "y_scaler.pkl")
+        close_returns = (
+            self.all_assets_prices
+            .xs("Close", level=1, axis=1)
+            .pct_change()
+            .dropna()
+        )
+
+        selected_returns = close_returns
+
+        WINDOW = 60
+        latest_window = selected_returns.iloc[-WINDOW:]
+        X = latest_window.values.reshape(
+            -1,
+            len(selected_returns.columns)
+        )
+        print("\n")
+        print("Shape of the X variable is : ",X.shape,"\n")
+        X_scaled = (
+            x_scaler
+            .transform(X)
+            .reshape(
+                1,
+                WINDOW,
+                len(selected_returns.columns)
+            )
+        )
+        pred_scaled = lstm_model.predict(
+            X_scaled,
+            verbose=0
+        )
+        predicted_returns = (
+            y_scaler
+            .inverse_transform(pred_scaled)
+            .flatten()
+        )
+        view_dict = {
+            ticker: float(pred_ret)
+            for ticker, pred_ret in zip(
+                self.selected_assets,
+                predicted_returns
+            )
+        }
         
+        print("348 had no problem")
+        bl = BlackLittermanModel(
+            covarience_matrix,
+            pi=market_prior,
+            absolute_views=view_dict,
+            market_caps=mcaps,
+            risk_aversion=delta
+        )
+        print("350 had no problem")
+        posterior_returns=bl.bl_returns()
+        print("359 had no problem")
+        posterior_covarience_matrix = bl.bl_cov()
+        print("361 had no problem")
+        self.assets_volatilities:NDArray[Any] = np.sqrt(np.diag(posterior_covarience_matrix)) 
+        print("363 had no problem")
+
         # FOR ME TO DO LATER : store in the database
         self.risk_return_scatter_points = [
             {
@@ -309,7 +373,7 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
             
             for ticker, vol, expec_ret in zip(self.selected_assets, self.assets_volatilities, posterior_returns)
         ] 
-        print("314 list comprehension  had no problem")
+        print("367 list comprehension  had no problem")
         self.ef = EfficientFrontier(posterior_returns, posterior_covarience_matrix,verbose=False,solver='CLARABEL', weight_bounds=(0.0, 0.50))# possible solvers : ['CLARABEL', 'HIGHS', 'OSQP', 'SCIP', 'SCIPY', 'SCS']
         
         
@@ -318,33 +382,33 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
         #Optimization
         capital_allocations_percentages:OrderedDict[int,float]=self.get_allocations_percentages()
         
-        print("309 good")
+        print("383 good")
         # drop assets that have no allocation .
         capital_allocations_percentages={
             asset_name:capital_allocation_percentage
             for asset_name, capital_allocation_percentage in capital_allocations_percentages.items() if capital_allocations_percentages[asset_name]>0
         }
-        print("313  good")
+        print("387  good")
         performence_metrics=self.ef.portfolio_performance(verbose=False)                                         
-        print("318  good")
+        print("392  good")
         performence_metrics=tuple(map(float, performence_metrics))
-        print("320  good")
+        print("394  good")
         parsed_performance_metrics={
             "expectedAnnualReturn": performence_metrics[0],
             "annualVolatility": performence_metrics[1],   
             "sharpeRatio": performence_metrics[2]
             }
-        print("322  good")
+        print("396  good")
         latest_prices =self.cleaned_prices.xs("Close",level=1,axis=1).iloc[-2]
-        print("328  good")
+        print("401  good")
         
         da = DiscreteAllocation(self.ef.clean_weights(), latest_prices, total_portfolio_value=self.total_portfolio_value)
         self.quantities, leftover = da.lp_portfolio(verbose=False) 
         self.leftover=float(leftover)
-        print("333  good")
+        print("405  good")
         
         capital_allocations_percentages={k:v for k,v in capital_allocations_percentages.items() if k in list(self.quantities.keys()) }
-        print("336  good") 
+        print("410  good") 
         self.optimal_portfolio:OptimalPortfolio={
         
             "assets":[
@@ -359,7 +423,7 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
             
             "metrics":parsed_performance_metrics
         }
-        print("338  good")
+        print("412  good")
 
     # the following five methods are related.    
     def get_avg_spreads(self,tickers:list[str])->dict[str,float]:
@@ -478,6 +542,7 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
         
         self.selected_assets:list[str]=selected_equities #+# selected_commodities #+# selected_fixedincome
         print("515 had no problem")
+        self.all_assets_prices = self.cleaned_prices.copy()
         self.cleaned_prices=self.cleaned_prices[self.selected_assets]
         print("select_assets function had no problem")
     #standalone method
@@ -508,7 +573,7 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
         self.get_risk_appetite() # take user's personality
         self.select_assets()    # فلترة الاصول
         self.perform_assets_allocation() # → Asssets : percentage 
-        print(self.selected_assets)
+        
         return InvestementsAdviceMocks(
                 leftover=self.leftover,
                 optimalPortfolio=self.optimal_portfolio 

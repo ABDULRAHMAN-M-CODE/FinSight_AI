@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 # DB session dependency
 from app.database import get_db
-
+from app.worker import cel_app
 # import needed models
 from app.models.registration import User, EmailVerificationToken, PasswordResetToken
 from datetime import datetime, timedelta
@@ -197,6 +197,10 @@ def login(user: UserLogin, request:Request, response: Response, db: Session = De
     print("SETTING COOKIE:", access_token)
     print("HEADERS OUT:", response.headers)
     # let's call the returned data to be : data X .
+    
+
+    
+    cel_app.send_task("monitor_user_task", args=[db_user.id])
     return LoginResponse(
         message= "Login successful",
         first_login= db_user.is_first_login
