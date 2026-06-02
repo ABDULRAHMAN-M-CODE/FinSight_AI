@@ -24,6 +24,7 @@ import MainLayout from './Pages/MainLayout';
 import PortfolioAnalytics from './Pages/PortfolioAnalytics';
 import StreamViewer from './Pages/StreamViewer';
 import GoalsAdvice from './Pages/GoalsAdvice';
+
 function App() {    
    // [path="/"] is the  default route to be rendered 
    return(
@@ -47,7 +48,8 @@ function App() {
           <Route path="GoalsAdvice" element={<GoalsAdvice />}/> 
           <Route path="DebtsAdvice" element={<SuccessiveValueFormulaModeling />}/>
           <Route path="SettingsPage" element={<SettingsPage />}/>
-      </Route> 
+      </Route>
+      
     </Routes>
   );
       

@@ -5,7 +5,10 @@ import { type FullAdviceDataType } from './MultiStepContext';
 import { type InvestementsAdviceType } from './MultiStepContext';
 import { useEffect } from 'react';
 import { useState } from 'react';
-
+import * as Tooltip from "@radix-ui/react-tooltip";
+import { assetMetadata } from "../data/assetMetadata";
+import SectorAllocationPie from '../Components/SectorAllocationPie';
+import { sectorMap } from "../data/sectorMap";
 type rebalancingDataType ={
     tradeOrders: {
         assetName: string;
@@ -129,7 +132,7 @@ export default function PortfolioAnalytics() {
             <Briefcase className="h-8 w-8 text-blue-600" />
             Recommended Portfolio
           </h1>
-          <p className="text-gray-500 mt-2">Assets Allocation</p>
+          <p className="text-gray-500 mt-2">Based on the Black-Litterman model and Efficient Frontier optimization.</p>
         </header>
         {/** Recommendations */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -175,7 +178,57 @@ export default function PortfolioAnalytics() {
                   <tbody className="divide-y divide-gray-100">
                     {mockData.optimalPortfolio.assets.map((asset) => (
                       <tr key={asset.assetName} className="hover:bg-gray-50/50">
-                        <td className="px-4 py-3 font-medium text-gray-900">{asset.assetName}</td>
+                        <td className="px-4 py-3 font-medium text-gray-900">
+                            <Tooltip.Provider>
+                                <Tooltip.Root>
+                                    <Tooltip.Trigger asChild>
+                                        <span className="cursor-help underline decoration-dotted">
+                                            {asset.assetName}
+                                        </span>
+                                    </Tooltip.Trigger>
+
+                                    <Tooltip.Portal>
+                                        <Tooltip.Content
+                                            side="top"
+                                            className="
+                                                z-50
+                                                max-w-xs
+                                                rounded-lg
+                                                border
+                                                bg-white
+                                                p-4
+                                                shadow-lg
+                                            "
+                                        >
+                                            <div className="space-y-2">
+                                                <div className="font-semibold">
+                                                    {
+                                                        assetMetadata[asset.assetName]?.name ??
+                                                        asset.assetName
+                                                    }
+                                                </div>
+
+                                                <div className="text-xs text-gray-500">
+                                                    Sector:
+                                                    {" "}
+                                                    {
+                                                        assetMetadata[asset.assetName]?.sector ??
+                                                        "Unknown"
+                                                    }
+                                                </div>
+
+                                                <div className="text-sm text-gray-700">
+                                                    {
+                                                        assetMetadata[asset.assetName]?.description ??
+                                                        "No description available."
+                                                    }
+                                                </div>
+                                            </div>
+                                        </Tooltip.Content>
+                                    </Tooltip.Portal>
+                                </Tooltip.Root>
+                            </Tooltip.Provider>
+                        </td>
                         <td className="px-4 py-3 text-gray-600">{Number((100*asset.capitalAllocationPercentage).toFixed(2))}%</td>
                         
                       </tr>
@@ -250,6 +303,10 @@ export default function PortfolioAnalytics() {
             </div>
           </section>
         </div>
+        <SectorAllocationPie
+            assets={mockData.optimalPortfolio.assets}
+            sectorMap={sectorMap}
+        />
       </div>
     </div>
   );
