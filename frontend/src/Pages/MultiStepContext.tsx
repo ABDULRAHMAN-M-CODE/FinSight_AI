@@ -41,16 +41,13 @@ const OptimalPortfolio=z.object({
 }) 
 
 const  InvestementsAdviceSchema =z.object({
-    leftover: z.number(),
     optimalPortfolio:OptimalPortfolio
-
 })
 
 
 export type InvestementsAdviceType = z.infer<typeof InvestementsAdviceSchema>; 
 export const FullAdviceDataSchema=z.object({
-    fullDebtsUiData:DebtsAdviceUiDataSchema, 
-    investementsAdvice:InvestementsAdviceSchema, 
+    fullDebtsUiData:DebtsAdviceUiDataSchema,  
     goalsAdvice:z.array(GoalAdviceItemSchema)
 })
 export type FullAdviceDataType= z.infer<typeof FullAdviceDataSchema>; 

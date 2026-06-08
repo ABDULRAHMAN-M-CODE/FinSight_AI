@@ -10,6 +10,7 @@ from app.schemas.questionnaire_schemas import (
     DebtIn
 )
 
+import traceback
 from app.core.utils.json_safe_utils import json_safe
 
 from app.models.user_financial_data import UserFinancialData
@@ -58,10 +59,7 @@ from app.worker import cel_app
 
 class FullAdviceData(BaseModel):
     fullDebtsUiData: FullDebtsUiData
-    investementsAdvice: InvestementsAdviceMocks
     goalsAdvice: list[GoalAdviceItemSchema]
-
-
 # =========================================================
 # ROUTER
 # =========================================================
@@ -297,71 +295,8 @@ def regenerate_financial_data(
         # =================================================
         # PORTFOLIO / INVESTMENT ADVICE
         # =================================================
-
-        print("running portfolio orchestrator")
-
-        portfolio_advice: InvestementsAdviceMocks = (
-            InvestementsAdviceOrchestrator(
-                answers_weights=data.subjective_answers_values_and_weights.questions_weights,
-                questions_scores=data.subjective_answers_values_and_weights.answers_values,
-                total_portfolio_value=data.subjective_answers_values_and_weights.investement_amount
-            ).get_investement_advice()
-        )
-
-        portfolio_description = (
-            PortfoliosPerformanceMetrics(
-
-                user_id=current_user.id,
-
-                expected_annual_return=portfolio_advice.optimalPortfolio.metrics.expectedAnnualReturn,
-
-                annual_volatility=portfolio_advice.optimalPortfolio.metrics.annualVolatility,
-
-                sharpe_ratio=portfolio_advice.optimalPortfolio.metrics.sharpeRatio
-            )
-        )
-
-        assets: list[Asset] = (
-            portfolio_advice.optimalPortfolio.assets
-        )
-
-        assets_names = []
-
-        for asset in assets:
-            assets_names.append(
-                asset.assetName
-            )
-
-        assets_percentages = []
-
-        for asset in assets:
-            assets_percentages.append(
-                asset.capitalAllocationPercentage
-            )
-
-        quantities = []
-
-        for asset in assets:
-            quantities.append(
-                asset.quantity
-            )
-
-        portfolio_description.assets = [
-
-            Portfolios(
-                asset_name=name,
-                capital_allocation_percentage=percentage,
-                quantity=quantity
-            )
-
-            for name, percentage, quantity in zip(
-                assets_names,
-                assets_percentages,
-                quantities
-            )
-        ]
-
-        db.add(portfolio_description)
+        print("ABOUT TO CALL PORTFOLIO ORCHESTRATOR")
+        cel_app.send_task("run_portfolio_orchestrator_task", args=[data.model_dump(),current_user.id])
 
         # =================================================
         # FINAL DATABASE COMMIT
@@ -370,13 +305,6 @@ def regenerate_financial_data(
         print("committing regenerated data")
 
         db.commit()
-
-
-        cel_app.send_task(
-            "monitor_user_task",
-            args=[current_user.id]
-        )
-
         # =================================================
         # FINAL RESPONSE
         # =================================================
@@ -386,9 +314,6 @@ def regenerate_financial_data(
         return FullAdviceData(
 
             fullDebtsUiData=debts_advice,
-
-            investementsAdvice=portfolio_advice,
-
             goalsAdvice=goals_advice
         )
 
@@ -402,7 +327,5 @@ def regenerate_financial_data(
 
         print("ERROR:", str(e))
 
-        raise HTTPException(
-            status_code=500,
-            detail="Failed to regenerate financial analysis"
-        )
+        traceback.print_exc()
+        raise

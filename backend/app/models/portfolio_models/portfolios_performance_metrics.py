@@ -13,21 +13,17 @@ class PortfoliosPerformanceMetrics(Base):
         primary_key=True,
         default=uuid.uuid4
     )
-
-    
     user_id = Column(
         Integer,
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False
     )
-
     expected_annual_return = Column(DECIMAL(12, 2), nullable=False)
     annual_volatility = Column(DECIMAL(12, 2), nullable=False)
     sharpe_ratio = Column(DECIMAL(12, 2), nullable=False)
 
     # Relationships
     user = relationship("User", back_populates="portfolios")
-
     assets = relationship(
         "Portfolios",
         back_populates="portfolio",

@@ -167,7 +167,6 @@ class AssetScatterPoint(BaseModel):
     expectedReturn:float
 
 class  InvestementsAdviceMocks (BaseModel) :
-      leftover: float
       optimalPortfolio:OptimalPortfolio 
       
       
@@ -403,8 +402,8 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
         print("401  good")
         
         da = DiscreteAllocation(self.ef.clean_weights(), latest_prices, total_portfolio_value=self.total_portfolio_value)
-        self.quantities, leftover = da.lp_portfolio(verbose=False) 
-        self.leftover=float(leftover)
+        self.quantities, _ = da.lp_portfolio(verbose=False) 
+        
         print("405  good")
         
         capital_allocations_percentages={k:v for k,v in capital_allocations_percentages.items() if k in list(self.quantities.keys()) }
@@ -575,7 +574,7 @@ class InvestementsAdviceOrchestrator:# why not to use paranthesis  like (BaseMod
         self.perform_assets_allocation() # → Asssets : percentage 
         
         return InvestementsAdviceMocks(
-                leftover=self.leftover,
+
                 optimalPortfolio=self.optimal_portfolio 
             )
 

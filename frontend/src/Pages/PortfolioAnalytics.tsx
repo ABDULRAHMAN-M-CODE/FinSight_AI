@@ -45,25 +45,38 @@ const formatPercent = (value: number) => `${(value * 100).toFixed(2)}%`;
 
 
 
-//rendering
 
 export default function PortfolioAnalytics() {
-  const [mockData, setMockData] = useState<InvestementsAdviceType | null>(()=>{
-    const rawString:string |null =localStorage.getItem("FullAdviceData")
-      if(rawString){
-        const backendData:FullAdviceDataType=JSON.parse(rawString)
-        return backendData.investementsAdvice
-      }
-      
-        return null;
-      
-  });
+  const [mockData, setMockData] = useState<InvestementsAdviceType | null>(null);
+  const [message, setMessage] = useState<string>("Portfolio is not ready yet");
   const [needsRebalancing,setNeedsRebalancing] =useState<boolean>(false);
   const [rebalancingData, setRebalancingData] = useState<rebalancingDataType>(rebalanceDataDefaults); 
-  
-  
 
+  useEffect(()=>{    
+    const fetchUserData=async ()=>{
+          try {
+            const response = await fetch("http://localhost:8000/mocks/get_investements_advice_mocks", { 
+              method: "GET",
+              headers: { "Content-Type": "application/json" },
+              credentials:"include"              
+            });
+            if (!response.ok) {
+                const error = await response.json();
+                console.log("could not fetch portfolio data or the portfolio is not ready yet, more details:",error)
+                setMessage(error.detail)
+                return;
+            }
+            const data = await response.json();
+            setMockData(data);
+          } catch (error) {
+            console.log(error);// Executed correctly
+            setMessage("Please check your internet connection.")
+            
+          } 
+    }
+    fetchUserData();
 
+  },[])
   useEffect(() => {
 
 
@@ -111,7 +124,7 @@ export default function PortfolioAnalytics() {
   if(!mockData){
     return(
       <>
-        <p> there is no data to render</p>
+        <p> {message}</p>
       </>
     )
   }

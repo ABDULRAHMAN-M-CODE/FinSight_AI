@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 from app.database import Base  
 class Portfolios(Base):
     __tablename__ = "portfolios"
-    id = Column(
+    id = Column( # auto generated
         UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4

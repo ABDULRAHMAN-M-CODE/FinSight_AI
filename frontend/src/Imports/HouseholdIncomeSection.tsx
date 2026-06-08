@@ -74,6 +74,7 @@ export const HouseholdIncomeSection: React.FC<HouseholdIncomeSectionProps> = ({ 
             {/**Conditionally rendering  for  the trash icon  , relative to it's parent */}
             {members.length > 1 && (
               <IconButton
+                
                 variant="danger"
                 onClick={() => removeMember(member.id)}
                 className="absolute -top-2 right-2"
@@ -124,7 +125,7 @@ export const HouseholdIncomeSection: React.FC<HouseholdIncomeSectionProps> = ({ 
         ))} {/** end of the map function */}
         
         {/** add another card or member */}
-        <Button variant="link" onClick={addMember} className="p-0">
+        <Button variant="link" type='button' onClick={addMember} className="p-0">
           + Add another household member
         </Button>
 

@@ -6,20 +6,21 @@ from fastapi import WebSocket
 import json
 from pathlib import Path
 from app.database import get_db
-from app.models.portfolio_models.portfolios import Portfolios
+from app.models.portfolio_models.portfolios import Portfolios # Note for later : why imported ? even if it's not used?
 from app.models.user_financial_data import UserFinancialData  # Note for later : why imported ? even if it's not used?
 from app.models.debt_models.debts_advices import DebtsAdvices # Note for later :  why imported ? even if it's not used?
 from app.models.debt_models.debts_metrics import DebtMetrics  #  Note for later : why imported ? even if it's not used?
 from app.models.portfolio_models.portfolios_performance_metrics import PortfoliosPerformanceMetrics # Note for later : why imported ? even if it's not used?
 from app.models.registration.user import User  # Note for later : why imported ? even if it's not used?
+from app.models.goal_models.goals import Goal   # Note for later : why imported ? even if it's not used?
+from app.models.goal_models.goal_analysis import GoalAnalysis # Note for later : why imported ? even if it's not used?
+from app.models.goal_models.goal_Plan_step import GoalPlanStep# Note for later : why imported ? even if it's not used?
 from app.core.dependencies import get_current_user
-from app.models.goal_models.goals import Goal
-from app.models.goal_models.goal_analysis import GoalAnalysis
-from app.models.goal_models.goal_Plan_step import GoalPlanStep
 from datetime import datetime, timezone
 import yfinance as yf
 import pandas as pd
 from typing import TypedDict
+import redis
 class ConnectionManager:
     def __init__(self):
         self.active_connections: dict[int, WebSocket] = {}
@@ -38,14 +39,8 @@ class ConnectionManager:
             await websocket.send_json(data)
 
 manager = ConnectionManager() 
-""" class TradeOrder(TypedDict):
-    action:str
-    assetName:str
-class RebalanceResult(TypedDict):
-    rebalancingNeedDetectedAt:str
-    tradeOrders:list[TradeOrder] """
 
-#used by monitor_user function
+#used by 'monitor_user' function
 async def rebalancing_logic(current_user_id: int)->None:     
     BASE_DIR = Path(__file__).resolve().parent   
     file_path = BASE_DIR / "sector_mapper.txt"
@@ -116,16 +111,13 @@ async def rebalancing_logic(current_user_id: int)->None:
         }
     else:
         result=None
-    import redis
+    
     r = redis.Redis(host="localhost", port=6379, db=0)
 
     r.publish(
         f"user:{current_user_id}",
         json.dumps(result)
     ) 
-
-
-###############################
 
 async def monitor_user(user_id: int):
     while True:
@@ -140,9 +132,54 @@ cel_app = Celery(
     backend="redis://localhost:6379/0" # stores task results.
 )
 
-# Question ZZZ : why to use localhost:6379, not other specification ? why to use  "ws://localhost:8000/ws/rebalancing" in frontend ? why they are not the same?
 @cel_app.task(name="monitor_user_task")
 def monitor_user_task(user_id: int):
-    asyncio.run(
+    asyncio.run( 
         monitor_user(user_id)
     )
+
+
+from app.core.finance.portfolio_construction import InvestementsAdviceOrchestrator
+from app.core.finance.portfolio_construction import InvestementsAdviceMocks
+from app.schemas.questionnaire_schemas import QuestionnaireSubmit
+from app.core.finance.portfolio_construction import Asset
+from app.database import SessionLocal
+#should the run_portfolio_orchestrator be async function in the first place or not ?
+@cel_app.task(name="run_portfolio_orchestrator_task") 
+def run_portfolio_orchestrator(submitted_data_dict,current_user_id: int)->PortfoliosPerformanceMetrics:
+            data = QuestionnaireSubmit(**submitted_data_dict)
+            portfolio_advice:InvestementsAdviceMocks = InvestementsAdviceOrchestrator(
+                answers_weights=data.subjective_answers_values_and_weights.questions_weights,
+                questions_scores=data.subjective_answers_values_and_weights.answers_values,
+                total_portfolio_value=data.subjective_answers_values_and_weights.investement_amount
+            ).get_investement_advice()
+            portfolio_description = PortfoliosPerformanceMetrics(
+                user_id=current_user_id,
+                expected_annual_return=portfolio_advice.optimalPortfolio.metrics.expectedAnnualReturn,
+                annual_volatility=portfolio_advice.optimalPortfolio.metrics.annualVolatility,
+                sharpe_ratio=portfolio_advice.optimalPortfolio.metrics.sharpeRatio
+            )
+            assets: list[Asset] = portfolio_advice.optimalPortfolio.assets
+            assets_names = []
+            for asset in assets:
+                assets_names.append(asset.assetName)
+            assets_percentages = []
+            for asset in assets:
+                assets_percentages.append(asset.capitalAllocationPercentage)
+            quantities=[]
+            for asset in assets:
+                quantities.append(asset.quantity)
+            portfolio_description.assets=[Portfolios(asset_name=name,capital_allocation_percentage=percentage,quantity=quantity) for name,percentage,quantity in zip(assets_names,assets_percentages,quantities)]
+            db = SessionLocal() 
+            try:
+                db.add(portfolio_description)
+                db.commit()
+                print("LAST TASK FINISHED")
+            except:
+                 # how will this line of code know  for which user it must store to the database ?  
+                print("error happend inside the portfolio task")
+            finally:
+                db.close()
+                cel_app.send_task("monitor_user_task", args=[current_user_id])
+
+    

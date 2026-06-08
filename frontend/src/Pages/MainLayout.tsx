@@ -89,7 +89,7 @@ export default function MainLayout() {
             onClick={()=> ShowMultiStepContext({n:navigate,endpointURL:"http://localhost:8000/financial-data/regenerate",httpMethod:"PUT"}) }
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-gray-400 hover:text-white hover:bg-gray-800/50 w-full text-left"
           >           
-            <span className="text-sm font-medium">change  your data and get new advice</span>
+            <span className="text-sm font-medium">Change your financial data</span>
           </button>
         </div>
 
