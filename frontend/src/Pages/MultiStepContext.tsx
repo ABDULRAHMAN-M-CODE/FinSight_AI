@@ -11,7 +11,7 @@ import { FinancialGoalsSection } from "../Imports/FinancialGoalsSection";
 import { OutstandingDebtsSection } from '../Imports/OutstandingDebtsSection';
 import BackAndContinueButtons from "../Imports/BackAndContinueButtons";
 import RiskAssessment from "../Components/InvestementsRiskProfileAssasementCard";
-
+import { DebtsAdviceUiDataSchema } from "../Components/MultiDebtPayoffTrajectory";
 
 // types
 import { type HouseholdMember,  } from '../Types/HouseHoldMember';
@@ -24,6 +24,7 @@ import { type Goal } from "../Types/Goal";
 
 //run time validation
 import z from "zod";
+import { GoalAdviceItemSchema } from "./GoalsAdvice";
 const Asset=z.object({
     assetName: z.string(),
     capitalAllocationPercentage:z.number()
@@ -46,6 +47,11 @@ export type InvestementsAdviceType = z.infer<typeof InvestementsAdviceSchema>;
     
 export const Response1=z.object({  
     requestResult: z.string()
+})
+export const FullAdviceDataSchema=z.object({
+    fullDebtsUiData: DebtsAdviceUiDataSchema,
+    investementsAdvice: InvestementsAdviceSchema,
+    goalsAdvice:z.array(GoalAdviceItemSchema) 
 })
 export type FullAdviceDataType= z.infer<typeof Response1>; 
 

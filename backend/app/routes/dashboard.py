@@ -100,7 +100,7 @@ def get_dashboard(
     # GOALS (FIXED)
     # =====================================================
 
-    goals_data = []
+    goals_data:list[GoalAdviceItemSchema] = []
 
     for goal in current_user.goals:
 

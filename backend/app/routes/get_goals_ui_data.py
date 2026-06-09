@@ -1,6 +1,5 @@
 from app.database import get_db
 from app.core.dependencies import get_current_user
-from app.models.registration import User
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.orm import Session
 from app.core.finance.portfolio_construction import InvestementsAdviceMocks
@@ -15,31 +14,60 @@ from app.models.goal_models.goals import Goal   # Note for later : why imported 
 from app.models.goal_models.goal_analysis import GoalAnalysis # Note for later : why imported ? even if it's not used?
 from app.models.goal_models.goal_Plan_step import GoalPlanStep# Note for later : why imported ? even if it's not used?
 from app.core.finance.portfolio_construction import Metrics,Asset,OptimalPortfolio# Note for later :.....
-#"http://localhost:8000/mocks/get_goals_ui_mocks"
+from app.schemas.goals_schemas import GoalAdviceItemSchema
+
+
 router = APIRouter(prefix="/mocks")
 @router.get(
     "/get_goals_ui_mocks",
     status_code=status.HTTP_201_CREATED,
-    response_model=
+    response_model=list[GoalAdviceItemSchema]# we don't know yet, but we do not care for now
 )
+
 def get_investements_advice_mocks(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
-) -> FullDebtsUiData: 
+) ->list[GoalAdviceItemSchema]: 
     try:
         print("started")
-        
-        orm1:DebtsAdvices = db.query(DebtsAdvices).filter(DebtsAdvices.user_id == current_user.id).first()
-        orm2:DebtMetrics=db.query(DebtMetrics).filter(DebtMetrics.user_id==current_user.id).first()
-        return FullDebtsUiData(
-                strategy= orm2.metrics["strategy"],
-                startingTotalBalance=orm2.metrics["startingTotalBalance"],
-                trajectory=orm2.metrics["trajectory"],
-                monthsToTotalPayoff=orm2.metrics["monthsToTotalPayoff"],                        
-                estimatedPayoffDate=orm2.metrics["estimatedPayoffDate"],
-                debtKeys=orm2.metrics["debtKeys"],        
-                advice=orm1.debts_advice  
-        )      
+
+
+        result:list[GoalAdviceItemSchema] = []
+
+        for goal in current_user.goals:
+
+            
+            analysis = (
+                db.query(GoalAnalysis)
+                .filter(GoalAnalysis.goal_id == goal.id)
+                .order_by(GoalAnalysis.generated_at.desc())
+                .first()
+            )
+
+            if not analysis:
+                continue
+
+            result.append(
+                GoalAdviceItemSchema(
+                    goal_id=goal.id,
+                    goal_name=goal.goal_name,
+
+                    is_possible=analysis.is_possible,
+                    priority=analysis.priority,
+                    required_monthly_saving=analysis.required_monthly_saving,
+                    months_remaining=analysis.months_remaining,
+                    ai_summary=analysis.ai_summary,
+
+                    simple_plan=[
+                        step.step_text
+                        for step in sorted(
+                            analysis.steps,
+                            key=lambda x: x.step_order
+                        )
+                    ]
+                )
+            )
+        return result
     except Exception as e:
         db.rollback()
         traceback.print_exc()

@@ -193,13 +193,6 @@ def login(user: UserLogin, request:Request, response: Response, db: Session = De
         max_age=ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         path="/"
     )
-
-    print("SETTING COOKIE:", access_token)
-    print("HEADERS OUT:", response.headers)
-    # let's call the returned data to be : data X .
-    
-
-    
     cel_app.send_task("monitor_user_task", args=[db_user.id])
     return LoginResponse(
         message= "Login successful",

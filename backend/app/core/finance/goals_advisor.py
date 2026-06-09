@@ -82,21 +82,17 @@ def generate_goals_advice(
     monthly_debt_payments: float,
     investments_total: float,
     goals_input: list[GoalInput]
-):
-
+)->list:
     # -----------------------------------------------------
     # DISPOSABLE INCOME
     # -----------------------------------------------------
-
     disposable_income = max(
         monthly_income - monthly_expenses - monthly_debt_payments,
         0
     )
-
     # -----------------------------------------------------
     # PREPARE GOALS FOR LLM
     # -----------------------------------------------------
-
     goals_payload = []
 
     for goal in goals_input:
