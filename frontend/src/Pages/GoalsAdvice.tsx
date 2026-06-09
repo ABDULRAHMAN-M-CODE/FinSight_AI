@@ -1,8 +1,7 @@
 
 import { Target, CheckCircle, AlertTriangle, Calendar, DollarSign, ArrowRight, Sparkles } from 'lucide-react';
 import { useEffect } from 'react';
-import { type FullAdviceDataType } from './MultiStepContext';
-
+import { useState } from 'react';
 import z from 'zod';
 export const GoalAdviceItemSchema=z.object({
   goal_id: z.number(),
@@ -14,92 +13,44 @@ export const GoalAdviceItemSchema=z.object({
   ai_summary: z.string(),
   simple_plan: z.array(z.string())
 })
+
 type GoalAdvice=z.infer<typeof GoalAdviceItemSchema>
 
-const defaultData: GoalAdvice[] = [
-  {
-    "goal_id": 1,
-    "goal_name": "Emergency Fund",
-    "is_possible": true,
-    "priority": "high",
-    "required_monthly_saving": 312.5,
-    "months_remaining": 16,
-    "ai_summary": "Building an emergency fund is highly important and achievable with your current financial profile.",
-    "simple_plan": [
-      "Save automatically every month",
-      "Reduce unnecessary subscriptions",
-      "Keep emergency savings in separate account",
-      "Use bonuses to accelerate savings"
-    ]
-  },
-  {
-    "goal_id": 2,
-    "goal_name": "Buy a Car",
-    "is_possible": true,
-    "priority": "medium",
-    "required_monthly_saving": 625,
-    "months_remaining": 24,
-    "ai_summary": "This goal is achievable but should come after strengthening emergency savings.",
-    "simple_plan": [
-      "Save consistently every month",
-      "Compare cheaper car options",
-      "Avoid high-interest financing",
-      "Track savings progress monthly"
-    ]
-  },
-  {
-    "goal_id": 3,
-    "goal_name": "Vacation Trip",
-    "is_possible": false,
-    "priority": "low",
-    "required_monthly_saving": 1000,
-    "months_remaining": 2,
-    "ai_summary": "The timeline for this goal is too aggressive given your disposable income.",
-    "simple_plan": [
-      "Postpone trip by 6 months",
-      "Reduce trip budget",
-      "Focus on debt reduction first",
-      "Re-evaluate after improving savings"
-    ]
-  },
-  {
-    "goal_id": 4,
-    "goal_name": "New Phone",
-    "is_possible": true,
-    "priority": "low",
-    "required_monthly_saving": 180,
-    "months_remaining": 5,
-    "ai_summary": "This goal is achievable with minor spending adjustments.",
-    "simple_plan": [
-      "Save monthly in dedicated account",
-      "Look for discounts and offers",
-      "Delay purchase if emergencies arise",
-      "Avoid installment debt if possible"
-    ]
-  }
-];
-
-
-
-//hooks
-import { useState } from 'react';
-
-//types
 export default function GoalsAdvice() {
-  const [mockData, setMockData] = useState< GoalAdvice[]>(()=>{
-      const rawString:string |null =localStorage.getItem("FullAdviceData") // FullAdviceData was set in localStorage using setItem() in MultiStepContext.tsx
-      if(rawString){
-        const parsedData:FullAdviceDataType=JSON.parse(rawString)
-        console.log("BACKEND DATA =", parsedData);
-        return parsedData.goalsAdvice 
-      }
-      return defaultData
-  });
-  
-    useEffect(()=>{
+  const [mockData, setMockData] = useState< GoalAdvice[]|null>(null);
+  const [message, setMessage] = useState< string>("");
+  useEffect(()=>{    
+    const fetchUserData=async ()=>{
+          try {
+            const response = await fetch("http://localhost:8000/mocks/get_goals_ui_mocks", { 
+              method: "GET",
+              headers: { "Content-Type": "application/json" },
+              credentials:"include"              
+            });
+            if (!response.ok) {
+                const error = await response.json();
+                console.log("could not fetch goals ui data data or it is not ready yet, more details:",error)
+                setMessage(error.detail)
+                return;
+            }
+            const data:GoalAdvice[] = await response.json();
+            setMockData(data);
+          } catch (error) {
+            console.log(error);// Executed correctly
+            setMessage("Please check your internet connection.")
+            
+          } 
+    }
+    fetchUserData();
 
-    },[])
-
+  },[])
+if (!mockData){
+  return (
+    <>
+      <p>{message}</p>
+    </>
+  )
+}
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 p-8 font-sans">
       <div className="max-w-7xl mx-auto space-y-8">

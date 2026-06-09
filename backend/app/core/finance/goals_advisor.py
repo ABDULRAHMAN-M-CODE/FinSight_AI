@@ -204,9 +204,6 @@ Return ALL goals.
     return validated_goals
 
 
-# =========================================================
-# SAVE TO DATABASE
-# =========================================================
 
 def save_goals_and_advice(
     db,
@@ -214,10 +211,6 @@ def save_goals_and_advice(
     goals_input: list[GoalInput],
     validated_goals: list[GoalAdviceItemSchema]
 ):
-
-    # -----------------------------------------------------
-    # SAVE GOALS
-    # -----------------------------------------------------
 
     db_goals_map = {}
 
@@ -240,10 +233,6 @@ def save_goals_and_advice(
         db.flush()
 
         db_goals_map[goal.id] = db_goal.id
-
-    # -----------------------------------------------------
-    # SAVE ANALYSIS
-    # -----------------------------------------------------
 
     for advice in validated_goals:
 

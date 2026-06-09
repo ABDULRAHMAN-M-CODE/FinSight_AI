@@ -51,8 +51,6 @@ from pydantic import BaseModel
 
 # celery
 from app.worker import cel_app
-
-
 # =========================================================
 # FINAL API RESPONSE SCHEMA
 # =========================================================

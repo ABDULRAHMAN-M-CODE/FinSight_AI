@@ -19,6 +19,7 @@ from app.routes.financial_data import router as financial_data_router
 
 # -------------------------------------------------------
 from app.routes.portfolio_analytics import router as get_investements_advice_router
+from app.routes.get_debts_advice_data import router as get_debts_advice_router
 # import limiter -------------------------------------------------------
 from app.core.security.limiter import init_limiter
 # -------------------------------------------------------
@@ -51,6 +52,7 @@ app.include_router(dashboard_router)
 app.include_router(web_socket_router)
 app.include_router(financial_data_router)
 app.include_router(get_investements_advice_router)
+app.include_router(get_debts_advice_router)
 # main endpoint
 @app.get("/")
 def home():

@@ -35,16 +35,14 @@ class TextualDebtAdvice(BaseModel):
 
 # Top level schema
 class FullDebtsUiData(BaseModel):
-    # those four debt-advice-related fields will be provided as additional context to the AI and will be also returned to the frontend .
-    strategy: Literal["snowball", "avalanche"]   # NEW
-    startingTotalBalance:float 
-    trajectory:list[DebtTrajectoryPoint]
-    monthsToTotalPayoff:int                         
-    estimatedPayoffDate:str                         
-              
     
-    debtKeys:list[DebtsKeysConfigSchema]         
-    advice:TextualDebtAdvice                        
+    strategy: Literal["snowball", "avalanche"]
+    startingTotalBalance:float
+    trajectory:list[DebtTrajectoryPoint]
+    monthsToTotalPayoff:int                        
+    estimatedPayoffDate:str
+    debtKeys:list[DebtsKeysConfigSchema]        
+    advice:TextualDebtAdvice            
      
 
 ###########**** classes that defines data shape and  types only; no run time  validation****  ########################

@@ -24,8 +24,6 @@ import { type Goal } from "../Types/Goal";
 
 //run time validation
 import z from "zod";
-import { DebtsAdviceUiDataSchema } from "../Components/MultiDebtPayoffTrajectory";
-import { GoalAdviceItemSchema } from "./GoalsAdvice";
 const Asset=z.object({
     assetName: z.string(),
     capitalAllocationPercentage:z.number()
@@ -43,14 +41,13 @@ const OptimalPortfolio=z.object({
 const  InvestementsAdviceSchema =z.object({
     optimalPortfolio:OptimalPortfolio
 })
-
-
 export type InvestementsAdviceType = z.infer<typeof InvestementsAdviceSchema>; 
-export const FullAdviceDataSchema=z.object({
-    fullDebtsUiData:DebtsAdviceUiDataSchema,  
-    goalsAdvice:z.array(GoalAdviceItemSchema)
+
+    
+export const Response1=z.object({  
+    requestResult: z.string()
 })
-export type FullAdviceDataType= z.infer<typeof FullAdviceDataSchema>; 
+export type FullAdviceDataType= z.infer<typeof Response1>; 
 
 export const subjectiveQuestions:SubjectiveQuestionsType = [
   {
@@ -186,7 +183,6 @@ export const subjectiveQuestions:SubjectiveQuestionsType = [
   }
 ];
 
-
 // logic and states. 
 function useMultiStepContex(){
 
@@ -194,17 +190,11 @@ function useMultiStepContex(){
         
              
         const [isLoading, setIsLoading]=useState(false);
-
         const navigate= useNavigate();
-
         const location = useLocation();
-        
-        
         const key="step";
-        
         // remember that the demo uses 'currentStep' instead of 'step', so there is no conflict.
         const [step, setStep]= useState( Number( localStorage.getItem(key)) || 1 );
-        
         // when the user reloads the page, error states must not persisted, they must be reset to prevent  stuck in error state.
         const [isThereError,setIsThereError]=useState(false);
         const [errorMsg,setErrorMsg]=useState("");
@@ -326,7 +316,7 @@ function useMultiStepContex(){
         
                 const data: FullAdviceDataType = await response.json();
                 console.table(`data recived from backend  before validation is : ${data}`)    
-                const result=FullAdviceDataSchema.safeParse(data); // run time validation on the unknown data, checks the 'correctness' of the  existing data
+                const result=Response1.safeParse(data); // run time validation on the unknown data, checks the 'correctness' of the  existing data
                 console.log(`safeParse result content is ${result}`)
                 if(result.success){
                     console.log("run time validation succeed!, results stored in the local storage")

@@ -174,12 +174,122 @@ def run_portfolio_orchestrator(submitted_data_dict,current_user_id: int)->Portfo
             try:
                 db.add(portfolio_description)
                 db.commit()
-                print("LAST TASK FINISHED")
+                print("portfolio orchestrator task finished TASK FINISHED")
             except:
                  # how will this line of code know  for which user it must store to the database ?  
-                print("error happend inside the portfolio task")
+                print("error happend inside the portfolio task orchestrator")
             finally:
                 db.close()
                 cel_app.send_task("monitor_user_task", args=[current_user_id])
 
+
+from app.core.finance.successive_value_modeling import (
+    full_debts_ui_data_orchestrator,
+    FullDebtsUiData,
+    choose_strategy_from_personality
+)
+from app.schemas.questionnaire_schemas import DebtIn
+from app.core.utils.json_safe_utils import json_safe
+@cel_app.task(name="run_debts_orchestrator_task")
+def  run_debts_orchestrator_task(submitted_data_dict,current_user_id: int,total_income:float)->None:
+
+        data = QuestionnaireSubmit(**submitted_data_dict)
+        user_financial_data = UserFinancialData(
+            user_id=current_user_id,
+            household_income=float(total_income),
+            income_sources=json_safe([
+                member.model_dump()
+                for member in data.household_income
+            ]),
+            monthly_budget=float(
+                data.monthly_budget
+            ),
+            outstanding_debts=json_safe([
+                debt.model_dump()
+                for debt in data.outstanding_debts
+            ])
+        )
+               
+        strategy = choose_strategy_from_personality(7)
+        debts: list[DebtIn] = (  data.outstanding_debts)
+        balances = [  d.balance for d in debts]
+        interest_rates = [
+            d.interest_rate for d in debts
+        ]
+        fixed_monthly_payments = [d.monthly_payment for d in debts]
+        debts_advice:FullDebtsUiData = (
+            full_debts_ui_data_orchestrator(
+                strategy=strategy,
+                balances=balances,
+                interest_rates=interest_rates,
+                fixed_montlhy_payments=(fixed_monthly_payments),
+                user_validated_data=data
+            )
+        )
+        
+
+        db = SessionLocal() 
+        try:
+             
+            db.add(user_financial_data)
+            db.add(
+                DebtsAdvices(
+                    user_id=current_user_id,
+                    debts_advice=json_safe(
+                        debts_advice.advice.model_dump()
+                    )
+                )
+            )
+
+            db.add(
+                DebtMetrics(
+                    user_id=current_user_id,
+                    metrics=json_safe(
+                        debts_advice.model_dump(
+                            exclude={"advice"}
+                        )
+                    )
+                )
+            )
+            db.commit()
+            print("debts orchestrator task finished TASK FINISHED")  
+        except:
+               print("debts orchestrator task ERROR")
+        finally:
+             db.close()
+             print("debts orchestrator task's db connection was closed")
+
+from app.core.finance.goals_advisor import (
+    generate_goals_advice,
+    save_goals_and_advice
+)
+@cel_app.task(name="run_goals_orchestrator_task")
+def  run_debts_orchestrator_task(submitted_data_dict,current_user_id: int,total_income:float)->None:
+        data = QuestionnaireSubmit(**submitted_data_dict)
+        goals_advice = generate_goals_advice(
+            user_id=current_user_id,
+            monthly_income=float(total_income/12),
+            monthly_expenses=float(
+                data.monthly_budget
+            ),
+            monthly_debt_payments=float(
+                sum(
+                    debt.monthly_payment
+                    for debt in data.outstanding_debts
+                )
+            ),
+            investments_total=float(
+                data
+                .subjective_answers_values_and_weights
+                .investement_amount
+            ),
+            goals_input=data.goals
+        )
+        db = SessionLocal()
+        save_goals_and_advice(
+            db=db,
+            user_id=current_user_id,
+            goals_input=data.goals,
+            validated_goals=goals_advice
+        )    
     
