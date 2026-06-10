@@ -41,69 +41,36 @@ function  useLoginPageLogic(){
     setLoginState("loading");
     
     try{
-    const response = await fetch("http://localhost:8000/auth/login", { 
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials:"include",
-      body: JSON.stringify({   
-        email: email.trim().toLowerCase(),
-        password: password
-      }),
-    });
 
-    if (!response.ok) { 
-      
-        setLoginState("error");// can't set error massege  if  not in the error state.
-        const errorData:BackendExcpetion= await response.json();
-        console.log("status code is : ",errorData.status_code,"\n")
-        setErrorMessage(errorData.detail)
-        return;
-    }
-    const data: LoginResponse = await response.json();
-    console.log("data returned from auth/login route is: ",  data,'\n');
-    if (data.first_login){
-      setLoginState("default")
-      navigate("/MultiStepContext");
-      return;
-    }
+        const response = await fetch("http://localhost:8000/auth/login", { 
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials:"include",
+          body: JSON.stringify({   
+            email: email.trim().toLowerCase(),
+            password: password
+          }),
+        });
 
-    
-    try{
-      const response1 = await fetch("http://localhost:8000/dashboard", { 
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        credentials:"include"
-      });
-    if (!response1.ok) { 
-      
-        setLoginState("error");// can't set error massege  if  not in the error state.
-        const errorData:BackendExcpetion= await response1.json();
-        console.log("status code is : ",errorData.status_code,"\n")
-        setErrorMessage(errorData.detail)
-        return;
-    }
-      const fullAdviceData: FullAdviceDataType = await response1.json();
-      const result=FullAdviceDataSchema.safeParse(fullAdviceData); // run time validation on the unknown data, checks the 'correctness' of the  existing data
-      console.log(`safeParse result inside the Login.tsx  content is ${result}`)
-      if(result.success){
-          console.log("run time validation succeed!, results stored in the local storage")
-          localStorage.setItem("FullAdviceData", JSON.stringify(fullAdviceData));// storing response as key:value in the local storage
+        if (!response.ok) { 
+          
+            setLoginState("error");// can't set error massege  if  not in the error state.
+            const errorData:BackendExcpetion= await response.json();
+            console.log("status code is : ",errorData.status_code,"\n")
+            setErrorMessage(errorData.detail)
+            return;
+        }
+        const data: LoginResponse = await response.json();
+        console.log("data returned from auth/login route is: ",  data,'\n');
+        // if the user did not fill the survey before
+/*         if (data.first_login){
           setLoginState("default")
-          navigate("/MainLayout");
-      }
-      
-      else{
-          setLoginState("error");
-          setErrorMessage("Run Time validation failed inside Login.tsx")
-      }    
-    }catch(error){
-      console.log(error) 
-      setLoginState("error")
-      setErrorMessage( "Network error , please try again later." );
-
-    }
-
-        setLoginState("default");
+          navigate("/MultiStepContext");
+          return;
+        } */
+        // if the user filled the survey before
+        setLoginState("default")
+        navigate("/MainLayout");
 
     }catch(error){ 
       console.log(error) 

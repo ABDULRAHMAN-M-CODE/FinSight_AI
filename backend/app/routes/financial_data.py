@@ -77,13 +77,9 @@ router = APIRouter(
     response_model=FullAdviceData
 )
 def regenerate_financial_data(
-
     data: QuestionnaireSubmit,
-
     current_user: User = Depends(get_current_user),
-
     db: Session = Depends(get_db)
-
 ) -> FullAdviceData:
 
     try:

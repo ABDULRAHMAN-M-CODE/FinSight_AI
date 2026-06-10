@@ -1,14 +1,14 @@
 [
    {
-      "goal_id": 4,
+      "goal_id": 6,
       "goal_name": "Build emergency fund",
-      "is_possible": false,
+      "is_possible": true,
       "priority": "high",
-      "required_monthly_saving": 204.08,
+      "required_monthly_saving": 251.94,
       "months_remaining": 49,
-      "ai_summary": "This goal is not possible right now because disposable income is $0 and the required monthly saving is $204.08. Fix monthly cash flow before starting this emergency fund.",
+      "ai_summary": "This goal is achievable because the required monthly saving of 251.94 is well below your disposable income of 8936.67. An emergency fund should be prioritized before extra investing or non-essential goals.",
       "simple_plan": [
-         "Pause emergency-fund contributions for now."
+         "Set up an automatic transfer of 251.94 each month to a separate high-yield savings account."
       ]
    }
 ]

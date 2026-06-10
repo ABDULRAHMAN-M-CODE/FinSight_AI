@@ -1,34 +1,17 @@
 [
    {
-      "goal_id": 1781105059932,
+      "goal_id": 1781105975454,
       "goal_name": "Build emergency fund",
-      "is_possible": false,
-      "priority": "high",
-      "required_monthly_saving": 204.08,
-      "months_remaining": 49,
-      "ai_summary": "This goal is not possible right now because disposable income is $0 and the required monthly saving is $204.08. Fix monthly cash flow before starting this emergency fund.",
-      "simple_plan": [
-         "Pause emergency-fund contributions for now.",
-         "Cut expenses or increase income until monthly cash flow is positive.",
-         "Keep existing investments untouched unless needed for a true emergency.",
-         "Restart with a smaller first milestone once you can save monthly.",
-         "Automate savings only after bills and debt payments are covered."
-      ]
-   },
-   {
-      "goal_id": 1781105110585,
-      "goal_name": "to know what are the names of tools, applied hands-on knowledge, frameworks, software, libraries, communities that I must learn right now to become the most paid web solution archetict ",
       "is_possible": true,
       "priority": "high",
-      "required_monthly_saving": 0.01,
+      "required_monthly_saving": 251.94,
       "months_remaining": 49,
-      "ai_summary": "This goal is possible because it can be pursued mainly with free learning resources and may help increase income. Use a low-cost plan until cash flow improves.",
+      "ai_summary": "This goal is achievable because the required monthly saving of 251.94 is well below your disposable income of 8936.67. An emergency fund should be prioritized before extra investing or non-essential goals.",
       "simple_plan": [
-         "Learn cloud and DevOps tools: AWS, Azure, Docker, Kubernetes, Terraform, GitHub Actions.",
-         "Strengthen backend and data tools: ASP.NET Core, C#, SQL Server, PostgreSQL, Redis, RabbitMQ, Kafka.",
-         "Practice architecture methods: TOGAF, C4 Model, Domain-Driven Design, Clean Architecture, OWASP ASVS.",
-         "Build portfolio projects using React, TypeScript, FastAPI, ASP.NET Core, PostgreSQL, Docker, and CI/CD.",
-         "Join free communities: Stack Overflow, GitHub, Microsoft Learn, AWS Community, CNCF Slack, Reddit r/softwarearchitecture."
+         "Set up an automatic transfer of 251.94 each month to a separate high-yield savings account.",
+         "Keep this money separate from daily spending and investments.",
+         "Review the fund every 6 months to make sure the target still matches your essential expenses.",
+         "Avoid using the fund except for true emergencies, then refill it as soon as possible."
       ]
    }
 ]

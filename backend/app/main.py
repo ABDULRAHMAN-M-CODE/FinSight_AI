@@ -12,13 +12,13 @@ from app.database import Base, engine
 from app.routes.auth import router as auth_router
 from app.routes.user_settings import router as user_settings_router
 from app.routes.questionnaire import router as questionnaire_router 
-from app.routes.dashboard import router as dashboard_router
+
 
 from app.routes.rebalancing_ws import router as web_socket_router
 from app.routes.financial_data import router as financial_data_router
 
 # -------------------------------------------------------
-from app.routes.portfolio_analytics import router as get_investements_advice_router
+from app.routes.get_portfolio_advice_ui_data import router as get_investements_advice_router
 from app.routes.get_debts_advice_data import router as get_debts_advice_router
 from app.routes.get_goals_ui_data import router as get_goals_advice_router
 # import limiter -------------------------------------------------------
@@ -49,7 +49,6 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(user_settings_router)
 app.include_router(questionnaire_router)
-app.include_router(dashboard_router)
 app.include_router(web_socket_router)
 app.include_router(financial_data_router)
 app.include_router(get_investements_advice_router)
