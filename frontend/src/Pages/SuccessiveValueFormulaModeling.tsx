@@ -30,7 +30,8 @@ export default function SuccessiveValueFormulaModeling(){
           } 
     }
     fetchUserData();
-
+    const intervalId = setInterval(fetchUserData, 2000);
+    return () => clearInterval(intervalId);
   },[])
   if (!mockData){
     return(

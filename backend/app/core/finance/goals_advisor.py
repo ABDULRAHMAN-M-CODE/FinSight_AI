@@ -262,3 +262,5 @@ def save_goals_and_advice(
             )
 
             db.add(db_step)
+            db.commit()
+            db.close()

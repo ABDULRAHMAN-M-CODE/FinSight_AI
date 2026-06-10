@@ -1,0 +1,14 @@
+[
+   {
+      "goal_id": 4,
+      "goal_name": "Build emergency fund",
+      "is_possible": false,
+      "priority": "high",
+      "required_monthly_saving": 204.08,
+      "months_remaining": 49,
+      "ai_summary": "This goal is not possible right now because disposable income is $0 and the required monthly saving is $204.08. Fix monthly cash flow before starting this emergency fund.",
+      "simple_plan": [
+         "Pause emergency-fund contributions for now."
+      ]
+   }
+]

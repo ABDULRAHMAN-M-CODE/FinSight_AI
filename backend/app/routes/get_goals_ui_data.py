@@ -15,7 +15,8 @@ from app.models.goal_models.goal_analysis import GoalAnalysis # Note for later :
 from app.models.goal_models.goal_Plan_step import GoalPlanStep# Note for later : why imported ? even if it's not used?
 from app.core.finance.portfolio_construction import Metrics,Asset,OptimalPortfolio# Note for later :.....
 from app.schemas.goals_schemas import GoalAdviceItemSchema
-
+import json
+from pathlib import Path
 
 router = APIRouter(prefix="/mocks")
 @router.get(
@@ -24,12 +25,12 @@ router = APIRouter(prefix="/mocks")
     response_model=list[GoalAdviceItemSchema]# we don't know yet, but we do not care for now
 )
 
-def get_investements_advice_mocks(
+def get_goals_advice_mocks(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ) ->list[GoalAdviceItemSchema]: 
     try:
-        print("started")
+        print(" get_goals_advice_mocks started")
 
 
         result:list[GoalAdviceItemSchema] = []
@@ -51,7 +52,6 @@ def get_investements_advice_mocks(
                 GoalAdviceItemSchema(
                     goal_id=goal.id,
                     goal_name=goal.goal_name,
-
                     is_possible=analysis.is_possible,
                     priority=analysis.priority,
                     required_monthly_saving=analysis.required_monthly_saving,
@@ -67,6 +67,13 @@ def get_investements_advice_mocks(
                     ]
                 )
             )
+        
+        serializabale_content=[]
+        for goal_advice in result:
+             serializabale_content.append(goal_advice.model_dump())
+        with open(Path(__file__).resolve().parent / "fetched_goals_advices.txt", 'w') as f: # Problem: result is empty list, it has nothing at all.
+            json.dump(serializabale_content,f,indent=3)
+
         return result
     except Exception as e:
         db.rollback()

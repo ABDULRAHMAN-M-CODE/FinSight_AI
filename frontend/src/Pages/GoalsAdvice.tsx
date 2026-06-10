@@ -35,6 +35,7 @@ export default function GoalsAdvice() {
             }
             const data:GoalAdvice[] = await response.json();
             setMockData(data);
+            setMessage("")
           } catch (error) {
             console.log(error);// Executed correctly
             setMessage("Please check your internet connection.")
@@ -42,8 +43,10 @@ export default function GoalsAdvice() {
           } 
     }
     fetchUserData();
-
+    const intervalId = setInterval(fetchUserData, 2000);
+    return () => clearInterval(intervalId);
   },[])
+  console.log(mockData)
 if (!mockData){
   return (
     <>

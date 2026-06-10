@@ -41,11 +41,6 @@ const rebalanceDataDefaults: rebalancingDataType = {
 
 const formatPercent = (value: number) => `${(value * 100).toFixed(2)}%`;
 
-
-
-
-
-
 export default function PortfolioAnalytics() {
   const [mockData, setMockData] = useState<InvestementsAdviceType | null>(null);
   const [needsRebalancing,setNeedsRebalancing] =useState<boolean>(false);
@@ -75,7 +70,8 @@ export default function PortfolioAnalytics() {
           } 
     }
     fetchUserData();
-
+    const intervalId = setInterval(fetchUserData, 2000);
+    return () => clearInterval(intervalId);
   },[])
   useEffect(() => {
 

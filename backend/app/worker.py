@@ -263,10 +263,11 @@ from app.core.finance.goals_advisor import (
     generate_goals_advice,
     save_goals_and_advice
 )
+from app.schemas.goals_schemas import GoalAdviceItemSchema
 @cel_app.task(name="run_goals_orchestrator_task")
-def  run_debts_orchestrator_task(submitted_data_dict,current_user_id: int,total_income:float)->None:
+def  run_goals_orchestrator_task(submitted_data_dict,current_user_id: int,total_income:float)->None:
         data = QuestionnaireSubmit(**submitted_data_dict)
-        goals_advice = generate_goals_advice(
+        goals_advices:list[GoalAdviceItemSchema] = generate_goals_advice(
             user_id=current_user_id,
             monthly_income=float(total_income/12),
             monthly_expenses=float(
@@ -285,11 +286,17 @@ def  run_debts_orchestrator_task(submitted_data_dict,current_user_id: int,total_
             ),
             goals_input=data.goals
         )
+        serializabale_content=[]
+        for goal_advice in goals_advices:
+             serializabale_content.append(goal_advice.model_dump())
+        with open(Path(__file__).resolve().parent / "goals_advice.txt", 'w') as f: # Problem: result is empty list, it has nothing at all.
+            json.dump(serializabale_content,f,indent=3)
+        # goals_advice.txt contains advice, I saved it to the file, so it does exist, but save_goals_and_advice does not save anything to the database at all !
         db = SessionLocal()
-        save_goals_and_advice(
+        save_goals_and_advice( # Note,let's called it Note XXXXXZ : this function did not work, it don't see error, but id did not save anything !
             db=db,
             user_id=current_user_id,
             goals_input=data.goals,
-            validated_goals=goals_advice
+            validated_goals=goals_advices
         )    
     

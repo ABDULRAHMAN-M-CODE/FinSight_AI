@@ -299,7 +299,7 @@ function useSettingsPage(){
               setTimeout(() => {
                 setFinishedProcessingDeletion(false);
               }, 2000);
-              navigate("/Login") ; 
+              navigate("/Signup") ; 
 
       }catch(error){
               setFinishedProcessingDeletion(true);

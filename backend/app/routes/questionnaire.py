@@ -35,6 +35,7 @@ def submit_questionnaire(data: QuestionnaireSubmit,current_user: User = Depends(
 
         cel_app.send_task("run_debts_orchestrator_task", args=[data.model_dump(),current_user.id,total_income])
         
+        # related to  or Note XXXXXZ  The problem is in the run_goals_orchestrator_task, it does not save things to the datbase
         cel_app.send_task("run_goals_orchestrator_task", args=[data.model_dump(),current_user.id,total_income])
 
         cel_app.send_task("run_portfolio_orchestrator_task", args=[data.model_dump(),current_user.id])
